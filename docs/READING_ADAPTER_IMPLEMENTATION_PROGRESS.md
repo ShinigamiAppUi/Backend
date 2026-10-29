@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current batch:** Batch 1 — Manga / Indonesian (`MANGA` / `id`)
 - **Batch status:** `IN_PROGRESS`
-- **Latest confirmed code commit: `c06363f2f833e95b526a035f1dbd20b606f8711e`
+- **Latest confirmed code commit: `0f6f9ae3fc9e16fce089d0d28893a83aa6998541`
 - **Next concrete action:** continue source-by-source audit and implementation for the 25 Indonesian manga providers below. Do not start a new language batch until this batch's feasible implementations have been completed and its inventory reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
@@ -30,6 +30,8 @@
 | 8 | Novel | English (`en`) | `NOT_STARTED` | Reconcile the English novel inventory in `READING_MANGA_ARCHITECTURE.md`. |
 
 ## Latest implementation note — 2026-10-29
+
+- Adapter source files are now named with content type first and language second, without changing Kotlin package names, provider class names, provider IDs, parser behavior, or registration. Renamed files cover Manga Indonesian/English, Manhwa Indonesian/English, and Novel Indonesian. See `docs/READING_ADAPTER_LAYOUT.md` for the naming contract and the eight content/language buckets. Manhua Indonesian/English and Novel English remain planned work; existing mixed/shared files must be reconciled during the source audit before being moved. Code refactor commit: `0f6f9ae3fc9e16fce089d0d28893a83aa6998541`. No build, tests, CI, or live validation has been run.
 
 - MikoRoku chapter URL validation now requires the exact `manga/{slug}/chapter/{key}` suffix after any optional prefix segments. Previously extra path segments after the chapter key were silently ignored while the adapter fetched the API resource for the earlier key. The host, HTTPS, slug/key character and length checks remain enforced. Code commit: `c06363f2f833e95b526a035f1dbd20b606f8711e`. Tests/build/CI and live validation remain deferred.
 
