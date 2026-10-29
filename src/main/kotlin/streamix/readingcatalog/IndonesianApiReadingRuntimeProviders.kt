@@ -29,7 +29,7 @@ class KomikuAsiaReadingRuntimeProvider(private val responseFetcher: ((String) ->
             val data = root.optJSONObject("data") ?: root
             val chapterData = data.optJSONObject("chapter") ?: data
             val pageArray = sequenceOf(root.optJSONArray("pages"), data.optJSONArray("pages"), chapterData.optJSONArray("pages"))
-                .firstOrNull { it != null } ?: return@runCatching emptyList<String>()
+                .firstOrNull { it != null && it.length() > 0 } ?: return@runCatching emptyList<String>()
             (0 until pageArray.length()).mapNotNull { index ->
                 val item = pageArray.opt(index)
                 val raw = when (item) {
