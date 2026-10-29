@@ -78,7 +78,11 @@ class MangalayReadingRuntimeProvider(private val documentFetcher: ((String) -> D
                 }
                 .firstOrNull()
         }.normalizedReadingPageUrls()
-        all.dropLast(1).takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
+        // Some Blogger chapters contain only one reader image; never erase the entire chapter
+        // just because the usual trailing navigation image is absent.
+        (all.dropLast(1).takeIf { it.isNotEmpty() } ?: all)
+            .takeIf { it.isNotEmpty() }
+            ?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
     private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80) && it.host.equals("mangalay.blogspot.com", true) && it.path.isNotBlank() } }.getOrDefault(false)
     private fun validImage(value: String) = isSafeReadingImageUrl(value)
