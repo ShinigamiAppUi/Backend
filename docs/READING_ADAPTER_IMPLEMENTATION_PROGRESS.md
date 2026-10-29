@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current pass:** Implementation-first sweep across all eight content/language groups; preserve the eight separate batch records and language boundaries.
 - **Pass status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `578fca3e9edd326210405e2710a1daab095c18f7`
+- **Latest confirmed code commit:** `ab34b362debece8d130c68177a490a7512a69bcd`
 - **Next concrete action:** continue the implementation-first sweep from `docs/READING_MANGA_ARCHITECTURE.md`, creating site-specific adapters and registering each one for every feasible inventory source across the eight content/language groups. Record duplicate, metadata-only, language-uncertain, inaccessible, and access-restricted sources explicitly; defer cleanup and full test/build until the inventory implementation pass is reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
@@ -21,13 +21,13 @@
 | Order | Content type | Language | Status | Notes |
 |---:|---|---|---|---|
 | 1 | Manga | Indonesian (`id`) | `IN_PROGRESS` | Content-kind boundary pass started; 25 inventory rows below; source-specific implementation audit remains. |
-| 2 | Manga | English (`en`) | `NOT_STARTED` | Resume from existing comic audit matrix and source references. |
-| 3 | Manhwa | Indonesian (`id`) | `NOT_STARTED` | Existing site-specific provider classes received a chapter-boundary pass; this is not the full implementation batch. |
-| 4 | Manhwa | English (`en`) | `NOT_STARTED` | Resume from existing comic audit matrix and source references. |
-| 5 | Manhua | Indonesian (`id`) | `NOT_STARTED` | Confirm actual source/content type; do not force manga-only sites into this group. |
-| 6 | Manhua | English (`en`) | `NOT_STARTED` | Confirm actual source/content type; do not force manga-only sites into this group. |
-| 7 | Novel | Indonesian (`id`) | `NOT_STARTED` | Reconcile the Indonesian novel inventory in `READING_MANGA_ARCHITECTURE.md`. |
-| 8 | Novel | English (`en`) | `NOT_STARTED` | Reconcile the English novel inventory in `READING_MANGA_ARCHITECTURE.md`. |
+| 2 | Manga | English (`en`) | `IN_PROGRESS` | Resume from existing comic audit matrix and source references. |
+| 3 | Manhwa | Indonesian (`id`) | `IN_PROGRESS` | Existing site-specific provider classes received a chapter-boundary pass; this is not the full implementation batch. |
+| 4 | Manhwa | English (`en`) | `IN_PROGRESS` | Resume from existing comic audit matrix and source references. |
+| 5 | Manhua | Indonesian (`id`) | `IN_PROGRESS` | Confirm actual source/content type; do not force manga-only sites into this group. |
+| 6 | Manhua | English (`en`) | `IN_PROGRESS` | Confirm actual source/content type; do not force manga-only sites into this group. |
+| 7 | Novel | Indonesian (`id`) | `IN_PROGRESS` | Reconcile the Indonesian novel inventory in `READING_MANGA_ARCHITECTURE.md`. |
+| 8 | Novel | English (`en`) | `IN_PROGRESS` | Reconcile the English novel inventory in `READING_MANGA_ARCHITECTURE.md`. |
 
 ## Latest implementation note — 2026-10-29
 
