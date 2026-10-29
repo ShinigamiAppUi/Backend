@@ -17,7 +17,7 @@ class WestMangaReadingRuntimeProvider(private val responseFetcher: ((String, Map
         val slug = chapterSlug(source.url) ?: return@withContext null
         val apiUrl = "https://data.mantweh.online/api/v/$slug"
         val headers = signedHeaders(apiUrl)
-        val body = runCatching { responseFetcher?.invoke(apiUrl, headers) ?: if (responseFetcher == null) fetch(apiUrl, headers) else null }.getOrNull() ?: return@withContext null
+        val body = try { responseFetcher?.invoke(apiUrl, headers) ?: if (responseFetcher == null) fetch(apiUrl, headers) else null } catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled } catch (_: Exception) { null } ?: return@withContext null
         val images = runCatching {
             val data = JSONObject(body).optJSONObject("data") ?: JSONObject(body)
             val arr = data.optJSONArray("images") ?: return@runCatching emptyList<String>()
@@ -63,7 +63,7 @@ class RiztranslationReadingRuntimeProvider(private val responseFetcher: ((String
         val chapterId = chapterId(source.url) ?: return@withContext null
         val apiUrl = "https://uefnaojxivvxeamljskn.supabase.co/rest/v1/Chapter?select=id,bookId,isigambar&id=eq.$chapterId"
         val headers = mapOf("apikey" to SUPABASE_ANON_KEY, "Accept" to "application/json", "User-Agent" to "ShinigamiReadingRuntime/1.0")
-        val body = runCatching { responseFetcher?.invoke(apiUrl, headers) ?: if (responseFetcher == null) fetch(apiUrl, headers) else null }.getOrNull() ?: return@withContext null
+        val body = try { responseFetcher?.invoke(apiUrl, headers) ?: if (responseFetcher == null) fetch(apiUrl, headers) else null } catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled } catch (_: Exception) { null } ?: return@withContext null
         val images = runCatching {
             val rows = JSONArray(body)
             if (rows.length() == 0) return@runCatching emptyList<String>()
