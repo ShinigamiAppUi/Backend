@@ -284,3 +284,191 @@ Follow the project workflow:
 ## 13. Current status
 
 This document records the **target architecture only**. No claim is made here that Reading Catalog, AniList reading metadata, 100+ providers, chapter extraction, or reader contracts have all been implemented or verified. The next step is a GitHub-only audit of the existing backend code against this contract.
+
+
+## 14. Keiyoushi source inventory and adapter progress tracker
+
+**Purpose:** Keep the candidate website list beside the Reading architecture so implementation progress can be checked off over time.
+
+**Evidence and status rules**
+- These are candidate sources gathered from the Keiyoushi extension index and an initial category pass. This is an inventory, **not proof that every site is live, legal to access, currently supported, or offers every listed content type/language**.
+- Verify the actual catalogue and language of each site before implementation. Names in broad aggregator lists may cover manga, manhwa, and manhua together.
+- `[ ]` = not yet verified/finished; change to `[x]` only when the corresponding site-language/content task has been audited and completed with evidence.
+- Keep the status specific to each category/language. A site may appear in multiple lists, and completing its Indonesian manga adapter does not automatically complete its English manhwa support.
+- Suggested completion evidence: adapter path + exact commit, search/title result, chapter list, resolved ordered pages, and passing focused tests. Do not count a descriptor-only entry as an implemented adapter.
+- Suggested statuses for implementation notes: `INVENTORY`, `AUDIT_PENDING`, `IMPLEMENTING`, `IMPLEMENTED`, `TESTED`, `FAILED`, `UNAVAILABLE`, `DUPLICATE`. Update the checkbox only when the chosen completion gate is satisfied.
+
+### 14.1 Manga — Indonesian
+
+- [ ] Kiryuu
+- [ ] KlikManga
+- [ ] BacaKomik
+- [ ] Bacami
+- [ ] Komikindo
+- [ ] KomikIndoID
+- [ ] KomikNesia
+- [ ] Komik Station
+- [ ] Komiktap
+- [ ] Komiku
+- [ ] Komiku.com
+- [ ] Komikmu
+- [ ] Komikzoid
+- [ ] Kuro Manga
+- [ ] Mangalay
+- [ ] Mangasusu
+- [ ] Natsu
+- [ ] NgamenKomik
+- [ ] TheManga
+- [ ] West Manga
+- [ ] Shinigami
+- [ ] LepoyTL
+- [ ] Ryukomik
+- [ ] Noromax
+
+### 14.2 Manga — English
+
+- [ ] MangaDex
+- [ ] MangaFire
+- [ ] MangaPill
+- [ ] Mangakakalot
+- [ ] Mangabat
+- [ ] MangaKatana
+- [ ] Mangahere
+- [ ] MangaHub
+- [ ] Manganato
+- [ ] MangaGG
+- [ ] MangaRead.org
+- [ ] MangaReader.site
+- [ ] Mangatown
+- [ ] MangaNow
+- [ ] MangaGeko
+- [ ] MangaFox
+- [ ] Mangasushi
+- [ ] Manga.uno
+- [ ] MangaBolt
+- [ ] Manga Trend
+- [ ] Weeb Central
+- [ ] ComicK Fanmade
+- [ ] Manga Demon
+- [ ] Manga District
+- [ ] MangaManiacs
+
+### 14.3 Manhwa — Indonesian
+
+- [ ] Manhwa Indo
+- [ ] ManhwaLand.mom
+- [ ] Manhwa List
+- [ ] ManhwaDesu
+- [ ] Komikhwa
+- [ ] MG Komik
+- [ ] LianScans
+- [ ] Soul Scans
+- [ ] Ainz Scans ID
+- [ ] IsekaiKomik
+- [ ] Ota Scans
+- [ ] West Manga
+- [ ] Komiku
+- [ ] Komikindo
+- [ ] KomikNesia
+- [ ] Komik Station
+- [ ] Komikmu
+- [ ] Shinigami
+
+### 14.4 Manhwa — English
+
+- [ ] Asura Scans
+- [ ] Aunt Manhwa
+- [ ] ManhwaBuddy
+- [ ] ManhwaGalaxy
+- [ ] ManhwaHub.to
+- [ ] ManhwaManhua
+- [ ] ManhwaNex
+- [ ] ManhwaOnline
+- [ ] ManhwaRead
+- [ ] Manhwa Reads
+- [ ] Manhwa Toon
+- [ ] ManhwaTop
+- [ ] ManhwaUS
+- [ ] ManhwaZ
+- [ ] ManhwaZone
+- [ ] New Manhwa
+- [ ] MurimScan
+- [ ] Hiperdex
+- [ ] Manhwa68
+- [ ] Manhwaddict
+- [ ] ManhwaDen
+- [ ] Manhwa18
+- [ ] Manhwa18.today
+- [ ] Manhwa18TX
+- [ ] Manhwa Comics
+
+### 14.5 Manhua — Indonesian
+
+These are **verification candidates**, mostly general Indonesian comic aggregators; confirm that each actually has Indonesian-language manhua before treating it as a manhua source.
+
+- [ ] Komiku
+- [ ] Komiku.com
+- [ ] Komikindo
+- [ ] KomikIndoID
+- [ ] KomikNesia
+- [ ] Komik Station
+- [ ] Komiktap
+- [ ] Komikmu
+- [ ] APKOMIK
+- [ ] West Manga
+- [ ] MG Komik
+- [ ] NgamenKomik
+- [ ] Shinigami
+- [ ] Kiryuu
+- [ ] KlikManga
+
+### 14.6 Manhua — English
+
+- [ ] ManhuaHot
+- [ ] Manhuanext
+- [ ] Manhua Plus
+- [ ] ManhuaTop
+- [ ] ManhuaUS
+- [ ] Manhua Zonghe
+- [ ] Top Manhua
+- [ ] TopManhua.fan
+- [ ] TopManhua.net
+- [ ] ManhwaManhua
+- [ ] CManhua
+- [ ] Zinmanga
+- [ ] MangaDex
+- [ ] MangaFire
+- [ ] MangaPill
+
+### 14.7 Initial audit priority
+
+This is a proposed audit order, not a verified availability ranking.
+
+1. **Foundation / multilingual:** MangaDex.
+2. **English manga:** MangaFire, MangaPill, Mangakakalot, MangaKatana.
+3. **English manhwa:** Asura Scans, ManhwaBuddy, ManhwaGalaxy, ManhwaHub.to.
+4. **Indonesian sources:** Kiryuu, KlikManga, Komiku, Komikindo, KomikNesia.
+5. **English manhua:** ManhuaHot, Manhuanext, Manhua Plus, ManhuaTop.
+6. **Cross-category candidates:** West Manga, MG Komik, Komik Station, Manhwa List.
+
+### 14.8 Per-source work log template
+
+Copy this template into an entry or linked audit note when work begins:
+
+```text
+Source:
+Content category:
+Language:
+Keiyoushi extension/reference:
+Shinigami adapter path:
+Status: INVENTORY | AUDIT_PENDING | IMPLEMENTING | IMPLEMENTED | TESTED | FAILED | UNAVAILABLE | DUPLICATE
+Last audited commit:
+Evidence:
+- Search/title lookup:
+- Chapter listing:
+- Ordered page extraction:
+- Focused tests:
+Known limitations:
+```
+
+Do not mark a source `TESTED` based on compilation alone. Confirm that the source can return the expected reading contract, or record the precise reason it is unavailable/unsupported. Re-audit source availability before implementation because third-party sites and extension definitions can change.
