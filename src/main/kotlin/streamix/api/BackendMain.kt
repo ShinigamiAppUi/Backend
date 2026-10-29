@@ -203,6 +203,16 @@ import streamix.readingcatalog.EtudeTranslationsReadingRuntimeProvider
 import streamix.readingcatalog.FoxaholicReadingRuntimeProvider
 import streamix.readingcatalog.IndraTranslationsReadingRuntimeProvider
 import streamix.readingcatalog.LazyGirlTranslationsReadingRuntimeProvider
+import streamix.readingcatalog.AkknovelReadingRuntimeProvider
+import streamix.readingcatalog.AllNovelReadingRuntimeProvider
+import streamix.readingcatalog.ArcaneTranslationsReadingRuntimeProvider
+import streamix.readingcatalog.BlumeVerseReadingRuntimeProvider
+import streamix.readingcatalog.ChrysanthemumGardenReadingRuntimeProvider
+import streamix.readingcatalog.CPUNovelReadingRuntimeProvider
+import streamix.readingcatalog.DaoistQuestReadingRuntimeProvider
+import streamix.readingcatalog.EternaluneReadingRuntimeProvider
+import streamix.readingcatalog.FanNovelReadingRuntimeProvider
+import streamix.readingcatalog.FenrirRealmReadingRuntimeProvider
 import streamix.readingcatalog.ReadingProviderRuntimeRace
 import streamix.readingcatalog.ReadingRuntimeProvider
 import streamix.readingcatalog.ReadingSourceType
@@ -354,6 +364,16 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         ManhwaReadReadingRuntimeProvider(),
         ToonGodReadingRuntimeProvider(),
         RoyalRoadReadingRuntimeProvider(),
+        FenrirRealmReadingRuntimeProvider(),
+        FanNovelReadingRuntimeProvider(),
+        EternaluneReadingRuntimeProvider(),
+        DaoistQuestReadingRuntimeProvider(),
+        CPUNovelReadingRuntimeProvider(),
+        ChrysanthemumGardenReadingRuntimeProvider(),
+        BlumeVerseReadingRuntimeProvider(),
+        ArcaneTranslationsReadingRuntimeProvider(),
+        AllNovelReadingRuntimeProvider(),
+        AkknovelReadingRuntimeProvider(),
         LazyGirlTranslationsReadingRuntimeProvider(),
         IndraTranslationsReadingRuntimeProvider(),
         FoxaholicReadingRuntimeProvider(),
