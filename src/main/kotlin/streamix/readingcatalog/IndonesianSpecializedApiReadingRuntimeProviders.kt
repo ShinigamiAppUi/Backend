@@ -76,7 +76,11 @@ class RiztranslationReadingRuntimeProvider(private val responseFetcher: ((String
                 .mapNotNull { index -> rows.optJSONObject(index)?.opt("isigambar") }
                 .mapNotNull { raw ->
                     when (raw) {
-                        is JSONArray -> (0 until raw.length()).mapNotNull { raw.optString(it).trim().takeIf { u -> u.isNotBlank() }?.takeIf(::validImage) }
+                        is JSONArray -> (0 until raw.length()).mapNotNull { index ->
+                            raw.opt(index).takeIf { it is String }?.let { (it as String).trim() }
+                                ?.takeIf(String::isNotBlank)
+                                ?.takeIf(::validImage)
+                        }
                         is String -> {
                             // The API has returned both a JSON-encoded array and a single image URL.
                             // Preserve the single-URL form instead of treating every non-array string
@@ -84,7 +88,11 @@ class RiztranslationReadingRuntimeProvider(private val responseFetcher: ((String
                             val value = raw.trim()
                             val parsedArray = runCatching { JSONArray(value) }.getOrNull()
                             if (parsedArray != null) {
-                                (0 until parsedArray.length()).mapNotNull { parsedArray.optString(it).trim().takeIf { u -> u.isNotBlank() }?.takeIf(::validImage) }
+                                (0 until parsedArray.length()).mapNotNull { index ->
+                                    parsedArray.opt(index).takeIf { it is String }?.let { (it as String).trim() }
+                                        ?.takeIf(String::isNotBlank)
+                                        ?.takeIf(::validImage)
+                                }
                             } else {
                                 value.takeIf(::validImage)?.let(::listOf).orEmpty()
                             }
