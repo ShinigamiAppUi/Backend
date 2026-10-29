@@ -116,7 +116,7 @@ class KomikIndoIdReadingRuntimeProvider(private val documentFetcher: ((String) -
                 .filterNotNull()
                 .map(String::trim)
                 .firstNotNullOfOrNull { raw ->
-                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:") }
+                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:", ignoreCase = true) }
                         ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }
                         ?.takeIf(::validImage)
                 }
@@ -142,7 +142,7 @@ class KlikMangaReadingRuntimeProvider(private val documentFetcher: ((String) -> 
             sequenceOf("data-src", "data-lazy-src", "data-original", "src")
                 .map { key -> img.attr(key).trim() }
                 .mapNotNull { raw ->
-                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:") }
+                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:", ignoreCase = true) }
                         ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }
                         ?.takeIf(::validImage)
                 }
