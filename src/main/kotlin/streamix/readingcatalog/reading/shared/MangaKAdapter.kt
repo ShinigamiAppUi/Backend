@@ -23,7 +23,13 @@ class MangaKReadingRuntimeProvider(private val documentFetcher: ((String) -> Doc
             val props = root.optJSONObject("props")?.optJSONObject("pageProps") ?: root.optJSONObject("pageProps") ?: return@runCatching emptyList<String>()
             val chapterObj = props.optJSONObject("initialChapter") ?: props.optJSONObject("chapter") ?: return@runCatching emptyList<String>()
             val arr = chapterObj.optJSONArray("images") ?: return@runCatching emptyList<String>()
-            (0 until arr.length()).mapNotNull { arr.optString(it).takeIf { u -> u.isNotBlank() }?.takeIf(::validImage) }
+            (0 until arr.length()).mapNotNull { index ->
+                val item = arr.opt(index)
+                if (item !is String) return@mapNotNull null
+                val raw = item.trim()
+                if (raw.isBlank() || raw.startsWith("data:", ignoreCase = true)) return@mapNotNull null
+                runCatching { URI(source.url).resolve(raw).toString() }.getOrNull()?.takeIf(::validImage)
+            }
         }.getOrNull().orEmpty().distinct()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
