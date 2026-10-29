@@ -49,7 +49,7 @@ class KomikuAsiaReadingRuntimeProvider(private val responseFetcher: ((String) ->
 
     private fun chapterPath(value: String): Pair<String, String>? = runCatching {
         val uri = URI(value)
-        if (!isSafeReadingHttpUrl(value) || !uri.host.equals("01.komiku.asia", true)) return@runCatching null
+        if (!isSafeReadingHttpUrl(value) || !uri.host.equals("01.komiku.asia", true) || uri.userInfo != null) return@runCatching null
         val segments = uri.path.split('/').filter(String::isNotBlank)
         if (segments.size < 2) return@runCatching null
         val comicId = segments[segments.size - 2]
