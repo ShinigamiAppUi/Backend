@@ -4,6 +4,7 @@ import java.net.URI
 import org.json.JSONObject
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -19,9 +20,13 @@ class ManhwaListReadingRuntimeProvider(private val documentFetcher: ((String) ->
         if (entry.kind != ReadingKind.MANHWA) return@withContext null
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) }
             ?: return@withContext null
-        val doc = runCatching {
+        val doc = try {
             if (documentFetcher != null) documentFetcher.invoke(source.url) else fetchDocument(source.url)
-        }.getOrNull() ?: return@withContext null
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (_: Exception) {
+            null
+        } ?: return@withContext null
         val pages = doc.select("#readerarea img, .reading-content img, .chapter-content img").mapNotNull { image ->
             sequenceOf("data-lazy-src", "data-src", "data-original", "src").map { image.attr(it).trim() }
                 .firstOrNull { it.isNotBlank() && !it.startsWith("data:") }
