@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current pass:** Implementation-first sweep across all eight content/language groups; preserve the eight separate batch records and language boundaries.
 - **Pass status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `894a680cdf006081286c1af4f93e146ecf74ac08`
+- **Latest confirmed code commit:** `6127f8e81f50619711f85802122e206231fc931f`
 - **Next concrete action:** continue the implementation-first sweep from `docs/READING_MANGA_ARCHITECTURE.md`, creating site-specific adapters and registering each one for every feasible inventory source across the eight content/language groups. Record duplicate, metadata-only, language-uncertain, inaccessible, and access-restricted sources explicitly; defer cleanup and full test/build until the inventory implementation pass is reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
