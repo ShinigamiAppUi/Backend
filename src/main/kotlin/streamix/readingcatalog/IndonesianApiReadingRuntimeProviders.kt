@@ -71,10 +71,14 @@ class KomikuAsiaReadingRuntimeProvider(private val responseFetcher: ((String) ->
         }.getOrNull()
     }
 
-    private fun resolveSafeImage(value: String, base: String): String? = runCatching {
-        val image = URI(base).resolve(value)
-        image.toString().takeIf(::isSafeReadingImageUrl)
-    }.getOrNull()
+    private fun resolveSafeImage(value: String, base: String): String? {
+        val candidate = value.trim()
+        if (candidate.isBlank() || candidate.equals("null", ignoreCase = true)) return null
+        return runCatching {
+            val image = URI(base).resolve(candidate)
+            image.toString().takeIf(::isSafeReadingImageUrl)
+        }.getOrNull()
+    }
 
     private fun fetchJson(value: String): String? {
         val uri = runCatching { URI(value) }.getOrNull() ?: return null
