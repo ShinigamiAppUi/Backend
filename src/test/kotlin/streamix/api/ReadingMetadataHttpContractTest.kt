@@ -56,9 +56,10 @@ class ReadingMetadataHttpContractTest {
             assertEquals(200, detail.statusCode(), detail.body())
             assertTrue(detail.body().contains("Fixture Manhwa"))
 
+            val callsBeforeInvalidKind = gateway.searchCalls
             val invalidKind = get(client, "$base/api/v1/reading/metadata/search?q=Fixture&kind=VIDEO", session.token)
             assertEquals(400, invalidKind.statusCode())
-            assertFalse(gateway.lastKind == null && gateway.lastQuery == "Fixture" && gateway.lastPage == 1)
+            assertEquals(callsBeforeInvalidKind, gateway.searchCalls)
         } finally {
             server.close()
             Files.walk(temp).use { paths ->
@@ -70,13 +71,15 @@ class ReadingMetadataHttpContractTest {
     @Test
     fun upstreamFailureIsMappedToSanitizedBadGateway() {
         val temp = Files.createTempDirectory("reading-metadata-failure")
+        val auth = AuthRuntime(temp.resolve("auth"))
+        val session = auth.auth.signIn(ExternalIdentity("test", "reading-metadata-failure", displayName = "Reader"))
         val catalog = CatalogService(
             repository = FileCatalogRepository(temp.resolve("anime-catalog.json")),
             extractors = StreamixExtractorRegistry(emptyList())
         )
         val server = StreamixHttpServer(
             service = StreamixService(catalog = catalog),
-            authRuntime = AuthRuntime(temp.resolve("auth")),
+            authRuntime = auth,
             host = "127.0.0.1",
             port = 0,
             readingMetadata = object : ReadingMetadataGateway {
@@ -89,7 +92,7 @@ class ReadingMetadataHttpContractTest {
         val client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build()
         try {
             server.start()
-            val response = get(client, "http://127.0.0.1:${server.boundPort()}/api/v1/reading/metadata/search?q=Fixture&kind=MANGA", AuthRuntime(temp.resolve("auth")).auth.signIn(ExternalIdentity("test", "reading-metadata-failure", displayName = "Reader")).token)
+            val response = get(client, "http://127.0.0.1:${server.boundPort()}/api/v1/reading/metadata/search?q=Fixture&kind=MANGA", session.token)
             assertEquals(502, response.statusCode())
             assertTrue(response.body().contains("AniList reading metadata request failed"))
             assertFalse(response.body().contains("503"))
@@ -111,8 +114,10 @@ class ReadingMetadataHttpContractTest {
         @Volatile var lastQuery: String? = null
         @Volatile var lastKind: ReadingMetadataKind? = null
         @Volatile var lastPage: Int? = null
+        @Volatile var searchCalls: Int = 0
 
         override fun search(query: String, kind: ReadingMetadataKind, page: Int): List<ReadingMetadata> {
+            searchCalls++
             lastQuery = query
             lastKind = kind
             lastPage = page
