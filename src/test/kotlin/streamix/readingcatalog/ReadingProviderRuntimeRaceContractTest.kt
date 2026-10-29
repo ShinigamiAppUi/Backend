@@ -353,6 +353,40 @@ class ReadingProviderRuntimeRaceContractTest {
     }
 
     @Test
+    fun runtimeRejectsUnsafeOptionalContentUrlEvenWhenComicPagesAreValid() = runBlocking {
+        val provider = object : ReadingRuntimeProvider {
+            override val id = "mixed-unsafe-content-url"
+            override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent =
+                ReadingContent(
+                    entry.kind,
+                    id,
+                    contentUrl = "https://127.0.0.1/internal",
+                    pageUrls = listOf("https://cdn.example/page.jpg")
+                )
+        }
+        val result = ReadingProviderRuntimeRace(listOf(provider))
+            .race(entry(), chapter("mixed-unsafe-content-url"), emptySet())
+        assertNull(result)
+    }
+
+    @Test
+    fun runtimeRejectsUnsafeOptionalContentUrlEvenWhenNovelTextExists() = runBlocking {
+        val provider = object : ReadingRuntimeProvider {
+            override val id = "novel-with-unsafe-content-url"
+            override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent =
+                ReadingContent(
+                    entry.kind,
+                    id,
+                    contentUrl = "https://192.168.1.10/internal",
+                    text = "Valid chapter text"
+                )
+        }
+        val result = ReadingProviderRuntimeRace(listOf(provider))
+            .race(entry(ReadingKind.NOVEL), chapter("novel-with-unsafe-content-url"), emptySet())
+        assertNull(result)
+    }
+
+    @Test
     fun runtimeAcceptsHttpsComicContentUrlWhenPageListIsAbsent() = runBlocking {
         val provider = object : ReadingRuntimeProvider {
             override val id = "safe-content-url"
