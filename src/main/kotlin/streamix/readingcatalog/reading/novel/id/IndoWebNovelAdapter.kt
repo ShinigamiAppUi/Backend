@@ -47,9 +47,11 @@ class IndoWebNovelReadingRuntimeProvider(
         }
     }
 
-    private fun validChapterUrl(value: String): Boolean = runCatching {
+    private fun validChapterUrl(value: String): Boolean = try {
         val uri = URI(value)
         novelHost(value, setOf("indowebnovel.com", "indowebnovel.id")) &&
             !uri.path.isNullOrBlank() && uri.userInfo == null && uri.port in setOf(-1, 443)
-    }.getOrDefault(false)
+    } catch (_: Exception) {
+        false
+    }
 }
