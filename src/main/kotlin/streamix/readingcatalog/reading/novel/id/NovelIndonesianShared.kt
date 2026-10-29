@@ -3,14 +3,16 @@ package streamix.readingcatalog
 import org.jsoup.nodes.Document
 
 internal fun novelHost(value: String, hosts: Set<String>): Boolean =
-    runCatching {
+    try {
         java.net.URI(value).let {
             it.scheme.equals("https", ignoreCase = true) &&
                 hosts.any { host -> it.host.equals(host, true) } &&
                 it.userInfo == null &&
                 it.port in setOf(-1, 443)
         }
-    }.getOrDefault(false)
+    } catch (_: Exception) {
+        false
+    }
 
 /**
  * Shared HTML fetch path for novel providers. Apply the same response-size ceiling
