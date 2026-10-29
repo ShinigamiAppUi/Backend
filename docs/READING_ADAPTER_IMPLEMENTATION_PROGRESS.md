@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current pass:** Implementation-first sweep across all eight content/language groups; preserve the eight separate batch records and language boundaries.
 - **Pass status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `15de8cb5adcf8bfc885589ae1a2fb372730b9e73`
+- **Latest confirmed code commit:** `eff140b5712948db29627daa15b77c66c37885cc`
 - **Next concrete action:** continue the implementation-first sweep from `docs/READING_MANGA_ARCHITECTURE.md`, creating site-specific adapters and registering each one for every feasible inventory source across the eight content/language groups. Record duplicate, metadata-only, language-uncertain, inaccessible, and access-restricted sources explicitly; defer cleanup and full test/build until the inventory implementation pass is reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
@@ -21,6 +21,8 @@
 - **Grensia Indonesian novel adapter added (2026-10-29):** source-specific adapter created at `reading/novel/id/GrensiaAdapter.kt`, registered in `BackendMain.kt`. Canonical host and chapter-post structure were taken from the public LNReader Grensia source (`grensia.blogspot.com`, Blogger post pages); parser targets the post body and removes scripts, styles, ads, iframes, and Blogger's “more” anchor before text extraction. Enforces exact HTTPS host, standard Blogger date path, and cancellation propagation. Commits: adapter `f5f364837a012b2c6c2b8531d4fe2af59002060b`; registration `778be2e405de22d36f5302418f36b16f17793813`. Parser still requires focused fixtures/live validation; no tests/build/CI run, in accordance with the implementation-first sweep.
 
 - **Dragon Tea cross-kind adapter correction (2026-10-29):** live public pages confirm `dragontea.ink` contains a dedicated NOVELS category as well as comics. Extended the existing `dragontea` provider to accept both `MANHWA` and `NOVEL`, branching to prose extraction for novels while preserving image-page extraction for manhwa. Cancellation is now propagated instead of swallowed. Public category evidence: urlDragon Tea NOVELS categoryturn1search4. Commit: `15de8cb5adcf8bfc885589ae1a2fb372730b9e73`. Novel chapter selectors/routes still need focused fixtures/live validation; no tests/build/CI run.
+
+- **WuxiaWorld.Site novel adapter added (2026-10-29):** added a distinct prose adapter for `wuxiaworld.site`, separate from `wuxiaworld.com`; public site evidence confirms novel routes under `/novel/{slug}/chapter-{number}`. Exact-host HTTPS validation, chapter-route validation, and cancellation propagation are included. Commits: adapter `68e1c27aa8ca662d2e4e5cd864c39da4b1f0e13c`; registration `eff140b5712948db29627daa15b77c66c37885cc`. Content selectors are still provisional pending focused fixtures/live validation; no tests/build/CI run.
 
 ## Batch plan
 
