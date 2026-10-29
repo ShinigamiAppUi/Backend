@@ -69,12 +69,14 @@ class KomikuComManhuaReadingRuntimeProvider(private val responseFetcher: ((Strin
     private fun chapterPath(value: String): Pair<String, String>? {
         if (!isSafeReadingChapterUrl(value, setOf("01.komiku.asia")) { it.isNotBlank() }) return null
         return runCatching {
-            val segments = URI(value).path.split('/').filter(String::isNotBlank)
-            if (segments.size < 2) return null
-            val comicId = segments[segments.size - 2]
-            val chapterId = segments.last()
-            if (!comicId.matches(Regex("""[A-Za-z0-9_-]{1,160}""")) || !chapterId.matches(Regex("""[A-Za-z0-9_-]{1,160}"""))) null
-            else comicId to chapterId
+            val uri = URI(value)
+            // The Komiku API route includes a language segment between the comic and
+            // chapter IDs. Taking the final two path segments used to return ("id",
+            // chapterId), silently constructing a request for the wrong comic ID.
+            val match = Regex(
+                """/api/v2/comics/([A-Za-z0-9_-]{1,160})/chapters/id/([A-Za-z0-9_-]{1,160})/?"""
+            ).matchEntire(uri.path) ?: return null
+            match.groupValues[1] to match.groupValues[2]
         }.getOrNull()
     }
 
