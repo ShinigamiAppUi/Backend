@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current batch:** Batch 1 — Manga / Indonesian (`MANGA` / `id`)
 - **Batch status:** `IN_PROGRESS`
-- **Latest confirmed code commit: `23d7bc5cf2ab4922cd00ba2b54e77eed1f67bfb8`
+- **Latest confirmed code commit: `d6582f2c4255fa3425276c50cd5bf23e549d690f`
 - **Next concrete action:** continue source-by-source audit and implementation for the 25 Indonesian manga providers below. Do not start a new language batch until this batch's feasible implementations have been completed and its inventory reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
@@ -30,6 +30,8 @@
 | 8 | Novel | English (`en`) | `NOT_STARTED` | Reconcile the English novel inventory in `READING_MANGA_ARCHITECTURE.md`. |
 
 ## Latest implementation note — 2026-10-29
+
+- Komiku.asia page extraction now checks `pages` under both `root.chapter` and `data.chapter`, in addition to root/data arrays. Previously, when `data` existed but was partial and the usable list lived under root-level `chapter.pages`, that candidate could be missed. The merged list still passes through shared URL normalization and safety filtering. Code commit: `d6582f2c4255fa3425276c50cd5bf23e549d690f`. Tests/build/CI and live validation remain deferred.
 
 - KomikNesia image candidates are now trimmed before validation and blank-string rejection. This prevents otherwise valid API URLs with surrounding whitespace from being silently discarded; HTTPS/safe-image validation and deduplication remain in place. Code commit: `23d7bc5cf2ab4922cd00ba2b54e77eed1f67bfb8`. Tests/build/CI and live validation remain deferred.
 
