@@ -19,7 +19,7 @@ class KiryuuReadingRuntimeProvider(private val documentFetcher: ((String) -> Doc
             sequenceOf("data-src", "data-lazy-src", "data-original", "src")
                 .map { key -> img.attr(key).trim() }
                 .mapNotNull { raw ->
-                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:") }
+                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:", ignoreCase = true) }
                         ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }
                         ?.takeIf(::validImage)
                 }
@@ -45,7 +45,7 @@ class KomikStationReadingRuntimeProvider(private val documentFetcher: ((String) 
             sequenceOf("data-lazy-src", "data-src", "data-original", "src")
                 .map { key -> img.attr(key).trim() }
                 .mapNotNull { raw ->
-                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:") }
+                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:", ignoreCase = true) }
                         ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }
                         ?.takeIf(::validImage)
                 }
@@ -71,7 +71,7 @@ class ApkomikReadingRuntimeProvider(private val documentFetcher: ((String) -> Do
             sequenceOf("data-lazy-src", "data-src", "data-original", "src")
                 .map { key -> img.attr(key).trim() }
                 .mapNotNull { raw ->
-                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:") }
+                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:", ignoreCase = true) }
                         ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }
                         ?.takeIf(::validImage)
                 }
@@ -97,7 +97,7 @@ class LepoyTlReadingRuntimeProvider(private val documentFetcher: ((String) -> Do
             sequenceOf("data-src", "data-lazy-src", "data-original", "src")
                 .map { key -> img.attr(key).trim() }
                 .mapNotNull { raw ->
-                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:") }
+                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:", ignoreCase = true) }
                         ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }
                         ?.takeIf(::validImage)
                 }
