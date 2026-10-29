@@ -472,3 +472,177 @@ Known limitations:
 ```
 
 Do not mark a source `TESTED` based on compilation alone. Confirm that the source can return the expected reading contract, or record the precise reason it is unavailable/unsupported. Re-audit source availability before implementation because third-party sites and extension definitions can change.
+
+
+## 15. Novel source inventory — Indonesian and English
+
+This inventory was researched against public GitHub source-code repositories, primarily [NovelSourcery/extensions-source](https://github.com/NovelSourcery/extensions-source) and [HnDK0/external-sources](https://github.com/HnDK0/external-sources). The repository directories contain source adapters for the named sites; that is evidence of a code/reference candidate, **not proof the live website currently works or that Shinigami has implemented an adapter**. Every item starts unchecked and must be audited individually.
+
+### 15.1 Novel — Indonesian
+
+Candidates found under NovelSourcery's `src/id` plus matching Indonesian novel plugins in NoveLA's external source repository:
+
+- [ ] BacaLightNovel
+- [ ] MeioNovel
+- [ ] NovelBookID
+- [ ] Sektenovel
+- [ ] VaNovel
+- [ ] WBNovel
+- [ ] IndoWebNovel
+- [ ] MeioNovels
+
+References:
+- [NovelSourcery Indonesian source directory](https://github.com/NovelSourcery/extensions-source/tree/main/src/id)
+- [NoveLA Indonesian external sources](https://github.com/HnDK0/external-sources/tree/main/id)
+
+### 15.2 Novel — English
+
+Candidates found under NovelSourcery's `src/en`. The list is a source-code inventory, not a guarantee of current site availability. Some entries may be translation groups, community-fiction platforms, metadata/discovery tools, mirrors, or source duplicates; verify that a candidate actually provides chapter content before implementing it.
+
+- [ ] AllNovelFull
+- [ ] AsianNovel
+- [ ] Atsumaru Novels
+- [ ] Baka-Tsuki
+- [ ] BotiTranslation
+- [ ] BoxNovel
+- [ ] Bright Novels
+- [ ] ByteTranslations
+- [ ] Chikari
+- [ ] Citrus Aurora
+- [ ] Crimson Scrolls
+- [ ] Cyrisia
+- [ ] Dao Translate
+- [ ] Divine Dao Library
+- [ ] Dragonholic
+- [ ] DragonTea
+- [ ] Dusk Blossoms
+- [ ] EtuDe Translations
+- [ ] FansMTL
+- [ ] Fenrir Realm
+- [ ] FictionZone
+- [ ] Flame Comics
+- [ ] Foxaholic
+- [ ] Foxaholic18
+- [ ] FreeGoodNovel
+- [ ] FreeWebNovel
+- [ ] FuckNovelpia
+- [ ] Genesis Studio
+- [ ] Greenz
+- [ ] Helios Scans
+- [ ] Hireath Translation
+- [ ] Honeyfeed
+- [ ] Indra Translations
+- [ ] Inkitt
+- [ ] Jade Scrolls
+- [ ] Kat Reading Cafe
+- [ ] KDT Novels
+- [ ] Knoxt
+- [ ] Konkon
+- [ ] KuuPress
+- [ ] Lazy Girl Translations
+- [ ] Leaf Studio
+- [ ] Libread
+- [ ] Light Novel Heaven
+- [ ] LightNovelTo
+- [ ] Light Novel Translation
+- [ ] LNCrawler
+- [ ] LNMTL
+- [ ] LNori
+- [ ] LulloBox
+- [ ] Lunox Scans
+- [ ] MTLBooks
+- [ ] MTLWuxia
+- [ ] MVLEmpyr
+- [ ] MZNovels
+- [ ] NoBadNovel
+- [ ] Noice Translations
+- [ ] Novel Archive
+- [ ] NovelBin.com
+- [ ] NovelBin.net
+- [ ] NovelBuddy
+- [ ] NovelCool
+- [ ] NovelDex
+- [ ] NovelFire
+- [ ] NovelFull
+- [ ] NovelHall
+- [ ] NovelHi
+- [ ] NovelLib
+- [ ] NovelLight
+- [ ] NovelLib
+- [ ] NovelLive
+- [ ] NovelLunar
+- [ ] NovelNinja
+- [ ] NovelPhoenix.net
+- [ ] NovelPing
+- [ ] NovelsHaven
+- [ ] NovelsOnline
+- [ ] Novels.pl
+- [ ] NovelUpdates
+- [ ] Nyx Scans
+- [ ] OpenQuill
+- [ ] ORV Reader
+- [ ] Pastel Tales
+- [ ] PawRead
+- [ ] Penguin Squad
+- [ ] R18Novel
+- [ ] Ranobes
+- [ ] Ranovel
+- [ ] ReadFrom.net
+- [ ] ReadHive
+- [ ] ReadNovelFull
+- [ ] ReadNovelMTL
+- [ ] Rechapters
+- [ ] Reigokai Translations
+- [ ] Requiem Translations
+- [ ] Royal Road
+- [ ] Sai no Kantei
+- [ ] Scribble Hub
+- [ ] Shanghai Fantasy
+- [ ] Sleepy Translations
+- [ ] SonicMTL
+- [ ] Story Seedling
+- [ ] Sufficient Velocity
+- [ ] TomatoMTL
+- [ ] Translatino
+- [ ] TransWeaver
+- [ ] Universal Novel
+- [ ] Wattpad
+- [ ] WebNovel
+- [ ] WebNovel Translation
+- [ ] We Tried TLs
+- [ ] WoopRead
+- [ ] WordExcerpt
+- [ ] WuxiaBox
+- [ ] WuxiaClick
+- [ ] WuxiaDreams
+- [ ] WuxiaSpace
+- [ ] WuxiaWorld.eu
+- [ ] WuxiaWorld.site
+- [ ] XNovel
+- [ ] Zetro Translation
+
+Additional English-source candidates present in NoveLA's external source repository:
+- [ ] AllNovel
+- [ ] Asura Scans — verify that the adapter is for prose novels rather than comics before classifying it as a novel provider
+- [ ] Chikari
+- [ ] Empire Novel
+- [ ] FAQWiki
+- [ ] FictionZone
+- [ ] FreeWebNovel
+- [ ] LightNovelPub
+- [ ] NovelBin (compare with NovelSourcery's NovelBin.com / NovelBin.net entries; deduplicate by canonical domain)
+
+Reference: [NoveLA English external sources](https://github.com/HnDK0/external-sources/tree/main/en).
+
+### 15.3 How to audit and count novel adapters
+
+For each candidate, record:
+- canonical domain and any alternate domains;
+- content type: original novel, translated novel, light novel, community fiction, or metadata/discovery only;
+- language of chapter text (not merely UI language);
+- search/title lookup, chapter list, and ordered text extraction evidence;
+- legal/access constraints, robots/rate limits, anti-bot behavior, redirects, and SSRF-safe fetch behavior;
+- duplicate relationship with another adapter;
+- Shinigami adapter path, last audited commit, and test evidence.
+
+Status: `INVENTORY` → `AUDIT_PENDING` → `IMPLEMENTING` → `IMPLEMENTED` → `TESTED`; use `FAILED`, `UNAVAILABLE`, or `DUPLICATE` with evidence when appropriate. Do not count a checkbox, extension descriptor, repository name, or copied implementation as a completed adapter. A novel source counts as implemented only after Shinigami's own adapter supports the Reading Catalog/provider contract; it counts as tested only after focused evidence for search, chapter ordering, and text extraction is recorded.
