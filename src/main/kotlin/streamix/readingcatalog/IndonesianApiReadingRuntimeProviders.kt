@@ -21,9 +21,13 @@ class KomikuAsiaReadingRuntimeProvider(private val responseFetcher: ((String) ->
             ?: return@withContext null
         val (comicId, chapterId) = chapterPath(source.url) ?: return@withContext null
         val apiUrl = "https://01.komiku.asia/api/v2/comics/$comicId/chapters/id/$chapterId"
-        val body = runCatching {
+        val body = try {
             if (responseFetcher != null) responseFetcher.invoke(apiUrl) else fetchJson(apiUrl)
-        }.getOrNull() ?: return@withContext null
+        } catch (cancelled: kotlinx.coroutines.CancellationException) {
+            throw cancelled
+        } catch (_: Exception) {
+            null
+        } ?: return@withContext null
         val pages = runCatching {
             val root = JSONObject(body)
             val data = root.optJSONObject("data") ?: root
@@ -93,9 +97,13 @@ class SiikomikReadingRuntimeProvider(private val documentFetcher: ((String) -> D
         if (entry.kind != ReadingKind.MANGA) return@withContext null
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) }
             ?: return@withContext null
-        val doc = runCatching {
+        val doc = try {
             if (documentFetcher != null) documentFetcher.invoke(source.url) else fetchDocument(source.url)
-        }.getOrNull() ?: return@withContext null
+        } catch (cancelled: kotlinx.coroutines.CancellationException) {
+            throw cancelled
+        } catch (_: Exception) {
+            null
+        } ?: return@withContext null
         val pages = doc.select("#readerarea img, .reading-content img").mapNotNull { image ->
             sequenceOf("data-lazy-src", "data-src", "data-original", "src")
                 .map { image.attr(it).trim() }
@@ -145,9 +153,13 @@ class NarasiNinjaReadingRuntimeProvider(private val documentFetcher: ((String) -
         if (entry.kind != ReadingKind.MANGA) return@withContext null
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) }
             ?: return@withContext null
-        val doc = runCatching {
+        val doc = try {
             if (documentFetcher != null) documentFetcher.invoke(source.url) else fetchDocument(source.url)
-        }.getOrNull() ?: return@withContext null
+        } catch (cancelled: kotlinx.coroutines.CancellationException) {
+            throw cancelled
+        } catch (_: Exception) {
+            null
+        } ?: return@withContext null
         val pages = doc.select("#readerarea img.ts-main-image, #readerarea img, .reading-content img").mapNotNull { image ->
             sequenceOf("src", "data-src", "data-lazy-src", "data-original")
                 .map { image.attr(it).trim() }
