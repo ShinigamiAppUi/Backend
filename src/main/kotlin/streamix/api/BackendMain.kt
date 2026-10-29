@@ -143,6 +143,7 @@ import streamix.readingcatalog.ManhwaReadReadingRuntimeProvider
 import streamix.readingcatalog.ToonGodReadingRuntimeProvider
 import streamix.readingcatalog.WebNovelReadingRuntimeProvider
 import streamix.readingcatalog.WuxiaWorldReadingRuntimeProvider
+import streamix.readingcatalog.GrensiaReadingRuntimeProvider
 import streamix.readingcatalog.BacaLNReadingRuntimeProvider
 import streamix.readingcatalog.IdnovelandReadingRuntimeProvider
 import streamix.readingcatalog.LexiNovelReadingRuntimeProvider
@@ -618,6 +619,7 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         WuxiaWorldReadingRuntimeProvider(),
         WuxiafoxReadingRuntimeProvider(),
         BacaLNReadingRuntimeProvider(),
+        GrensiaReadingRuntimeProvider(),
         IdnovelandReadingRuntimeProvider(),
         LexiNovelReadingRuntimeProvider(),
         RanahnovelReadingRuntimeProvider(),
