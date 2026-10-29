@@ -451,6 +451,20 @@ This is a proposed audit order, not a verified availability ranking.
 5. **English manhua:** ManhuaHot, Manhuanext, Manhua Plus, ManhuaTop.
 6. **Cross-category candidates:** West Manga, MG Komik, Komik Station, Manhwa List.
 
+
+
+#### Inventory implementation reconciliation — 2026-10-29
+
+The implementation-first sweep has added individual adapter files and backend registrations for the site candidates wherever a canonical source contract could be established. These notes do not change the evidence-based checkbox rule above; do not check an item until its site-specific source behavior has been verified.
+
+- **Alias, no duplicate adapter:** ComicK Fanmade uses the existing Comick adapter; New Manhwa uses the existing SayManhwa adapter; Helios Scans maps to the existing HelioScans adapter; Hireath Translation is the inventory spelling variant of Hiraeth Translation.
+- **WBNovel:** the dedicated file/class is now named WBNovel and uses provider ID `wbnovel`; historical `wbnove` Catalog IDs are normalized for compatibility.
+- **Komikhwa:** canonical host `komikhwa.com` is identified and an Indonesian Manhwa adapter is registered. The image selectors remain unverified until fixtures/live evidence are added.
+- **IsekaiKomik:** still requires a canonical domain and source reference. Do not invent a host or register a speculative adapter.
+- **NovelUpdates:** discovery/metadata index, not a chapter-content source; treat as metadata discovery only, not as a `ReadingRuntimeProvider`.
+- **LightNovelPub:** the upstream source inventory marks the source unavailable/terminated. Keep it explicitly unavailable unless a legitimate, current chapter-content endpoint is verified; do not target unrelated successor domains.
+- **Verification status:** newly added inventory-first adapters remain `IMPLEMENTING`/pending fixtures. No build, test suite, CI, or live chapter validation was run in this pass.
+
 ### 14.8 Per-source work log template
 
 Copy this template into an entry or linked audit note when work begins:
