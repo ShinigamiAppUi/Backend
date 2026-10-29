@@ -14,7 +14,7 @@
 - **Latest confirmed code commit:** `c3de0376932cdee56355b08a7adbdb0882d9cc96` — select Bacami script arrays only after safe-page normalization
 - **Next concrete action:** continue source-by-source audit and implementation for the 25 Indonesian manga providers below. Do not start a new language batch until this batch's feasible implementations have been completed and its inventory reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
-- **Important status distinction:** the changes so far tighten content-kind dispatch/chapter boundaries only. They do **not** mean the source-specific parser work is complete or that these adapters are fully implemented.
+- **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
 
 ## Batch plan
 
@@ -30,6 +30,9 @@
 | 8 | Novel | English (`en`) | `NOT_STARTED` | Reconcile the English novel inventory in `READING_MANGA_ARCHITECTURE.md`. |
 
 ## Latest implementation note — 2026-10-29
+
+- Hardened Bacami multi-script fallback: evaluate each `imageUrls` array only after resolving, validating, and normalizing its string URLs; select the first non-empty usable page list. Earlier stale/unsafe arrays no longer mask a later usable reader array. Code commits: `ac61e823cf813aeaa2f511eff55df39bc66a7f65` and `c3de0376932cdee56355b08a7adbdb0882d9cc96`. Fixture tests/build/CI and live validation remain deferred.
+
 
 - Hardened KomikNesia chapter-source parsing to use the shared HTTPS-only URL guard across its three allowed hosts and require a `/view/` path before extracting the bounded slug. This removes acceptance of HTTP/port 80 on a provider that was outside the previous 21-adapter pass. Code commit: `b075b73d99dc3d2844b00a782211ab6575dcce69`. Tests/build/CI and live verification remain deferred.
 
