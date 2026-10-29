@@ -10,8 +10,9 @@ import kotlinx.coroutines.withContext
 class KomikuReadingRuntimeProvider(private val documentFetcher: ((String) -> Document?)? = null) : ReadingRuntimeProvider {
     override val id = "komiku"
     override fun supports(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry) =
-        entry.kind != ReadingKind.NOVEL && chapter.sources.any { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) }
+        entry.kind == ReadingKind.MANGA && chapter.sources.any { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) }
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
+        if (entry.kind != ReadingKind.MANGA) return@withContext null
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) } ?: return@withContext null
         val doc = runCatching { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null }.getOrNull() ?: return@withContext null
         val pages = doc.select("#Baca_Komik img").filterNot { img ->
@@ -35,8 +36,9 @@ class KomikuReadingRuntimeProvider(private val documentFetcher: ((String) -> Doc
 class BacamiReadingRuntimeProvider(private val documentFetcher: ((String) -> Document?)? = null) : ReadingRuntimeProvider {
     override val id = "bacami"
     override fun supports(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry) =
-        entry.kind != ReadingKind.NOVEL && chapter.sources.any { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) }
+        entry.kind == ReadingKind.MANGA && chapter.sources.any { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) }
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
+        if (entry.kind != ReadingKind.MANGA) return@withContext null
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) } ?: return@withContext null
         val doc = runCatching { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null }.getOrNull() ?: return@withContext null
         val script = doc.select("script").firstOrNull { it.data().contains("imageUrls") || it.html().contains("imageUrls") }
@@ -56,8 +58,9 @@ class BacamiReadingRuntimeProvider(private val documentFetcher: ((String) -> Doc
 class KomikIndoIdReadingRuntimeProvider(private val documentFetcher: ((String) -> Document?)? = null) : ReadingRuntimeProvider {
     override val id = "komikindoid"
     override fun supports(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry) =
-        entry.kind != ReadingKind.NOVEL && chapter.sources.any { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) }
+        entry.kind == ReadingKind.MANGA && chapter.sources.any { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) }
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
+        if (entry.kind != ReadingKind.MANGA) return@withContext null
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) } ?: return@withContext null
         val doc = runCatching { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null }.getOrNull() ?: return@withContext null
         val pages = doc.select("div.img-landmine img").mapNotNull { img ->
@@ -77,8 +80,9 @@ class KomikIndoIdReadingRuntimeProvider(private val documentFetcher: ((String) -
 class KlikMangaReadingRuntimeProvider(private val documentFetcher: ((String) -> Document?)? = null) : ReadingRuntimeProvider {
     override val id = "klikmanga"
     override fun supports(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry) =
-        entry.kind != ReadingKind.NOVEL && chapter.sources.any { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) }
+        entry.kind == ReadingKind.MANGA && chapter.sources.any { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) }
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
+        if (entry.kind != ReadingKind.MANGA) return@withContext null
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) } ?: return@withContext null
         val doc = runCatching { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null }.getOrNull() ?: return@withContext null
         val pages = doc.select(".reading-content img, .page-break img, .chapter-content img").mapNotNull { img ->
