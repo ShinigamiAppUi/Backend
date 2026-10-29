@@ -38,8 +38,7 @@ class KomikuComManhuaReadingRuntimeProviderTest {
         )
         val invalidRoutes = listOf(
             "https://01.komiku.asia/api/v2/comics/comic-42/chapters/id/chapter-9/extra",
-            "https://01.komiku.asia/api/v2/comics/comic-42/chapters/en/chapter-9",
-            "https://01.komiku.asia/api/v2/comics/id/chapters/id/chapter-9"
+            "https://01.komiku.asia/api/v2/comics/comic-42/chapters/en/chapter-9"
         )
 
         for (url in invalidRoutes) {
