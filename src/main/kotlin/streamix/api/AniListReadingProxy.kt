@@ -2,8 +2,8 @@ package streamix.api
 
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.google.gson.Gson
 import java.io.IOException
-import java.util.Locale
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -20,8 +20,8 @@ class AniListReadingProxy(
 ) : AniListReadingGateway {
     override fun search(query: String, page: Int): List<AniListReadingMedia> {
         val safePage = page.coerceAtLeast(1)
-        val escaped = query.replace("\\", "\\\\").replace("\"", "\\\"")
-        val body = """{"query":"query($search:String,$page:Int,$type:MediaType!){Page(page:$page,perPage:20){media(search:$search,type:$type){id title{romaji english native userPreferred} coverImage{large} bannerImage description(asHtml:false) genres format countryOfOrigin status averageScore}}}","variables":{"search":"$escaped","page":$safePage,"type":"MANGA"}}"""
+        val queryText = "query(\$search:String,\$page:Int,\$type:MediaType!){Page(page:\$page,perPage:20){media(search:\$search,type:\$type){id title{romaji english native userPreferred} coverImage{large} bannerImage description(asHtml:false) genres format countryOfOrigin status averageScore}}}"
+        val body = Gson().toJson(mapOf("query" to queryText, "variables" to mapOf("search" to query, "page" to safePage, "type" to "MANGA")))
         val response = execute(body)
         val root = parseSuccessfulResponse(response)
         val media = try {
@@ -34,7 +34,8 @@ class AniListReadingProxy(
 
     override fun detail(anilistId: Long): AniListReadingMedia? {
         if (anilistId <= 0L) return null
-        val body = """{"query":"query($id:Int!,$type:MediaType!){Media(id:$id,type:$type){id title{romaji english native userPreferred} coverImage{large} bannerImage description(asHtml:false) genres format countryOfOrigin status averageScore}}","variables":{"id":$anilistId,"type":"MANGA"}}"""
+        val queryText = "query(\$id:Int!,\$type:MediaType!){Media(id:\$id,type:\$type){id title{romaji english native userPreferred} coverImage{large} bannerImage description(asHtml:false) genres format countryOfOrigin status averageScore}}"
+        val body = Gson().toJson(mapOf("query" to queryText, "variables" to mapOf("id" to anilistId, "type" to "MANGA")))
         val response = execute(body)
         val root = parseSuccessfulResponse(response)
         val media = try { root.getAsJsonObject("data")?.get("Media") } catch (_: RuntimeException) { null }
