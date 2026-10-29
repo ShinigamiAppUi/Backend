@@ -624,6 +624,7 @@ internal fun canonicalReadingProviderId(rawProviderId: String, kind: ReadingKind
         "comick-fanmade", "comick-fan-made" -> "comick"
         "comick-unoriginal" -> "comick"
         "bbato" -> "bato"
+        "wbnove" -> "wbnovel"
         else -> rawProviderId.trim()
     }
 
