@@ -11,12 +11,14 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current pass:** Implementation-first sweep across all eight content/language groups; preserve the eight separate batch records and language boundaries.
 - **Pass status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `9b2ed3f1fdade84a56d919935d88033385f6ba87`
+- **Latest confirmed code commit:** `778be2e405de22d36f5302418f36b16f17793813`
 - **Next concrete action:** continue the implementation-first sweep from `docs/READING_MANGA_ARCHITECTURE.md`, creating site-specific adapters and registering each one for every feasible inventory source across the eight content/language groups. Record duplicate, metadata-only, language-uncertain, inaccessible, and access-restricted sources explicitly; defer cleanup and full test/build until the inventory implementation pass is reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
 
 - **IndoWebNovel adapter hardening (2026-10-29):** refactored `IndoWebNovelReadingRuntimeProvider` to preserve the shared provider contract while propagating coroutine `CancellationException` instead of swallowing cancellation in `runCatching`. URL validation now also rejects URI user-info and non-HTTPS ports through the shared `novelHost` validation path. Commit: `9b2ed3f1fdade84a56d919935d88033385f6ba87`. This is a code-level hardening change only; source-specific selectors and chapter text extraction still require fixtures/live verification. No tests/build/CI run, per implementation-first sweep policy.
+
+- **Grensia Indonesian novel adapter added (2026-10-29):** source-specific adapter created at `reading/novel/id/GrensiaAdapter.kt`, registered in `BackendMain.kt`. Canonical host and chapter-post structure were taken from the public LNReader Grensia source (`grensia.blogspot.com`, Blogger post pages); parser targets the post body and removes scripts, styles, ads, iframes, and Blogger's “more” anchor before text extraction. Enforces exact HTTPS host, standard Blogger date path, and cancellation propagation. Commits: adapter `f5f364837a012b2c6c2b8531d4fe2af59002060b`; registration `778be2e405de22d36f5302418f36b16f17793813`. Parser still requires focused fixtures/live validation; no tests/build/CI run, in accordance with the implementation-first sweep.
 
 ## Batch plan
 
