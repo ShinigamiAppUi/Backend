@@ -23,7 +23,8 @@ class KomikuReadingRuntimeProvider(private val documentFetcher: ((String) -> Doc
                 .firstNotNullOfOrNull { raw ->
                     raw.takeIf { it.isNotBlank() && !it.startsWith("data:") }
                         ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }
-                }?.takeIf(::validImage)
+                        ?.takeIf(::validImage)
+                }
         }.distinct()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
