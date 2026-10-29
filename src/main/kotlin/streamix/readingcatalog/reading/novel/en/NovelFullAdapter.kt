@@ -38,10 +38,12 @@ class NovelFullReadingRuntimeProvider(private val documentFetcher: ((String) -> 
             }
         }
 
-    private fun validChapterUrl(value: String): Boolean = runCatching {
+    private fun validChapterUrl(value: String): Boolean = try {
         val uri = URI(value)
         uri.scheme.equals("https", true) && uri.host.equals("novelfull.com", true) &&
             uri.userInfo == null && uri.port in setOf(-1, 443) &&
             !uri.path.isNullOrBlank() && (uri.path.contains("/chapter/", true) || uri.path.contains("-chapter-", true))
-    }.getOrDefault(false)
+    } catch (_: Exception) {
+        false
+    }
 }
