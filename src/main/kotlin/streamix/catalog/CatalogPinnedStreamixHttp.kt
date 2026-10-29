@@ -122,7 +122,11 @@ internal class CatalogPinnedStreamixHttp(
                 if (declaredLength > MAX_CATALOG_HTTP_RESPONSE_BYTES) {
                     throw IOException("catalog HTTP response exceeds the configured size limit")
                 }
-                val text = body?.byteStream()?.use { readBoundedCatalogResponse(it, MAX_CATALOG_HTTP_RESPONSE_BYTES) }?.toString(Charsets.UTF_8).orEmpty()
+                val text = if (body == null) "" else {
+                    val bytes = body.byteStream().use { readBoundedCatalogResponse(it, MAX_CATALOG_HTTP_RESPONSE_BYTES) }
+                        ?: throw IOException("catalog HTTP response exceeds the configured size limit")
+                    bytes.toString(Charsets.UTF_8)
+                }
                 val responseCookies = response.headers.values("Set-Cookie").mapNotNull { value ->
                     value.substringBefore(';').split('=', limit = 2)
                         .takeIf { it.size == 2 }?.let { it[0].trim() to it[1].trim() }
