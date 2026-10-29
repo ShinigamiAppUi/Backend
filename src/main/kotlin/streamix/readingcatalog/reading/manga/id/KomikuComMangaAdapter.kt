@@ -15,7 +15,7 @@ class KomikuComMangaReadingRuntimeProvider(private val responseFetcher: ((String
         }
 
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
-        if (entry.kind != ReadingKind.MANHUA) return@withContext null
+        if (entry.kind != ReadingKind.MANGA) return@withContext null
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && chapterPath(it.url) != null }
             ?: return@withContext null
         val (comicId, chapterId) = chapterPath(source.url) ?: return@withContext null
