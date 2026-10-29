@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current batch:** Batch 1 — Manga / Indonesian (`MANGA` / `id`)
 - **Batch status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `57699761a3dde90b11de32221c694d0d24d7aca5` — Indonesian manhwa chapter-boundary guards
+- **Latest confirmed code commit:** `3981e0c12398b3fb06480984bf16d0ac2ba70b67` — validate API path identifiers for Indonesian manga adapters
 - **Next concrete action:** continue source-by-source audit and implementation for the 25 Indonesian manga providers below. Do not start a new language batch until this batch's feasible implementations have been completed and its inventory reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** the changes so far tighten content-kind dispatch/chapter boundaries only. They do **not** mean the source-specific parser work is complete or that these adapters are fully implemented.
@@ -77,6 +77,7 @@ The class names and paths below were checked in this repository. Canonical URLs 
 - Added chapter-boundary kind checks so direct resolver/extractor calls cannot use the wrong adapter for another content type.
 - Fixed the existing KomikNesia and Shinigami chapter guards to enforce `MANGA` exactly.
 - Tightened the UlasComic provider in the Indonesian manhwa API group to `MANHWA`, consistent with its group and neighboring provider contracts.
+- Hardened WestManga and MikoRoku chapter URL parsing by constraining API path identifiers to bounded alphanumeric/underscore/hyphen segments before interpolating them into fixed API paths.
 - Added explicit chapter guards to the Indonesian Manhwa provider families.
 - **Scope limitation:** this is a boundary-safety pass, not a claim that all 25 manga adapters or the manhwa batch are fully implemented. Parser details, source references, API changes, image extraction, pagination, error states, and licensing/access constraints still need per-site review.
 - **Tests/build/CI:** not run, intentionally deferred by the agreed implementation-first policy.
@@ -111,4 +112,4 @@ For each batch, check these in order:
 
 | Date (UTC) | Batch | Change | Commit | Evidence / follow-up |
 |---|---|---|---|---|
-| 2026-10-29 | Manga / Indonesian | Started exact content-kind dispatch and chapter-boundary hardening; source-specific implementation remains partial | See branch history; latest confirmed commit `57699761a3dde90b11de32221c694d0d24d7aca5` | No tests/build run; continue site-by-site implementation before moving to the next language batch |
+| 2026-10-29 | Manga / Indonesian | Started exact content-kind dispatch and chapter-boundary hardening; added bounded path-identifier validation for WestManga and MikoRoku API routes; source-specific implementation remains partial | `3981e0c12398b3fb06480984bf16d0ac2ba70b67` | No tests/build run; continue site-by-site implementation before moving to the next language batch |
