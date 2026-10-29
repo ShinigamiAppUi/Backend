@@ -43,7 +43,7 @@ class NoBadNovelReadingRuntimeProvider(
     private fun validChapterUrl(value: String): Boolean = runCatching {
         val uri = URI(value)
         uri.scheme.equals("https", true) &&
-            uri.host?.lowercase() in setOf("nobadnovel.com", "www.nobadnovel.com".map(String::lowercase) &&
+            uri.host?.lowercase()?.let { it in setOf("nobadnovel.com", "www.nobadnovel.com") } == true &&
             uri.userInfo == null && uri.port in setOf(-1, 443) &&
             (uri.path.contains("/series/", true))
     }.getOrDefault(false)
