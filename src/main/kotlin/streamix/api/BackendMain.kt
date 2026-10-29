@@ -690,7 +690,12 @@ internal fun canonicalReadingProviderId(rawProviderId: String, kind: ReadingKind
         "mangadex-manhwa", "mangadex-manhua" -> "mangadex"
         "weebcentral-manhwa" -> "weebcentral"
         "new-manhwa" -> "saymanhwa"
-        "komiku.com", "komiku-com" -> if (kind == ReadingKind.MANHUA) "komiku-com-manhua" else "komiku-asia"
+        "komiku.com", "komiku-com" -> when (kind) {
+            ReadingKind.MANGA -> "komiku-com-manga"
+            ReadingKind.MANHWA -> "komiku-manhwa"
+            ReadingKind.MANHUA -> "komiku-com-manhua"
+            else -> "komiku-asia"
+        }
         "mangaread.org", "manga-read-org" -> "mangaread"
         "comick-fanmade", "comick-fan-made" -> "comick"
         "comick-unoriginal" -> "comick"
