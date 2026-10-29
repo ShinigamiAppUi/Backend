@@ -142,6 +142,7 @@ import streamix.readingcatalog.MangaGekoReadingRuntimeProvider
 import streamix.readingcatalog.ManhwaReadReadingRuntimeProvider
 import streamix.readingcatalog.ToonGodReadingRuntimeProvider
 import streamix.readingcatalog.WebNovelReadingRuntimeProvider
+import streamix.readingcatalog.WuxiaWorldSiteReadingRuntimeProvider
 import streamix.readingcatalog.WuxiaWorldReadingRuntimeProvider
 import streamix.readingcatalog.GrensiaReadingRuntimeProvider
 import streamix.readingcatalog.BacaLNReadingRuntimeProvider
@@ -617,6 +618,7 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         WuxiaSpaceReadingRuntimeProvider(),
         WebNovelReadingRuntimeProvider(),
         WuxiaWorldReadingRuntimeProvider(),
+        WuxiaWorldSiteReadingRuntimeProvider(),
         WuxiafoxReadingRuntimeProvider(),
         BacaLNReadingRuntimeProvider(),
         GrensiaReadingRuntimeProvider(),
