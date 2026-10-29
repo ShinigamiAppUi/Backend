@@ -646,3 +646,51 @@ For each candidate, record:
 - Shinigami adapter path, last audited commit, and test evidence.
 
 Status: `INVENTORY` → `AUDIT_PENDING` → `IMPLEMENTING` → `IMPLEMENTED` → `TESTED`; use `FAILED`, `UNAVAILABLE`, or `DUPLICATE` with evidence when appropriate. Do not count a checkbox, extension descriptor, repository name, or copied implementation as a completed adapter. A novel source counts as implemented only after Shinigami's own adapter supports the Reading Catalog/provider contract; it counts as tested only after focused evidence for search, chapter ordering, and text extraction is recorded.
+
+
+## 16. Novel source freshness review and implementation priority
+
+Reviewed GitHub source history on **2026-10-29**. Prioritize sources with recent source-adapter fixes/additions, not merely large inventories. Git commit activity is a useful maintenance signal, but it does **not** prove that a site publishes new chapters frequently; chapter-release cadence must be checked separately on the live site.
+
+### 16.1 Indonesian — highest audit priority
+
+1. **Grensia** — recently added to LNReader's Indonesian plugins on 2026-10-17. Audit live search, latest chapter timestamps, and chapter text before implementation.
+2. **IndoWebNovel** — chapter-list/text recovery was committed 2026-09-24 and chapter HTML sanitization/legacy markup handling on 2026-10-19. Strong maintenance signal; verify live content cadence and current domain.
+3. **BacaLightNovel, MeioNovel, NovelBookID, Sektenovel, VaNovel, WBNovel** — present in NovelSourcery's Indonesian source directory, but the recent directory history is dominated by shared/bulk merges rather than clear source-specific fixes. Keep as second-wave candidates until source-specific activity and live update cadence are verified.
+4. **SakuraNovel** — LNReader source exists, but its latest source-specific history is older (2025-10-20). Lower priority unless live chapter cadence or current community evidence justifies it.
+5. **NovelRingan** — its LNReader filename is explicitly marked `broken`; do not prioritize unless repaired and re-verified.
+
+References:
+- [LNReader Indonesian plugins](https://github.com/LNReader/lnreader-plugins/tree/master/plugins/indonesian)
+- [Grensia source history](https://github.com/LNReader/lnreader-plugins/commits/master/plugins/indonesian/grensia.ts)
+- [IndoWebNovel source history](https://github.com/LNReader/lnreader-plugins/commits/master/plugins/indonesian/indowebnovel.ts)
+- [NovelSourcery Indonesian sources](https://github.com/NovelSourcery/extensions-source/tree/main/src/id)
+
+### 16.2 English — highest audit priority
+
+1. **Royal Road** — active maintenance through 2026-10-28, including Anubis bot-check and chapter-list handling fixes. Strong candidate for ongoing maintenance, but bot protection must be handled within access rules; do not attempt to bypass access controls.
+2. **Novel Bin / NovelBin.xyz** — source updated 2026-10-28 to use a standalone JSON API plugin. Audit the canonical domain and API contract before implementation; avoid duplicate NovelBin adapters for alternate domains.
+3. **WebNovel** — plugin fixes on 2026-10-26 for chapter dates/statistics and ongoing status; also had search fixes in September 2026.
+4. **NovelBuddy** — search results/query-length fix on 2026-10-19 and domain update in July 2026.
+5. **NovelSourcery English source pool** — the repository has multiple source additions/fixes on 2026-10-27 and 2026-10-28, including FreeWebNovel, ByteTranslations, JadeScrolls, IndraTranslations, FenrirRealm, and NoiceTranslations. Audit these as a second source pool, checking whether each contains actual novel chapter text and whether the content language matches the target.
+6. **NovelFire / NovelPhoenix** — source changes were seen in August–October 2026, but confirm current branding/domain and chapter cadence before selecting.
+7. **Scribble Hub and other community-fiction platforms** — useful for original/community fiction but classify separately from translated light novels; verify update cadence per title.
+
+References:
+- [LNReader English plugins](https://github.com/LNReader/lnreader-plugins/tree/master/plugins/english)
+- [Royal Road source history](https://github.com/LNReader/lnreader-plugins/commits/master/plugins/english/royalroad.ts)
+- [Novel Bin source history](https://github.com/LNReader/lnreader-plugins/commits/master/plugins/english/novelbin.ts)
+- [WebNovel source history](https://github.com/LNReader/lnreader-plugins/commits/master/plugins/english/webnovel.ts)
+- [NovelBuddy source history](https://github.com/LNReader/lnreader-plugins/commits/master/plugins/english/novelbuddy.ts)
+- [NovelSourcery English sources](https://github.com/NovelSourcery/extensions-source/tree/main/src/en)
+
+### 16.3 Evidence required before a source is called “frequently updated”
+
+For each shortlisted site, record separate measurements:
+- **Adapter maintenance:** date and substance of latest source-code fix/addition.
+- **Live publication cadence:** inspect a sample of the latest 10–20 chapter entries; record their publication dates and count updates across at least 7 days where feasible.
+- **Content correctness:** language of actual chapter text, not just site UI; novel vs comic classification; chapter order and duplicate chapters.
+- **Reliability/access:** successful search, chapter list and text fetch; redirects, rate limits, bot challenges, login/paywall requirements.
+- **Decision:** `PRIORITY_A`, `PRIORITY_B`, `LOW_ACTIVITY`, `BROKEN`, `DUPLICATE`, or `UNAVAILABLE`, with dated evidence.
+
+Do not equate a repository's frequent commits with frequent chapter releases. Use source-code freshness to decide what to audit first, then use live publication evidence to decide which providers deserve implementation priority.
