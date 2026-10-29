@@ -77,21 +77,27 @@ class BacamiReadingRuntimeProvider(private val documentFetcher: ((String) -> Doc
         if (entry.kind != ReadingKind.MANGA) return@withContext null
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) } ?: return@withContext null
         val doc = try { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null } catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled } catch (_: Exception) { null } ?: return@withContext null
-        val values = doc.select("script")
+        // Evaluate candidates after URL validation and normalization. A script can contain
+        // a non-empty but stale/unsafe imageUrls array before the actual reader payload.
+        // Choosing the first raw non-empty array would mask later usable page lists.
+        val pages = doc.select("script")
             .asSequence()
             .mapNotNull { script ->
                 val body = script.data().ifBlank { script.html() }
                 extractBacamiImageUrlsArray(body)
             }
             .mapNotNull { raw -> runCatching { JsonParser.parseString(raw).asJsonArray }.getOrNull() }
-            .firstOrNull { array -> array.any { it.isJsonPrimitive && it.asJsonPrimitive.isString && it.asString.isNotBlank() } }
-            ?: return@withContext null
-        val pages = values.mapNotNull { value ->
-            val rawImage = value.takeIf { it.isJsonPrimitive }?.asString?.takeIf(String::isNotBlank)
-                ?: return@mapNotNull null
-            runCatching { URI(source.url).resolve(rawImage).toString() }.getOrNull()
-                ?.takeIf(::validImage)
-        }.normalizedReadingPageUrls()
+            .mapNotNull { array ->
+                array.mapNotNull { value ->
+                    val rawImage = value.takeIf { it.isJsonPrimitive && it.asJsonPrimitive.isString }
+                        ?.asString?.trim()?.takeIf(String::isNotBlank)
+                        ?: return@mapNotNull null
+                    runCatching { URI(source.url).resolve(rawImage).toString() }.getOrNull()
+                        ?.takeIf(::validImage)
+                }.normalizedReadingPageUrls().takeIf { it.isNotEmpty() }
+            }
+            .firstOrNull()
+            .orEmpty()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
     private fun validChapter(value: String) =
