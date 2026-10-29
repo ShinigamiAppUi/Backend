@@ -44,6 +44,9 @@
 - Hardened KlikManga chapter URL validation to reject embedded credentials and explicit ports other than 80/443, consistent with the other Indonesian manga HTML adapters. This is source-URL hardening only; parser coverage remains under audit.
 - Code commit: `a95c9524ca6fdd521f26c82d2deafbe80a0aa39f` (`fix(reading): harden KlikManga chapter URL authority`).
 
+- Hardened KlikManga chapter URL validation to reject embedded credentials and explicit ports other than 80/443. Code commit: `a95c9524ca6fdd521f26c82d2deafbe80a0aa39f` (`fix(reading): harden KlikManga chapter URL authority`).
+- Updated BacaKomik `onerror` fallback extraction to recognize either single-quoted or double-quoted `src` values, matching the site's HTML fallback variants without relaxing image URL validation. Code commit: `92ec83cbdf2d3e8f8efc22883cb14363158eccd2` (`fix(reading): parse both BacaKomik fallback quote styles`).
+
 ## Status vocabulary
 
 - Inventory/audit: `INVENTORIED`, `AUDIT_PENDING`, `AUDITED`, `PARTIAL`
