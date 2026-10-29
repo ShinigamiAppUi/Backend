@@ -43,7 +43,7 @@ class FuckNovelpiaReadingRuntimeProvider(
     private fun validChapterUrl(value: String): Boolean = runCatching {
         val uri = URI(value)
         uri.scheme.equals("https", true) &&
-            uri.host?.lowercase() in setOf("fucknovelpia.com", "www.fucknovelpia.com".map(String::lowercase) &&
+            uri.host?.lowercase()?.let { it in setOf("fucknovelpia.com", "www.fucknovelpia.com") } == true &&
             uri.userInfo == null && uri.port in setOf(-1, 443) &&
             (uri.path.contains("/novel/", true))
     }.getOrDefault(false)
