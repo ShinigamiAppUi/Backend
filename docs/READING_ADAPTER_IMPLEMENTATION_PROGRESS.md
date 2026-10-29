@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current pass:** Implementation-first sweep across all eight content/language groups; preserve the eight separate batch records and language boundaries.
 - **Pass status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `25b81dc2fc184d895e0ba7a23dd5bddc560371db`
+- **Latest confirmed code commit:** `6b65a1dcccce91cd14815648cfea11873dc6737c`
 - **Next concrete action:** continue the implementation-first sweep from `docs/READING_MANGA_ARCHITECTURE.md`, creating site-specific adapters and registering each one for every feasible inventory source across the eight content/language groups. Record duplicate, metadata-only, language-uncertain, inaccessible, and access-restricted sources explicitly; defer cleanup and full test/build until the inventory implementation pass is reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 
@@ -29,6 +29,10 @@
 
 
 - **English Manga fetch-boundary sweep (2026-10-29):** inspected all 23 files under `reading/manga/en/` for chapter-fetch exception behavior. Six adapters used `runCatching` at the suspend fetch boundary and could swallow coroutine cancellation; changed those boundaries to rethrow `CancellationException` and handle only ordinary `Exception` as a null result. Code commits: MangaPlus `659d7bb2da55ea61838dcd4e7a6c2f349b15af10`; MangaReader `cc21ed660c697cb42d09218824bb0a1be82e4671`; MangaUp `4fd3db887f9113c7b7f9804fb400160dd82928a2`; Mangakakalot `330cbbdc74bdae6934accf6e5bd10fe27bb1aacf`; Manganato `20d8bd0d9ddf3e68f4ec28a051b90973b8a41449`; VIZ `25b81dc2fc184d895e0ba7a23dd5bddc560371db`. The remaining 17 sampled fetch boundaries already preserve cancellation explicitly. This is a targeted coroutine correctness pass only; selector/source validity and fixtures remain open. No tests/build/CI/live checks were run, and the implementation-first sweep remains `IN_PROGRESS`.
+
+
+
+- **English Manhwa fetch-boundary sweep (2026-10-29):** inspected all 32 files under `reading/manhwa/en/`. Eight adapters were still wrapping their suspend fetch calls in `runCatching`, risking swallowed coroutine cancellation. Replaced those fetch wrappers with cancellation-preserving `try/catch` boundaries in Flame Comics `54cbb023d3e50011752444c03d787c1d67fc7167`, Rage Scans `0142672cdb3600b7ccad46ec89f86132f6274cd4`, Raven Scans `f3bd65c83b181eb6597d8de5b3f0cbca0b27eba5`, Reaper Scans `a3f0cf8c96d71c5236caca4b219e976c0b3a348f`, Roseveil `d6e11005c7574572cad7b1406f7167f34522a0c4`, Soul Scans `9ac409e935186addcb6f9d724bf168c0c67b8c10`, ToonGod `e1b75ac2dd59625a0765a0a61dce6afdfe22395d`, and Toonily `6b65a1dcccce91cd14815648cfea11873dc6737c`. The remaining inspected fetch boundaries already preserved cancellation. This does not verify live site reachability or selectors. No tests/build/CI/live checks were run; implementation-first sweep remains `IN_PROGRESS`.
 
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
 
