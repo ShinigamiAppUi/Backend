@@ -175,6 +175,8 @@ The class names and paths below were checked in this repository. Canonical URLs 
 
 ## Changes made on this branch so far
 
+- 2026-10-29 — Added first-pass English novel adapters for Light Novel Translations, LnMTL, LNORI, LulloBox, Mistmint Haven, NobleMTL, Noice Translations, Novel Arrow, and Wuxia Space. Each has a dedicated file, exact host/path guard, selector set, cancellation propagation, and runtime registration. Status: `IMPLEMENTED_UNTESTED`; source markup and current canonical domain still need audit. Index-only sources such as Novel Updates remain excluded from chapter-text adapters until confirmed to host chapter content. No tests/build/CI run.
+
 - 2026-10-29 — Added first-pass English novel chapter-text adapters for AllNovelFull, BoxNovel, LightNovelCave, LightNovelHeaven, NovelHall, NovelLib, NovelRest, Ranobes, ReadNovelFull, and NovelNinja from the consolidated novel inventory. Each is isolated in its own file and registered with a site-specific host/path guard and selector set. Status is `IMPLEMENTED_UNTESTED`; canonical redirects, live markup, content language, and access constraints remain to be audited. No tests/build/CI run.
 
 - 2026-10-29 — Added first-pass English novel chapter-text adapters for NovelFull, NovelHi, NovelLight, Scribble Hub, and Inkitt, each in its own file with a site-scoped host/path guard, isolated selectors, cancellation propagation, and runtime registration. These are `IMPLEMENTED_UNTESTED`; live markup, exact canonical paths, language/content and access limitations remain to be audited. No tests/build/CI run.

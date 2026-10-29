@@ -63,6 +63,15 @@ import streamix.readingcatalog.NovelRestReadingRuntimeProvider
 import streamix.readingcatalog.RanobesReadingRuntimeProvider
 import streamix.readingcatalog.ReadNovelFullReadingRuntimeProvider
 import streamix.readingcatalog.NovelNinjaReadingRuntimeProvider
+import streamix.readingcatalog.LightNovelTranslationsReadingRuntimeProvider
+import streamix.readingcatalog.LnMTLReadingRuntimeProvider
+import streamix.readingcatalog.LNORIReadingRuntimeProvider
+import streamix.readingcatalog.LulloBoxReadingRuntimeProvider
+import streamix.readingcatalog.MistmintHavenReadingRuntimeProvider
+import streamix.readingcatalog.NobleMTLReadingRuntimeProvider
+import streamix.readingcatalog.NoiceTranslationsReadingRuntimeProvider
+import streamix.readingcatalog.NovelArrowReadingRuntimeProvider
+import streamix.readingcatalog.WuxiaSpaceReadingRuntimeProvider
 import streamix.readingcatalog.JNovelClubReadingRuntimeProvider
 import streamix.readingcatalog.BacaKomikReadingRuntimeProvider
 import streamix.readingcatalog.MangaCanReadingRuntimeProvider
@@ -268,6 +277,15 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         RanobesReadingRuntimeProvider(),
         ReadNovelFullReadingRuntimeProvider(),
         NovelNinjaReadingRuntimeProvider(),
+        LightNovelTranslationsReadingRuntimeProvider(),
+        LnMTLReadingRuntimeProvider(),
+        LNORIReadingRuntimeProvider(),
+        LulloBoxReadingRuntimeProvider(),
+        MistmintHavenReadingRuntimeProvider(),
+        NobleMTLReadingRuntimeProvider(),
+        NoiceTranslationsReadingRuntimeProvider(),
+        NovelArrowReadingRuntimeProvider(),
+        WuxiaSpaceReadingRuntimeProvider(),
         WebNovelReadingRuntimeProvider(),
         WuxiaWorldReadingRuntimeProvider(),
         BacaLNReadingRuntimeProvider(),
