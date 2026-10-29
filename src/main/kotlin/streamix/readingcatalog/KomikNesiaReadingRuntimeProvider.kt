@@ -61,6 +61,8 @@ class KomikNesiaReadingRuntimeProvider(
                         ?.mapNotNull { item ->
                             item.takeIf { it.isJsonPrimitive && it.asJsonPrimitive.isString }
                                 ?.asString
+                                ?.trim()
+                                ?.takeIf(String::isNotBlank)
                                 ?.takeIf(::validImage)
                         }
                 }
