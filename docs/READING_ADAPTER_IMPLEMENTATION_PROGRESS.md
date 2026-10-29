@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current pass:** Implementation-first sweep across all eight content/language groups; preserve the eight separate batch records and language boundaries.
 - **Pass status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `10374e5c5d7cb4b929849496736285c716543b13`
+- **Latest confirmed code commit:** `d81937a21f5df084966aaa35807ce4b3a49c4554`
 - **Next concrete action:** continue the implementation-first sweep from `docs/READING_MANGA_ARCHITECTURE.md`, creating site-specific adapters and registering each one for every feasible inventory source across the eight content/language groups. Record duplicate, metadata-only, language-uncertain, inaccessible, and access-restricted sources explicitly; defer cleanup and full test/build until the inventory implementation pass is reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
@@ -36,6 +36,9 @@
 
 
 - **Indonesian shared comic adapter cancellation hardening (2026-10-29):** Noromax and SekteKomik previously used `runCatching` around document fetches, which could turn an explicit coroutine `CancellationException` from an injected fetcher into an ordinary missing chapter. Both now rethrow cancellation and handle only ordinary exceptions as fetch failure. Commits: Noromax `db7df14dda6a0fbce86e9ff1b9ee434f2601fa95`; SekteKomik `10374e5c5d7cb4b929849496736285c716543b13`. This is source-level cancellation hardening only; selectors/routes remain pending focused fixture/live verification. No tests/build/CI run, per the implementation-first sweep policy.
+
+
+- **Shared comic adapter cancellation hardening (2026-10-29):** continued the static scan of shared comic providers. WebtoonXYZ and WeebCentral also wrapped document fetches in `runCatching`, which could swallow an injected fetcher's coroutine cancellation. Both now rethrow `CancellationException` and treat only ordinary exceptions as fetch failures. Commits: WebtoonXYZ `bff4d68c3449dca405393c36ee82946cda6b66af`; WeebCentral `d81937a21f5df084966aaa35807ce4b3a49c4554`. Combined with the previous Noromax/SekteKomik fixes, this is static cancellation hardening only; source-specific selectors/routes and chapter output remain pending focused fixtures/live verification. No tests/build/CI run.
 
 ## Batch plan
 
