@@ -35,7 +35,6 @@ class StreamixHttpServer(
     private val gson: Gson = Gson(),
     private val aniListProxy: AniListGateway = AniListProxy(),
     private val readingMetadata: ReadingMetadataGateway = AniListReadingMetadataProxy(),
-    private val readingMetadata: ReadingMetadataGateway = AniListReadingMetadataProxy(),
     private val externalIdentityVerifier: streamix.auth.ExternalIdentityVerifier? = null,
     private val viewCounts: EpisodeViewCountStore = EpisodeViewCountStore()
 ) : AutoCloseable {
