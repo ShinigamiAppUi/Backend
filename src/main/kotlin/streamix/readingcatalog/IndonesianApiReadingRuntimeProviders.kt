@@ -32,22 +32,28 @@ class KomikuAsiaReadingRuntimeProvider(private val responseFetcher: ((String) ->
             val root = JSONObject(body)
             val data = root.optJSONObject("data") ?: root
             val chapterData = data.optJSONObject("chapter") ?: data
-            val pageArray = sequenceOf(root.optJSONArray("pages"), data.optJSONArray("pages"), chapterData.optJSONArray("pages"))
-                .firstOrNull { it != null && it.length() > 0 } ?: return@runCatching emptyList<String>()
-            (0 until pageArray.length()).mapNotNull { index ->
-                val item = pageArray.opt(index)
-                when (item) {
-                    is JSONObject -> sequenceOf("url", "src", "image", "image_url")
-                        .mapNotNull { key ->
-                            item.optString(key)
-                                .takeIf { it.isNotBlank() && it != "null" }
-                                ?.let { resolveSafeImage(it, apiUrl) }
+            sequenceOf(root.optJSONArray("pages"), data.optJSONArray("pages"), chapterData.optJSONArray("pages"))
+                .filterNotNull()
+                .map { pageArray ->
+                    (0 until pageArray.length()).mapNotNull { index ->
+                        val item = pageArray.opt(index)
+                        when (item) {
+                            is JSONObject -> sequenceOf("url", "src", "image", "image_url")
+                                .mapNotNull { key ->
+                                    item.optString(key)
+                                        .takeIf { it.isNotBlank() && it != "null" }
+                                        ?.let { resolveSafeImage(it, apiUrl) }
+                                }
+                                .firstOrNull()
+                            is String -> item.takeIf { it.isNotBlank() && it != "null" }?.let { resolveSafeImage(it, apiUrl) }
+                            else -> null
                         }
-                        .firstOrNull()
-                    is String -> item.takeIf { it.isNotBlank() && it != "null" }?.let { resolveSafeImage(it, apiUrl) }
-                    else -> null
+                    }
                 }
-            }
+                // Some responses include a non-empty placeholder array before the actual chapter pages.
+                // Continue through nested payload locations until one yields safe, usable image URLs.
+                .firstOrNull { candidatePages -> candidatePages.any { !it.isNullOrBlank() } }
+                .orEmpty()
         }.getOrNull().orEmpty().filter(String::isNotBlank).normalizedReadingPageUrls()
         pages.takeIf { it.isNotEmpty() }?.let {
             ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages")
