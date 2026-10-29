@@ -36,6 +36,7 @@ import streamix.readingcatalog.ManhwaHubReadingRuntimeProvider
 import streamix.readingcatalog.ManhwaNexReadingRuntimeProvider
 import streamix.readingcatalog.ManhwaOnlineReadingRuntimeProvider
 import streamix.readingcatalog.ManhwaZoneReadingRuntimeProvider
+import streamix.readingcatalog.ManhwaZReadingRuntimeProvider
 import streamix.readingcatalog.RavenScansReadingRuntimeProvider
 import streamix.readingcatalog.RageScansReadingRuntimeProvider
 import streamix.readingcatalog.MangaHubReadingRuntimeProvider
@@ -383,6 +384,7 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         MangaBoltReadingRuntimeProvider(),
         ManhwaGalaxyReadingRuntimeProvider(),
         ManhwaHubReadingRuntimeProvider(),
+        ManhwaZReadingRuntimeProvider(),
         ManhwaNexReadingRuntimeProvider(),
         ManhwaOnlineReadingRuntimeProvider(),
         ManhwaZoneReadingRuntimeProvider(),
