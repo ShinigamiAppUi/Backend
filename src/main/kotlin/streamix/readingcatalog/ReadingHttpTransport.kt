@@ -157,11 +157,12 @@ internal fun isSafeReadingHttpUrl(value: String): Boolean = runCatching {
             host != "localhost" &&
             !host.endsWith(".localhost") &&
             !host.endsWith(".local")
-        val literalAddress = host?.let {
+        val literalHost = host?.removePrefix("[")?.removeSuffix("]")
+        val literalAddress = literalHost?.let {
             it.contains(':') || it.matches(Regex("[0-9.]+"))
         } == true
         val publicLiteral = if (literalAddress) {
-            val addresses = java.net.InetAddress.getAllByName(host)
+            val addresses = java.net.InetAddress.getAllByName(literalHost)
             addresses.isNotEmpty() && addresses.none(CatalogPublicDns()::isPrivateOrLocal)
         } else true
         uri.scheme.equals("https", ignoreCase = true) &&
