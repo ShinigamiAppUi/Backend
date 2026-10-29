@@ -53,6 +53,11 @@ class ReadingProviderRuntimeRaceContractTest {
         assertEquals(false, isSafeReadingImageUrl("https://user@cdn.example/page.jpg"))
         assertEquals(false, isSafeReadingImageUrl("https://cdn.example:8443/page.jpg"))
         assertEquals(false, isSafeReadingImageUrl("https:///page.jpg"))
+        assertEquals(false, isSafeReadingImageUrl("https://localhost/page.jpg"))
+        assertEquals(false, isSafeReadingImageUrl("https://private.local/page.jpg"))
+        assertEquals(false, isSafeReadingImageUrl("https://127.0.0.1/page.jpg"))
+        assertEquals(false, isSafeReadingImageUrl("https://192.168.1.10/page.jpg"))
+        assertEquals(false, isSafeReadingImageUrl("https://[::1]/page.jpg"))
     }
     @Test
     fun runtimeDoesNotCallProvidersNotReferencedByChapter() = runBlocking {
