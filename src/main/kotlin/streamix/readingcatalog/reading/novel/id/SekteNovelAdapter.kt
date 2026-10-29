@@ -16,5 +16,9 @@ class SekteNovelReadingRuntimeProvider(private val documentFetcher: ((String)->D
   val text=extractFirstReadingNovelText(doc, ".epcontent, .entry-content, .post-content, .chapter-content, .text-left, .text-right")
   text.takeIf(String::isNotBlank)?.let{ReadingContent(entry.kind,"reading-provider:$id",source.url,text=it,format="text")}
  }
- private fun valid(v:String)=novelHost(v,setOf("sektenovel.web.id","sektenovel.id"))&&URI(v).path.isNotBlank()
+ private fun valid(v:String): Boolean = try {
+  novelHost(v,setOf("sektenovel.web.id","sektenovel.id")) && !URI(v).path.isNullOrBlank()
+ } catch (_: Exception) {
+  false
+ }
 }
