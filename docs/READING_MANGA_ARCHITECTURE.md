@@ -1033,3 +1033,50 @@ The numbering below preserves the supplied list, including distinct product vari
 - Before implementation, audit canonical domain and redirects, language, search and pagination, title/detail/chapter navigation, chapter ordering and content, recent chapter cadence, duplicate coverage, applicable terms/licensing, and permitted access. Never bypass login, paywalls, bot challenges, or other access controls.
 - Status for every item in this section: `INVENTORY` / `AUDIT_PENDING` unless a separate evidence-backed audit record explicitly changes it. A plugin entry or repository presence is not proof of a live, maintained website or a completed Shinigami adapter.
 
+## 19. Mandatory adapter implementation rules — site-specific and language-separated
+
+These are binding implementation rules for all Reading Catalog novel-source work. They apply to every source in Sections 15–18 and any source added later.
+
+### 19.1 One dedicated adapter per website
+
+- **Every website must have its own site-specific adapter.** Do not implement one generic novel adapter that attempts to support multiple unrelated sites through shared selectors, domain switches, a large conditional tree, or configuration-only source definitions.
+- The adapter must encode that website's own behavior: canonical base URL, search request/response format, pagination, title/detail parsing, chapter-list navigation and ordering, chapter-content extraction, URL normalization, request headers that are legitimately required, and site-specific error/empty-state handling.
+- Shared infrastructure is allowed only for genuinely cross-cutting concerns such as HTTP transport, rate limiting, retry/backoff, caching, common domain models, telemetry, and test fixtures. Shared infrastructure must not replace each website's dedicated parsing/navigation implementation.
+- If multiple hostnames are confirmed to be aliases for the same service, document the evidence and canonicalization before treating them as one adapter. If sites merely have similar names, themes, or CMS software, keep separate adapters.
+- A website-specific adapter must fail clearly when its expected page structure or response contract changes. Do not silently fall back to generic selectors that may return incorrect titles or chapter text.
+- Each adapter must have its own unit/fixture tests and an explicit live smoke-test record where permitted. A descriptor, manifest entry, or shared generic parser is not an implemented adapter.
+
+### 19.2 Strict language separation: Indonesian vs English
+
+- Keep Indonesian and English novel sources in separate implementation groups, packages/directories, registries, progress tables, and audit batches. Do not mix them into a single undifferentiated source list or completion counter.
+- Recommended grouping:
+  - `reading/novel/id/` — Indonesian-language source adapters.
+  - `reading/novel/en/` — English-language source adapters.
+  - Shared domain contracts and infrastructure may live outside these groups.
+- Use the source's **verified chapter-content language**, not its display name, repository folder, or URL alone, to assign language. If a site hosts multiple languages, register each language-specific endpoint/experience separately when its content and behavior differ; document any justified exception explicitly.
+- Keep separate Indonesian and English adapter registries and report progress separately: inventory, audited, implementation started, implemented, fixture-tested, live-verified, unavailable, and blocked. Never count a source in both language totals unless the two language experiences are separately verified and registered.
+- For a mixed-language site such as a site whose language label conflicts with a path or plugin manifest, set status to `LANGUAGE_UNVERIFIED` until the actual chapter text is checked.
+
+### 19.3 Required adapter contract and evidence
+
+Each dedicated adapter must implement and test the applicable operations in the Reading runtime contract:
+1. Search titles and handle empty queries/results and pagination.
+2. Parse a title/detail page and stable source identity.
+3. Enumerate chapters with correct ordering, labels, URLs, and duplicate handling.
+4. Extract chapter content accurately and detect empty, blocked, malformed, or changed pages.
+5. Normalize and validate URLs; constrain redirects and outbound requests to permitted public destinations.
+6. Apply bounded timeouts, retries/backoff, rate limits, and actionable error categories.
+7. Include fixture-based tests for normal pages, missing fields, empty results, changed markup/API, duplicate chapters, and network/HTTP failures.
+8. Record live verification date, tested functions, observed language, canonical URL/redirects, access limitations, and relevant terms/licensing review. Live tests must stay within authorized access; do not bypass authentication, paywalls, bot challenges, or other access controls.
+
+### 19.4 Implementation workflow and lock criteria
+
+For each language group, process sources in batches while preserving one adapter per site:
+`INVENTORY → AUDIT → IMPLEMENT SITE-SPECIFIC ADAPTER → FIXTURE TEST → LIVE SMOKE TEST (where permitted) → RE-AUDIT → LOCK`.
+
+- Do not mark an adapter `LOCKED` unless source-specific tests and evidence are recorded.
+- Do not label a source `IMPLEMENTED` solely because its name exists in a registry or it uses a shared generic parser.
+- Keep failed, inactive, inaccessible, language-uncertain, and terms-uncertain sources explicitly marked as such; do not inflate implemented counts.
+- Adapter names should identify the site (for example, `BacaLightNovelAdapter` or `RoyalRoadAdapter`), and reside in the correct language group. These are naming examples only, not claims that either adapter already exists.
+- A website redesign should trigger tests and a re-audit for that site's adapter without silently changing unrelated site adapters.
+
