@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current pass:** Implementation-first sweep across all eight content/language groups; preserve the eight separate batch records and language boundaries.
 - **Pass status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `6127f8e81f50619711f85802122e206231fc931f`
+- **Latest confirmed code commit:** `7971ff5b81ec3d8bb6998ecd738de403489e0723`
 - **Next concrete action:** continue the implementation-first sweep from `docs/READING_MANGA_ARCHITECTURE.md`, creating site-specific adapters and registering each one for every feasible inventory source across the eight content/language groups. Record duplicate, metadata-only, language-uncertain, inaccessible, and access-restricted sources explicitly; defer cleanup and full test/build until the inventory implementation pass is reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
@@ -369,3 +369,6 @@ For each batch, check these in order:
 
 
 - **2026-10-29 — English novel inventory-first continuation:** added dedicated adapters for Foxteller (`foxteller.com`), Galaxy Translations (inventory canonical domain `darkstartranslations.com`), Sweet Escape Translations (`sweetescapetranslations.com`), and Wuxiafox (`wuxiafox.com`), each under `reading/novel/en/` with a distinct provider ID and exact HTTPS host allowlist. All four are registered in `BackendMain.createSiteReadingProviders()`. Commits: Foxteller `386b459570074bc30d5ffc209013b3151779a6a9`; Galaxy Translations `9517708cb7116727200158bf4741e5b285f55d1a`; Sweet Escape `86936d30fa786328244c844bd437889afa078d32`; Wuxiafox `87c59a44694fd5179107b63d7614a840f7e4e277`; registration `12074af64b7eed37983487fcf170b2288062d896`. These are first-pass chapter-content adapters with conservative selectors, not source-verified completion: site-specific chapter fixtures and selector refinement remain open. No tests/build/CI/live checks run, per the implementation-first instruction.
+
+
+- **2026-10-29 — SRANKMANGA novel adapter:** confirmed the site's public novel listing at `srankmanga.com/novels/` and added a dedicated English novel reader adapter under `reading/novel/en/SrankMangaAdapter.kt`, provider ID `asuralightnovel`, restricted to HTTPS `srankmanga.com` URLs with a novel/chapter path. Registered it in `BackendMain.createSiteReadingProviders()`. Adapter commit `fcc2fac05fa99ae33d780ac980da58c0162e7919`; registration commit `7971ff5b81ec3d8bb6998ecd738de403489e0723`. The site blocks direct page inspection in this environment, so the chapter selector remains provisional and must not be marked verified; tests/build/CI/live checks remain deferred.
