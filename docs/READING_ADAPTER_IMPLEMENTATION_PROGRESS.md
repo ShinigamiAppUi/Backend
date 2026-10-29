@@ -31,6 +31,8 @@
 
 ## Latest implementation note — 2026-10-29
 
+- Fixed BacaKomik image candidate selection: each fallback/lazy/source attribute is now resolved and validated before selection, so an unsafe or malformed earlier candidate does not block a later safe image URL. Code commit: `6048f1fd11954e6055354caa890dfa638e826137` (`fix(reading): try later safe BacaKomik image candidates`). This is a parser robustness fix, not full adapter verification.
+
 - Hardened MikoRoku chapter URL authority checks to reject embedded credentials and nonstandard ports. Commit: `0e090d2e4c8845be273799d678ccffa3baed25c8` (`fix(reading): harden MikoRoku chapter URL authority`).
 - Hardened KomikIndoID chapter URL authority checks and changed image selection to validate each candidate as it is tried, including parsing either quote style in the `onError` fallback. Commit: `d296b902f76027a39b0ad2ec92761e61b97de32c` (`fix(reading): validate KomikIndoID image fallbacks`).
 
@@ -138,4 +140,5 @@ For each batch, check these in order:
 
 | Date (UTC) | Batch | Change | Commit | Evidence / follow-up |
 |---|---|---|---|---|
+| 2026-10-29 | Manga / Indonesian | BacaKomik now validates each fallback/lazy/source image candidate before selecting it, allowing later safe candidates after an unsafe/malformed earlier value. | `6048f1fd11954e6055354caa890dfa638e826137` | Targeted source-specific parser robustness fix; no tests/build/CI run. |
 | 2026-10-29 | Manga / Indonesian | Exact content-kind dispatch and chapter-boundary hardening; bounded WestManga/MikoRoku API identifiers; resolved relative Bacami image URLs; improved Komiku.asia page-array selection and URL/identifier validation; hardened chapter URL authority checks across Indonesian manga providers; changed Komiku image extraction to validate each candidate before choosing it, allowing later lazy/source attributes when an earlier candidate is invalid. Source-specific implementation remains partial. | `1f3fcc55bf403750f2e962d94ecebb5497518931` (latest); earlier code commits: `274c64eacc7c8519fd4ab49dcc628ad4e5ce21d8`, `d5a100104863768c5e6e507ccc326b235b7ccb4d`, `0ddd266cb54037f0e1867e52e428203870f0f0b6`, `a46ed2f2aa4e48016259d608e08d7bd61c9f0d08`, `30743cc37adbdb7f7f1286677685ed35eafa9268`, `97fae3b1318434c711dd86b9c0e7ec848d30ffea`, `035ee82c85ea3d33cdd4ddeec6218fa3c0015d1f`, `093ae83e1ecb2eba63f9f8dc57701b8b5e8d974e`, `3981e0c12398b3fb06480984bf16d0ac2ba70b67`, `57699761a3dde90b11de32221c694d0d24d7aca5` | No tests/build run; continue site-by-site implementation before moving to the next language batch |
