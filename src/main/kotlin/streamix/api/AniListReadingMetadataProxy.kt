@@ -29,7 +29,9 @@ data class ReadingMetadata(
     val status: String? = null,
     val genres: List<String> = emptyList(),
     val format: String? = null,
-    val countryOfOrigin: String? = null
+    val countryOfOrigin: String? = null,
+    val malId: Int? = null,
+    val synonyms: List<String> = emptyList()
 )
 
 interface ReadingMetadataGateway {
@@ -55,7 +57,7 @@ class AniListReadingMetadataProxy(
             query($search:String, $page:Int) {
               Page(page:$page, perPage:20) {
                 media(search:$search, type:MANGA$mediaFilter) {
-                  id title { romaji english native userPreferred }
+                  id idMal synonyms title { romaji english native userPreferred }
                   coverImage { large } bannerImage description(asHtml:false)
                   genres status format countryOfOrigin startDate { year }
                 }
@@ -90,7 +92,7 @@ class AniListReadingMetadataProxy(
         val graphQl = """
             query($id:Int) {
               Media(id:$id, type:MANGA) {
-                id title { romaji english native userPreferred }
+                id idMal synonyms title { romaji english native userPreferred }
                 coverImage { large } bannerImage description(asHtml:false)
                 genres status format countryOfOrigin startDate { year }
               }
@@ -145,6 +147,10 @@ class AniListReadingMetadataProxy(
 
     private fun toReadingMetadata(obj: JsonObject): ReadingMetadata {
         val id = obj["id"].asLong
+        val malId = obj["idMal"]?.takeIf { !it.isJsonNull }?.asInt
+        val synonyms = obj["synonyms"]?.takeIf { it.isJsonArray }?.asJsonArray?.mapNotNull {
+            it.takeIf { value -> !value.isJsonNull }?.asString
+        }.orEmpty()
         val titles = obj["title"]?.takeIf { it.isJsonObject }?.asJsonObject
         val title = listOf("userPreferred", "english", "romaji", "native")
             .asSequence()
@@ -180,7 +186,9 @@ class AniListReadingMetadataProxy(
             status = status,
             genres = genres,
             format = format,
-            countryOfOrigin = country
+            countryOfOrigin = country,
+            malId = malId,
+            synonyms = synonyms
         )
     }
 }
