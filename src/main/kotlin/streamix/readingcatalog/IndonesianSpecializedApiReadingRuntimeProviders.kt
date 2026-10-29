@@ -22,7 +22,7 @@ class WestMangaReadingRuntimeProvider(private val responseFetcher: ((String, Map
             val data = JSONObject(body).optJSONObject("data") ?: JSONObject(body)
             val arr = data.optJSONArray("images") ?: return@runCatching emptyList<String>()
             (0 until arr.length()).mapNotNull { arr.optString(it).takeIf { u -> u.isNotBlank() }?.takeIf(::validImage) }
-        }.getOrNull().orEmpty().distinct()
+        }.getOrNull().orEmpty().normalizedReadingPageUrls()
         images.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
     private fun chapterSlug(value: String): String? = runCatching {
@@ -73,7 +73,7 @@ class RiztranslationReadingRuntimeProvider(private val responseFetcher: ((String
                 is String -> runCatching { JSONArray(raw).let { a -> (0 until a.length()).mapNotNull { a.optString(it).takeIf { u -> u.isNotBlank() }?.takeIf(::validImage) } } }.getOrDefault(emptyList())
                 else -> emptyList()
             }
-        }.getOrNull().orEmpty().distinct()
+        }.getOrNull().orEmpty().normalizedReadingPageUrls()
         images.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:riztranslation", source.url, it, format = "image-pages") }
     }
     private fun chapterId(value: String): String? = runCatching { URI(value).let { if (isSafeReadingHttpUrl(value) && it.host.equals("riztranslation.pages.dev", true) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80)) it.path.trimEnd('/').substringAfterLast('/').takeIf { s -> s.length in 1..160 && s.all(Char::isDigit) } else null } }.getOrNull()
@@ -103,7 +103,7 @@ class MikoRokuReadingRuntimeProvider(private val responseFetcher: ((String) -> S
             }
         }.mapNotNull { body ->
             runCatching { extractFirestoreImages(JSONObject(body), key) }.getOrNull()
-        }.firstOrNull { it.isNotEmpty() }.orEmpty().distinct()
+        }.firstOrNull { it.isNotEmpty() }.orEmpty().normalizedReadingPageUrls()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
     private fun chapterParts(value: String): Pair<String, String>? = runCatching {
