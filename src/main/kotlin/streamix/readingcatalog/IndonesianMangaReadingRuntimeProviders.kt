@@ -25,7 +25,7 @@ class KomikuReadingRuntimeProvider(private val documentFetcher: ((String) -> Doc
                         ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }
                         ?.takeIf(::validImage)
                 }
-        }.distinct()
+        }.normalizedReadingPageUrls()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
     private fun validChapter(value: String) = runCatching {
@@ -58,7 +58,7 @@ class BacamiReadingRuntimeProvider(private val documentFetcher: ((String) -> Doc
                 ?: return@mapNotNull null
             runCatching { URI(source.url).resolve(rawImage).toString() }.getOrNull()
                 ?.takeIf(::validImage)
-        }.distinct()
+        }.normalizedReadingPageUrls()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
     private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("v1.bacami.site", true) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80) && it.path.contains("chapter", true) } }.getOrDefault(false)
@@ -86,7 +86,7 @@ class KomikIndoIdReadingRuntimeProvider(private val documentFetcher: ((String) -
                         ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }
                         ?.takeIf(::validImage)
                 }
-        }.distinct()
+        }.normalizedReadingPageUrls()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
     private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("komikindo.ch", true) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80) && it.path.isNotBlank() } }.getOrDefault(false)
@@ -112,7 +112,7 @@ class KlikMangaReadingRuntimeProvider(private val documentFetcher: ((String) -> 
                         ?.takeIf(::validImage)
                 }
                 .firstOrNull()
-        }.distinct()
+        }.normalizedReadingPageUrls()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
     private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80) && it.host.equals("klikmanga.org", true) && it.path.isNotBlank() } }.getOrDefault(false)
