@@ -42,8 +42,7 @@ class KomikuAsiaReadingRuntimeProvider(private val responseFetcher: ((String) ->
                         when (item) {
                             is JSONObject -> sequenceOf("url", "src", "image", "image_url")
                                 .mapNotNull { key ->
-                                    item.optString(key)
-                                        .takeIf { it.isNotBlank() && it != "null" }
+                                    (item.opt(key) as? String)
                                         ?.let { resolveSafeImage(it, apiUrl) }
                                 }
                                 .firstOrNull()
