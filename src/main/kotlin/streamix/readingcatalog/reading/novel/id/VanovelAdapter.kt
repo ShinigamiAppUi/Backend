@@ -16,5 +16,9 @@ class VanovelReadingRuntimeProvider(private val documentFetcher: ((String)->Docu
   val text=extractFirstReadingNovelText(doc, ".text-left, .text-right, .entry-content, .chapter-content, .chapter-text, .c-blog-post > div > div:nth-child(2)")
   text.takeIf(String::isNotBlank)?.let{ReadingContent(entry.kind,"reading-provider:$id",source.url,text=it,format="text")}
  }
- private fun valid(v:String)=novelHost(v,setOf("vanovel.com"))&&URI(v).path.isNotBlank()
+ private fun valid(v:String): Boolean = try {
+  novelHost(v,setOf("vanovel.com")) && !URI(v).path.isNullOrBlank()
+ } catch (_: Exception) {
+  false
+ }
 }
