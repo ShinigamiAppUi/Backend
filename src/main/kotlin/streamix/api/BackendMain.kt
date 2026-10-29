@@ -188,6 +188,9 @@ import streamix.readingcatalog.Manhwa18TodayReadingRuntimeProvider
 import streamix.readingcatalog.Manhwa18TXReadingRuntimeProvider
 import streamix.readingcatalog.ManhwaComicsReadingRuntimeProvider
 import streamix.readingcatalog.Manhwa18ReadingRuntimeProvider
+import streamix.readingcatalog.KomiktapManhuaReadingRuntimeProvider
+import streamix.readingcatalog.KomikmuManhuaReadingRuntimeProvider
+import streamix.readingcatalog.ManhwaReadsReadingRuntimeProvider
 import streamix.readingcatalog.ReadingProviderRuntimeRace
 import streamix.readingcatalog.ReadingRuntimeProvider
 import streamix.readingcatalog.ReadingSourceType
@@ -200,6 +203,9 @@ import kotlin.io.path.createDirectories
 internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
     val providers = listOf(
         MangaDexReadingRuntimeProvider(),
+        ManhwaReadsReadingRuntimeProvider(),
+        KomikmuManhuaReadingRuntimeProvider(),
+        KomiktapManhuaReadingRuntimeProvider(),
         Manhwa18ReadingRuntimeProvider(),
         ManhwaComicsReadingRuntimeProvider(),
         Manhwa18TXReadingRuntimeProvider(),
@@ -388,6 +394,9 @@ internal fun canonicalReadingProviderId(rawProviderId: String): String =
         "mangadex-manhwa", "mangadex-manhua" -> "mangadex"
         "weebcentral-manhwa" -> "weebcentral"
         "new-manhwa" -> "saymanhwa"
+        "komiku.com", "komiku-com" -> "komiku-asia"
+        "mangaread.org", "manga-read-org" -> "mangaread"
+        "comick-fanmade", "comick-fan-made" -> "comick"
         "comick-unoriginal" -> "comick"
         "bbato" -> "bato"
         else -> rawProviderId.trim()
