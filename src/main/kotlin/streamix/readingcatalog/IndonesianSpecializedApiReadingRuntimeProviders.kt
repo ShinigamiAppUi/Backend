@@ -66,23 +66,30 @@ class RiztranslationReadingRuntimeProvider(private val responseFetcher: ((String
         val body = try { responseFetcher?.invoke(apiUrl, headers) ?: if (responseFetcher == null) fetch(apiUrl, headers) else null } catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled } catch (_: Exception) { null } ?: return@withContext null
         val images = runCatching {
             val rows = JSONArray(body)
-            if (rows.length() == 0) return@runCatching emptyList<String>()
-            val raw = rows.getJSONObject(0).opt("isigambar")
-            when (raw) {
-                is JSONArray -> (0 until raw.length()).mapNotNull { raw.optString(it).takeIf { u -> u.isNotBlank() }?.takeIf(::validImage) }
-                is String -> {
-                    // The API has returned both a JSON-encoded array and a single image URL.
-                    // Preserve the single-URL form instead of treating every non-array string
-                    // as an empty chapter.
-                    val parsedArray = runCatching { JSONArray(raw) }.getOrNull()
-                    if (parsedArray != null) {
-                        (0 until parsedArray.length()).mapNotNull { parsedArray.optString(it).takeIf { u -> u.isNotBlank() }?.takeIf(::validImage) }
-                    } else {
-                        raw.trim().takeIf(::validImage)?.let(::listOf).orEmpty()
-                    }
+            // PostgREST normally returns one row for an ID filter. Still skip malformed or
+            // unusable rows instead of letting the first bad row mask a later usable result.
+            (0 until rows.length()).asSequence()
+                .mapNotNull { index -> rows.optJSONObject(index)?.opt("isigambar") }
+                .mapNotNull { raw ->
+                    when (raw) {
+                        is JSONArray -> (0 until raw.length()).mapNotNull { raw.optString(it).trim().takeIf { u -> u.isNotBlank() }?.takeIf(::validImage) }
+                        is String -> {
+                            // The API has returned both a JSON-encoded array and a single image URL.
+                            // Preserve the single-URL form instead of treating every non-array string
+                            // as an empty chapter.
+                            val value = raw.trim()
+                            val parsedArray = runCatching { JSONArray(value) }.getOrNull()
+                            if (parsedArray != null) {
+                                (0 until parsedArray.length()).mapNotNull { parsedArray.optString(it).trim().takeIf { u -> u.isNotBlank() }?.takeIf(::validImage) }
+                            } else {
+                                value.takeIf(::validImage)?.let(::listOf).orEmpty()
+                            }
+                        }
+                        else -> emptyList()
+                    }.normalizedReadingPageUrls().takeIf { it.isNotEmpty() }
                 }
-                else -> emptyList()
-            }
+                .firstOrNull()
+                .orEmpty()
         }.getOrNull().orEmpty().normalizedReadingPageUrls()
         images.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:riztranslation", source.url, it, format = "image-pages") }
     }
