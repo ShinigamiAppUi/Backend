@@ -46,7 +46,12 @@ class BacamiReadingRuntimeProvider(private val documentFetcher: ((String) -> Doc
         val raw = Regex("""imageUrls\s*:\s*(\[[\s\S]*?\])""").find(script)?.groupValues?.get(1)
             ?: return@withContext null
         val values = runCatching { JsonParser.parseString(raw).asJsonArray }.getOrNull() ?: return@withContext null
-        val pages = values.mapNotNull { it.takeIf { v -> v.isJsonPrimitive }?.asString?.takeIf(::validImage) }.distinct()
+        val pages = values.mapNotNull { value ->
+            val rawImage = value.takeIf { it.isJsonPrimitive }?.asString?.takeIf(String::isNotBlank)
+                ?: return@mapNotNull null
+            runCatching { URI(source.url).resolve(rawImage).toString() }.getOrNull()
+                ?.takeIf(::validImage)
+        }.distinct()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
     private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("v1.bacami.site", true) && it.path.contains("chapter", true) } }.getOrDefault(false)
