@@ -1,6 +1,7 @@
 package streamix.catalog
 
 import java.io.ByteArrayOutputStream
+import java.io.IOException
 import java.net.InetAddress
 import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
@@ -116,7 +117,12 @@ internal class CatalogPinnedStreamixHttp(
         }
         client.newBuilder().callTimeout(timeoutMs.coerceAtLeast(1), TimeUnit.MILLISECONDS).build()
             .newCall(builder.build()).execute().use { response ->
-                val text = response.body?.string().orEmpty()
+                val body = response.body
+                val declaredLength = body?.contentLength() ?: -1L
+                if (declaredLength > MAX_CATALOG_HTTP_RESPONSE_BYTES) {
+                    throw IOException("catalog HTTP response exceeds the configured size limit")
+                }
+                val text = body?.byteStream()?.use { readBoundedCatalogResponse(it, MAX_CATALOG_HTTP_RESPONSE_BYTES) }?.toString(Charsets.UTF_8).orEmpty()
                 val responseCookies = response.headers.values("Set-Cookie").mapNotNull { value ->
                     value.substringBefore(';').split('=', limit = 2)
                         .takeIf { it.size == 2 }?.let { it[0].trim() to it[1].trim() }
@@ -230,5 +236,26 @@ internal class CatalogCookieJar : CookieJar {
         val now = System.currentTimeMillis()
         cookies.removeAll { it.expiresAt < now }
         cookies.filter { it.matches(url) }
+    }
+}
+
+
+internal const val MAX_CATALOG_HTTP_RESPONSE_BYTES = 4 * 1024 * 1024
+
+/**
+ * Reads at most [maxBytes], using one extra byte to detect an oversized response
+ * even when the upstream omits Content-Length or streams a chunked body.
+ */
+internal fun readBoundedCatalogResponse(input: java.io.InputStream, maxBytes: Int): ByteArray? {
+    require(maxBytes > 0) { "maxBytes must be positive" }
+    val output = ByteArrayOutputStream(minOf(maxBytes, 8192))
+    val buffer = ByteArray(8192)
+    while (true) {
+        val remaining = maxBytes - output.size()
+        val count = input.read(buffer, 0, minOf(buffer.size, remaining + 1))
+        if (count < 0) return output.toByteArray()
+        if (count == 0) continue
+        if (count > remaining) return null
+        output.write(buffer, 0, count)
     }
 }
