@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current batch:** Batch 1 — Manga / Indonesian (`MANGA` / `id`)
 - **Batch status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `79fe422120aca53fde7b49c15c1713adfe8e7ca5` — require HTTPS chapter URLs in four Indonesian Manga adapters
+- **Latest confirmed code commit:** `f118116306ab479bdae03064e0fcf759e3c30000` — require HTTPS chapter URLs across Indonesian Manga adapters
 - **Next concrete action:** continue source-by-source audit and implementation for the 25 Indonesian manga providers below. Do not start a new language batch until this batch's feasible implementations have been completed and its inventory reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** the changes so far tighten content-kind dispatch/chapter boundaries only. They do **not** mean the source-specific parser work is complete or that these adapters are fully implemented.
@@ -30,6 +30,8 @@
 | 8 | Novel | English (`en`) | `NOT_STARTED` | Reconcile the English novel inventory in `READING_MANGA_ARCHITECTURE.md`. |
 
 ## Latest implementation note — 2026-10-29
+
+- Extended the shared HTTPS-only chapter URL guard across 21 Indonesian Manga adapters in five provider files: Komiku, Bacami, KomikIndoID, KlikManga, Kiryuu, KomikStation, Apkomik, LepoyTL, BacaKomik, MangaCanBlog, Mangalay, NgamenKomik, Ngomik, OkyyKomik, ShiyuraSub, Komiku.asia, Siikomik, NarasiNinja, WestManga, Riztranslation, and MikoRoku. This removes the previous acceptance of HTTP URLs and explicit port 80 while preserving each adapter's host/path checks. Code commits: `79fe422120aca53fde7b49c15c1713adfe8e7ca5`, `c1632644b9de03629e5c4f95d18c4d5fa81775b1`, `f01c9c790009f93945c62aaf8ed59536827efff9`, `28c13d49bf22f930c6f5568ac86b88ee6bc22145`, `f118116306ab479bdae03064e0fcf759e3c30000`. Tests/build/CI remain deferred; no live-source behavior is claimed.
 
 - Tightened chapter URL validation for Komiku, Bacami, KomikIndoID, and KlikManga by switching to the shared `isSafeReadingChapterUrl()` guard. These adapters now require HTTPS, reject credentials and non-default ports, and retain their provider-specific host/path constraints; HTTP port 80 is no longer accepted. Code commit: `79fe422120aca53fde7b49c15c1713adfe8e7ca5`. Tests/build/CI remain deferred; this is not live verification.
 
