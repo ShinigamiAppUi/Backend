@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current batch:** Batch 1 — Manga / Indonesian (`MANGA` / `id`)
 - **Batch status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `f118116306ab479bdae03064e0fcf759e3c30000` — require HTTPS chapter URLs across Indonesian Manga adapters
+- **Latest confirmed code commit:** `3d5852307c9a2d96d4c75601b80e655efc345147` — parse nested Bacami image URL arrays
 - **Next concrete action:** continue source-by-source audit and implementation for the 25 Indonesian manga providers below. Do not start a new language batch until this batch's feasible implementations have been completed and its inventory reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** the changes so far tighten content-kind dispatch/chapter boundaries only. They do **not** mean the source-specific parser work is complete or that these adapters are fully implemented.
@@ -30,6 +30,8 @@
 | 8 | Novel | English (`en`) | `NOT_STARTED` | Reconcile the English novel inventory in `READING_MANGA_ARCHITECTURE.md`. |
 
 ## Latest implementation note — 2026-10-29
+
+- Hardened Bacami `imageUrls` parsing: scan all script blocks for a parseable JSON array with usable string entries, and extract balanced arrays while respecting quoted strings/escapes instead of stopping at the first `]`. Code commit: `3d5852307c9a2d96d4c75601b80e655efc345147`. Tests/build/CI and live-source validation remain deferred.
 
 - Extended the shared HTTPS-only chapter URL guard across 21 Indonesian Manga adapters in five provider files: Komiku, Bacami, KomikIndoID, KlikManga, Kiryuu, KomikStation, Apkomik, LepoyTL, BacaKomik, MangaCanBlog, Mangalay, NgamenKomik, Ngomik, OkyyKomik, ShiyuraSub, Komiku.asia, Siikomik, NarasiNinja, WestManga, Riztranslation, and MikoRoku. This removes the previous acceptance of HTTP URLs and explicit port 80 while preserving each adapter's host/path checks. Code commits: `79fe422120aca53fde7b49c15c1713adfe8e7ca5`, `c1632644b9de03629e5c4f95d18c4d5fa81775b1`, `f01c9c790009f93945c62aaf8ed59536827efff9`, `28c13d49bf22f930c6f5568ac86b88ee6bc22145`, `f118116306ab479bdae03064e0fcf759e3c30000`. Tests/build/CI remain deferred; no live-source behavior is claimed.
 
@@ -197,3 +199,4 @@ For each batch, check these in order:
 | 2026-10-29 | Manga / Indonesian | KomikNesia now contains unexpected fetcher/API exceptions as a failed chapter fetch while preserving coroutine cancellation. | `ca27f0e8d4b0d2a1e0b0b89231b5018f97bc7391` | Failure-boundary reliability fix; no fixture/build/CI run yet. |
 | 2026-10-29 | Manga / Indonesian | Updated Mangalay's stale class comment to describe preserving `.separator` reader images in document order rather than assuming the last image is navigation. | `2dd9e5aeb0dcac118c58c32adbb11023fea8b314` | Documentation-only code comment alignment; no tests/build/CI run. |
 | 2026-10-29 | Manga / Indonesian | Enforced shared HTTPS-only chapter URL validation across 21 Indonesian Manga adapters; removed HTTP/port-80 acceptance while preserving site-specific host/path checks. | `f118116306ab479bdae03064e0fcf759e3c30000` (latest code); related commits: `79fe422120aca53fde7b49c15c1713adfe8e7ca5`, `c1632644b9de03629e5c4f95d18c4d5fa81775b1`, `f01c9c790009f93945c62aaf8ed59536827efff9`, `28c13d49bf22f930c6f5568ac86b88ee6bc22145` | Source guard verified by re-fetching all five provider files; tests/build/CI and live-source checks remain deferred. |
+| 2026-10-29 | Manga / Indonesian | Bacami now scans script blocks for a parseable `imageUrls` array and extracts balanced nested arrays safely. | `3d5852307c9a2d96d4c75601b80e655efc345147` | Code re-fetched; parser tests/build/CI and live-source validation still pending. |
