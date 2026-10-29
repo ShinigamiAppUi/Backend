@@ -16,8 +16,15 @@ class BacaKomikReadingRuntimeProvider(private val documentFetcher: ((String) -> 
         val doc = runCatching { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null }.getOrNull() ?: return@withContext null
         val pages = doc.select("div:has(>img[alt*=Chapter]) img").filter { it.parent()?.tagName() != "noscript" }.mapNotNull { img ->
             val fallback = Regex("""src=['"]([^'"]+)['"]""").find(img.attr("onerror"))?.groupValues?.get(1)
-            sequenceOf(fallback, img.attr("data-lazy-src"), img.attr("data-src"), img.attr("data-original"), img.attr("src")).filterNotNull().map(String::trim).firstNotNullOfOrNull { it.takeIf { v -> v.isNotBlank() && !v.startsWith("data:") } }
-                ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }?.takeIf(::validImage)
+            sequenceOf(fallback, img.attr("data-lazy-src"), img.attr("data-src"), img.attr("data-original"), img.attr("src"))
+                .filterNotNull()
+                .map(String::trim)
+                .mapNotNull { raw ->
+                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:") }
+                        ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }
+                        ?.takeIf(::validImage)
+                }
+                .firstOrNull()
         }.distinct()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
