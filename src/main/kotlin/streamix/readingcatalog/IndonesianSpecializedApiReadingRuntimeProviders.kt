@@ -137,10 +137,13 @@ class MikoRokuReadingRuntimeProvider(private val responseFetcher: ((String) -> S
             val a = value?.optJSONObject("arrayValue")?.optJSONArray("values") ?: return emptyList()
             return (0 until a.length()).mapNotNull { i -> a.optJSONObject(i)?.optString("stringValue")?.takeIf(::validImage) }
         }
-        val direct = list(fields.optJSONObject("images"))
+        // Prefer direct images only when they survive shared normalization. A non-empty
+        // array may still contain only duplicate/unsafe entries; in that case inspect the
+        // chapter-specific nested map instead of letting the unusable direct field mask it.
+        val direct = list(fields.optJSONObject("images")).normalizedReadingPageUrls()
         if (direct.isNotEmpty()) return direct
         val nested = fields.optJSONObject("chapters")?.optJSONObject("mapValue")?.optJSONObject("fields")?.optJSONObject(key)?.optJSONObject("mapValue")?.optJSONObject("fields")
-        return list(nested?.optJSONObject("images"))
+        return list(nested?.optJSONObject("images")).normalizedReadingPageUrls()
     }
     private fun validImage(value: String) = isSafeReadingImageUrl(value)
     private fun fetch(value: String): String? = ReadingHttpTransport.getText(
