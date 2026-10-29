@@ -61,7 +61,7 @@ class IndonesianManhwaGapAdapterTest {
             Jsoup.parse("""<div id="Baca_Komik"><img data-src="/komiku-page.webp"></div>""", url)
         }
         val ch = chapter("komiku-manhwa", "https://komiku.org/title/chapter-1")
-        assertEquals(listOf("https://komiku.org/title/komiku-page.webp"), provider.chapter(entry(), ch)?.pageUrls)
+        assertEquals(listOf("https://komiku.org/komiku-page.webp"), provider.chapter(entry(), ch)?.pageUrls)
         assertNull(provider.chapter(entry(ReadingKind.MANGA), ch))
     }
 
