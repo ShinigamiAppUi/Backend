@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current batch:** Batch 1 — Manga / Indonesian (`MANGA` / `id`)
 - **Batch status:** `IN_PROGRESS`
-- **Latest confirmed code commit: `d1c5bbe13c68155161345e5c8520e3863d718ffd`
+- **Latest confirmed code commit: `bb453e5aca031468303ca1185fb64e9989f48c76`
 - **Next concrete action:** continue source-by-source audit and implementation for the 25 Indonesian manga providers below. Do not start a new language batch until this batch's feasible implementations have been completed and its inventory reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
@@ -143,6 +143,8 @@ The class names and paths below were checked in this repository. Canonical URLs 
 | `west-manga` / `WestMangaReadingRuntimeProvider` | Needs source-specific canonical URL/reference review; code allowlist is not live proof | Manga | Indonesian (inventory label; verify chapter content) | `PARTIAL` | `IN_PROGRESS` | Not run — deferred | Not run — deferred | `src/main/kotlin/streamix/readingcatalog/IndonesianSpecializedApiReadingRuntimeProviders.kt` | Complete per-site parser/source-reference audit; record evidence and remaining work | Content-kind boundary pass only; not counted as fully implemented. |
 
 ## Changes made on this branch so far
+
+- 2026-10-29 — MikoRoku Firestore image extraction now accepts `stringValue` only when the JSON field is actually a string, rather than coercing unexpected JSON types with `optString()`. Trimming, blank rejection, safe-image validation, normalized deduplication, and fallback to nested chapter images remain intact. Code commit: `bb453e5aca031468303ca1185fb64e9989f48c76`; fixture tests/build/CI/live validation remain deferred.
 
 - 2026-10-29 — Komiku.asia API page objects now accept image candidates only when the JSON field is actually a string. The previous `optString()` path could coerce numbers/objects into text before URL validation. Candidate strings still use the existing trim, null/blank rejection, base-URL resolution, and safe-image validator. Code commit: `d1c5bbe13c68155161345e5c8520e3863d718ffd`; fixture tests/build/CI/live validation remain deferred.
 
