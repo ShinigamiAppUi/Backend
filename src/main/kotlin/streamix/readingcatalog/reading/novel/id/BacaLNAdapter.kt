@@ -39,6 +39,9 @@ class BacaLNReadingRuntimeProvider(private val documentFetcher: ((String) -> Doc
             }
         }
 
-    private fun validChapterUrl(value: String): Boolean =
-        novelHost(value, setOf("bacaln.com")) && runCatching { URI(value).path.isNotBlank() }.getOrDefault(false)
+    private fun validChapterUrl(value: String): Boolean = try {
+        novelHost(value, setOf("bacaln.com")) && URI(value).path.isNotBlank()
+    } catch (_: Exception) {
+        false
+    }
 }
