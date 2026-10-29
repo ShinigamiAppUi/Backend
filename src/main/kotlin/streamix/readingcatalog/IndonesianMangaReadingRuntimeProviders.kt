@@ -27,7 +27,13 @@ class KomikuReadingRuntimeProvider(private val documentFetcher: ((String) -> Doc
         }.distinct()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
-    private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && (it.host.equals("komiku.org", true) || it.host.equals("komikid.org", true) || it.host.equals("komiku.to", true)) && it.path.isNotBlank() } }.getOrDefault(false)
+    private fun validChapter(value: String) = runCatching {
+        URI(value).let {
+            isSafeReadingHttpUrl(value) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80) &&
+                (it.host.equals("komiku.org", true) || it.host.equals("komikid.org", true) || it.host.equals("komiku.to", true)) &&
+                it.path.isNotBlank()
+        }
+    }.getOrDefault(false)
     private fun validImage(value: String) = isSafeReadingImageUrl(value)
     private fun fetch(value: String): Document? = fetchIndonesianReadingDocument(value)
 }
