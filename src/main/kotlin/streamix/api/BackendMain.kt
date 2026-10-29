@@ -102,7 +102,7 @@ import streamix.readingcatalog.MeioNovelReadingRuntimeProvider
 import streamix.readingcatalog.SakuraNovelReadingRuntimeProvider
 import streamix.readingcatalog.SekteNovelReadingRuntimeProvider
 import streamix.readingcatalog.VanovelReadingRuntimeProvider
-import streamix.readingcatalog.WBNoveReadingRuntimeProvider
+import streamix.readingcatalog.WBNovelReadingRuntimeProvider
 import streamix.readingcatalog.WestMangaReadingRuntimeProvider
 import streamix.readingcatalog.RiztranslationReadingRuntimeProvider
 import streamix.readingcatalog.MikoRokuReadingRuntimeProvider
@@ -422,7 +422,7 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         SakuraNovelReadingRuntimeProvider(),
         SekteNovelReadingRuntimeProvider(),
         VanovelReadingRuntimeProvider(),
-        WBNoveReadingRuntimeProvider(),
+        WBNovelReadingRuntimeProvider(),
         WestMangaReadingRuntimeProvider(),
         RiztranslationReadingRuntimeProvider(),
         MikoRokuReadingRuntimeProvider(),
