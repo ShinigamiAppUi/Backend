@@ -16,5 +16,9 @@ class MtlNovelIdReadingRuntimeProvider(private val documentFetcher: ((String)->D
   val text=extractFirstReadingNovelText(doc, "div.par")
   text.takeIf(String::isNotBlank)?.let{ReadingContent(entry.kind,"reading-provider:$id",source.url,text=it,format="text")}
  }
- private fun valid(v:String)=novelHost(v,setOf("mtlnovel.me"))&&URI(v).path.isNotBlank()
+ private fun valid(v: String): Boolean = try {
+  novelHost(v, setOf("mtlnovel.me")) && URI(v).path.isNotBlank()
+ } catch (_: Exception) {
+  false
+ }
 }
