@@ -22,7 +22,7 @@ class KomikNesiaReadingRuntimeProvider(
     private val apiBase = "https://api-be.komiknesia.my.id/api"
 
     override fun supports(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): Boolean =
-        entry.kind != ReadingKind.NOVEL && chapter.sources.any {
+        entry.kind == ReadingKind.MANGA && chapter.sources.any {
             it.enabled && it.providerId.equals(id, true) && slug(it.url) != null
         }
 
