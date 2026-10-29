@@ -89,6 +89,7 @@ import streamix.readingcatalog.BacamiReadingRuntimeProvider
 import streamix.readingcatalog.KomikIndoIdReadingRuntimeProvider
 import streamix.readingcatalog.KlikMangaReadingRuntimeProvider
 import streamix.readingcatalog.ManhwaIndoReadingRuntimeProvider
+import streamix.readingcatalog.HiperdexReadingRuntimeProvider
 import streamix.readingcatalog.HolotoonReadingRuntimeProvider
 import streamix.readingcatalog.HwagoReadingRuntimeProvider
 import streamix.readingcatalog.LumosKomikReadingRuntimeProvider
@@ -353,6 +354,7 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         KlikMangaReadingRuntimeProvider(),
         ManhwaIndoReadingRuntimeProvider(),
         HolotoonReadingRuntimeProvider(),
+        HiperdexReadingRuntimeProvider(),
         HwagoReadingRuntimeProvider(),
         LumosKomikReadingRuntimeProvider(),
         NatsuReadingRuntimeProvider(),
