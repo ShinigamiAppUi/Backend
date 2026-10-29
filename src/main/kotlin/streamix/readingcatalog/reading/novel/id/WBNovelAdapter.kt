@@ -16,5 +16,9 @@ class WBNovelReadingRuntimeProvider(private val documentFetcher: ((String)->Docu
   val text=extractFirstReadingNovelText(doc, ".text-left, .text-right, .entry-content, .c-blog-post > div > div:nth-child(2)")
   text.takeIf(String::isNotBlank)?.let{ReadingContent(entry.kind,"reading-provider:$id",source.url,text=it,format="text")}
  }
- private fun valid(v:String)=novelHost(v,setOf("wbnovel.com","wbnove.com"))&&URI(v).path.isNotBlank()
+ private fun valid(v: String): Boolean = try {
+  novelHost(v, setOf("wbnovel.com", "wbnove.com")) && URI(v).path.isNotBlank()
+ } catch (_: Exception) {
+  false
+ }
 }
