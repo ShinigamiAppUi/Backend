@@ -52,7 +52,7 @@ class ManhuaUSReadingRuntimeProvider(private val documentFetcher: ((String) -> D
 
     private fun validChapterUrl(value: String): Boolean = isSafeReadingChapterUrl(
         value,
-        setOf("manhuaus.club", "www.manhuaus.club")
+        setOf("manhuaus.com", "www.manhuaus.com", "manhuaus.club", "www.manhuaus.club")
     ) { path ->
         path.contains("/chapter", ignoreCase = true) || path.contains("/chapters/", ignoreCase = true)
     }
