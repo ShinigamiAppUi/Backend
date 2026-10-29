@@ -15,7 +15,7 @@ class BacaKomikReadingRuntimeProvider(private val documentFetcher: ((String) -> 
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) } ?: return@withContext null
         val doc = runCatching { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null }.getOrNull() ?: return@withContext null
         val pages = doc.select("div:has(>img[alt*=Chapter]) img").filter { it.parent()?.tagName() != "noscript" }.mapNotNull { img ->
-            val fallback = Regex("""src='([^']+)'""").find(img.attr("onerror"))?.groupValues?.get(1)
+            val fallback = Regex("""src=['"]([^'"]+)['"]""").find(img.attr("onerror"))?.groupValues?.get(1)
             sequenceOf(fallback, img.attr("data-lazy-src"), img.attr("data-src"), img.attr("data-original"), img.attr("src")).filterNotNull().map(String::trim).firstNotNullOfOrNull { it.takeIf { v -> v.isNotBlank() && !v.startsWith("data:") } }
                 ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }?.takeIf(::validImage)
         }.distinct()
