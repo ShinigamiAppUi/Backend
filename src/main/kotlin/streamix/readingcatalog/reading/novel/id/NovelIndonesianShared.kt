@@ -5,7 +5,7 @@ import org.jsoup.nodes.Document
 internal fun novelHost(value: String, hosts: Set<String>): Boolean =
     runCatching {
         java.net.URI(value).let {
-            it.scheme == "https" &&
+            it.scheme.equals("https", ignoreCase = true) &&
                 hosts.any { host -> it.host.equals(host, true) } &&
                 it.userInfo == null &&
                 it.port in setOf(-1, 443)
