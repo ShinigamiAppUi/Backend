@@ -13,6 +13,7 @@ import streamix.readingcatalog.FileReadingCatalogRepository
 import streamix.readingcatalog.ReadingCatalogService
 import streamix.readingcatalog.ReadingChapterEntry
 import streamix.readingcatalog.ReadingChapterSource
+import streamix.readingcatalog.ReadingKind
 import streamix.readingcatalog.VoraToonReadingRuntimeProvider
 import streamix.readingcatalog.ComicasoReadingRuntimeProvider
 import streamix.readingcatalog.TheMangaReadingRuntimeProvider
