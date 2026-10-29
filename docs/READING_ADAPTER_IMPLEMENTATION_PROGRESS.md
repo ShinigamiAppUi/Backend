@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current batch:** Batch 1 — Manga / Indonesian (`MANGA` / `id`)
 - **Batch status:** `IN_PROGRESS`
-- **Latest confirmed code commit: `0f6f9ae3fc9e16fce089d0d28893a83aa6998541`
+- **Latest confirmed code commit:** `269540fd689b598d785b11a2e21120f87ff57526`
 - **Next concrete action:** continue source-by-source audit and implementation for the 25 Indonesian manga providers below. Do not start a new language batch until this batch's feasible implementations have been completed and its inventory reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
@@ -30,6 +30,8 @@
 | 8 | Novel | English (`en`) | `NOT_STARTED` | Reconcile the English novel inventory in `READING_MANGA_ARCHITECTURE.md`. |
 
 ## Latest implementation note — 2026-10-29
+
+- Began enforcing the per-site file layout requested for easier maintenance. Split the eight existing Indonesian novel provider classes into individual `reading/novel/id/*Adapter.kt` files and moved shared Indonesian novel URL/fetch helpers to `NovelIndonesianShared.kt`. Also split WebNovel, WuxiaWorld, NovelCool, Baca Light Novel, and J-Novel Club into individual language-bucket files (Baca Light Novel under `id/`; the English-language sources under `en/`). Provider class names and IDs are unchanged; no registry changes were intended. Code changes are being committed together with this note. Tests/build/CI remain deferred.
 
 - Adapter source files are now named with content type first and language second, without changing Kotlin package names, provider class names, provider IDs, parser behavior, or registration. Renamed files cover Manga Indonesian/English, Manhwa Indonesian/English, and Novel Indonesian. See `docs/READING_ADAPTER_LAYOUT.md` for the naming contract and the eight content/language buckets. Manhua Indonesian/English and Novel English remain planned work; existing mixed/shared files must be reconciled during the source audit before being moved. Code refactor commit: `0f6f9ae3fc9e16fce089d0d28893a83aa6998541`. No build, tests, CI, or live validation has been run.
 

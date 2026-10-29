@@ -5,71 +5,10 @@ import org.jsoup.nodes.Document
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-/** WebNovel chapter adapter: extracts the novel's chapter_content text, not a generic page body. */
-class WebNovelReadingRuntimeProvider(private val documentFetcher: ((String) -> Document?)? = null) : ReadingRuntimeProvider {
-    override val id = "webnovel"
-    override fun supports(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry) =
-        entry.kind == ReadingKind.NOVEL && chapter.sources.any { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) }
-    override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
-        if (entry.kind != ReadingKind.NOVEL) return@withContext null
-        val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) } ?: return@withContext null
-        val doc = runCatching { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null }.getOrNull() ?: return@withContext null
-        val text = extractFirstReadingNovelText(doc, ".chapter_content, .cha-content")
-        text.takeIf(String::isNotBlank)?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, text = it, format = "text") }
-    }
-    private fun validChapter(value: String) = runCatching { URI(value).let { it.scheme == "https" && it.host.equals("www.webnovel.com", true) && it.userInfo == null && it.port in setOf(-1, 443) && it.path.contains("/chapter-", true) } }.getOrDefault(false)
-    private fun fetch(value: String): Document? = fetchNovelDocument(value)
-}
 
-/** WuxiaWorld chapter adapter reads the site's chapter-content article. */
-class WuxiaWorldReadingRuntimeProvider(private val documentFetcher: ((String) -> Document?)? = null) : ReadingRuntimeProvider {
-    override val id = "wuxiaworld"
-    override fun supports(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry) =
-        entry.kind == ReadingKind.NOVEL && chapter.sources.any { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) }
-    override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
-        if (entry.kind != ReadingKind.NOVEL) return@withContext null
-        val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) } ?: return@withContext null
-        val doc = runCatching { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null }.getOrNull() ?: return@withContext null
-        val text = extractFirstReadingNovelText(doc, "#chapter-content, .chapter-content")
-        text.takeIf(String::isNotBlank)?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, text = it, format = "text") }
-    }
-    private fun validChapter(value: String) = runCatching { URI(value).let { it.scheme == "https" && it.host.equals("www.wuxiaworld.com", true) && it.userInfo == null && it.port in setOf(-1, 443) && it.path.contains("/chapter", true) } }.getOrDefault(false)
-    private fun fetch(value: String): Document? = fetchNovelDocument(value)
-}
 
-/** Baca Light Novel extracts the article body used by its chapter pages. */
-class BacaLightNovelReadingRuntimeProvider(private val documentFetcher: ((String) -> Document?)? = null) : ReadingRuntimeProvider {
-    override val id = "baca-light-novel"
-    override fun supports(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry) =
-        entry.kind == ReadingKind.NOVEL && chapter.sources.any { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) }
-    override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
-        if (entry.kind != ReadingKind.NOVEL) return@withContext null
-        val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) } ?: return@withContext null
-        val doc = runCatching { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null }.getOrNull() ?: return@withContext null
-        val text = extractFirstReadingNovelText(doc, ".epcontent, .entry-content, .post-content")
-        text.takeIf(String::isNotBlank)?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, text = it, format = "text") }
-    }
-    private fun validChapter(value: String) = runCatching { URI(value).let { it.scheme == "https" && (it.host.equals("bacalightnovel.co", true) || it.host.equals("bacalightnovel.com", true)) && it.userInfo == null && it.port in setOf(-1, 443) && it.path.isNotBlank() } }.getOrDefault(false)
-    private fun fetch(value: String): Document? = fetchNovelDocument(value)
-}
 
-/** NovelCool chapter adapter uses its dedicated text container. */
-class NovelCoolReadingRuntimeProvider(private val documentFetcher: ((String) -> Document?)? = null) : ReadingRuntimeProvider {
-    override val id = "novelcool"
-    override fun supports(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry) =
-        entry.kind == ReadingKind.NOVEL && chapter.sources.any { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) }
-    override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
-        if (entry.kind != ReadingKind.NOVEL) return@withContext null
-        val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) } ?: return@withContext null
-        val doc = runCatching { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null }.getOrNull() ?: return@withContext null
-        val text = extractFirstReadingNovelText(doc, "#content, .chapter-content, .txt")
-        text.takeIf(String::isNotBlank)?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, text = it, format = "text") }
-    }
-    private fun validChapter(value: String) = runCatching { URI(value).let { it.scheme == "https" && (it.host.equals("www.novelcool.com", true) || it.host.equals("novelcool.com", true)) && it.userInfo == null && it.port in setOf(-1, 443) && it.path.isNotBlank() } }.getOrDefault(false)
-    private fun fetch(value: String): Document? = fetchNovelDocument(value)
-}
-
-private fun fetchNovelDocument(value: String): Document? =
+internal fun fetchNovelDocument(value: String): Document? =
     fetchReadingHtmlDocument(
         value,
         mapOf("Accept" to "text/html,application/xhtml+xml"),

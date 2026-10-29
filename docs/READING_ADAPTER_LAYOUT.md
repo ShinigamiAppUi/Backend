@@ -97,3 +97,8 @@ Catalog remains source-URL configuration, not a duplicate metadata catalog. AniL
 3. Keep provider IDs stable and unique; do not copy a provider implementation into another language bucket unless that source genuinely serves that language and the behavior is audited.
 4. Register the provider through the existing runtime registration path.
 5. Record implementation, fixture, live-validation and CI evidence separately. Do not mark a batch `LOCKED` without proof.
+
+
+## Per-adapter file rule
+
+Use one provider class per site-specific adapter file, following the requested shape: `reading/<content-type>/<language>/<SiteName>Adapter.kt` (for example `reading/novel/id/BacaLightNovelAdapter.kt` and `reading/novel/en/RoyalRoadAdapter.kt`). Do not group unrelated sites into `*Providers.kt` files inside the language directories. Shared parsing/transport helpers stay in shared files and are not counted as adapters. Existing provider class names and IDs remain stable while the source files are split.
