@@ -14,9 +14,9 @@ class MangaNowReadingRuntimeProvider(private val documentFetcher: ((String) -> D
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) } ?: return@withContext null
         val doc = try { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null } catch (cancelled: CancellationException) { throw cancelled } catch (_: Exception) { null } ?: return@withContext null
         val pages = doc.select(".container-reader-chapter > .iv-card:not([data-url$=manganow.jpg])").mapNotNull { page ->
-            sequenceOf("data-url", "data-src", "data-original", "src").map(String::trim).firstNotNullOfOrNull { key -> page.attr(key).takeIf { it.isNotBlank() && !it.startsWith("data:") } }
+            sequenceOf("data-url", "data-src", "data-original", "src").map(String::trim).firstNotNullOfOrNull { key -> page.attr(key).takeIf { it.isNotBlank() && !it.startsWith("data:", ignoreCase = true) } }
                 ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }?.takeIf(::validImage)
-        }.distinct()
+        }.normalizedReadingPageUrls()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
     private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("manganow.to", true) && it.path.isNotBlank() } }.getOrDefault(false)
