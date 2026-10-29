@@ -1,5 +1,18 @@
 # Reading Adapter Implementation Progress
 
+## List-based implementation update — 2026-10-30
+
+- **User-provided source inventory — Indonesian Manhua candidates:** the supplied list names general Indonesian aggregators (Komikindo, KomikIndoID, KomikNesia, and APKOMIK) in addition to the three existing Manhua-ID adapters. Added dedicated MANHUA dispatch adapters by adapting each site's existing host validation and chapter-page/API parser, while using distinct provider IDs so Catalog source selection stays explicit:
+  - `KomikindoManhuaReadingRuntimeProvider` — `src/main/kotlin/streamix/readingcatalog/reading/manhua/id/KomikindoManhuaAdapter.kt`; code commit `617d5cf2bf89c16110f8d807a862dffbd129063f`.
+  - `KomikIndoIdManhuaReadingRuntimeProvider` — `src/main/kotlin/streamix/readingcatalog/reading/manhua/id/KomikIndoIdManhuaAdapter.kt`; code commit `264ba73ee7c0f3f16d1f7c2f50110a866962f6c6`.
+  - `KomikNesiaManhuaReadingRuntimeProvider` — `src/main/kotlin/streamix/readingcatalog/reading/manhua/id/KomikNesiaManhuaAdapter.kt`; code commit `b864d84e8c6ce7971762e24bb5876d061aed78ed`.
+  - `ApkomikManhuaReadingRuntimeProvider` — `src/main/kotlin/streamix/readingcatalog/reading/manhua/id/ApkomikManhuaAdapter.kt`; code commit `151a5b292237d46cadfc8385531d3ebdaedb10c4`.
+- Registered all four providers in `src/main/kotlin/streamix/api/BackendMain.kt`; registration commit `ff3548d3ead5a1b062c1185b499d591137075cc6`.
+- **Evidence boundary:** these are source-code adapters derived from existing per-site implementations and the user's candidate inventory; they are not evidence that each site currently hosts Indonesian manhua, that the canonical domains/selectors/API are live, or that pages resolve. No tests, build, CI, or live source checks were run. Keep all four in implementation-pending verification status; do not count them as `TESTED`.
+- **Inventory reconciliation note:** the listed Indonesian Novel sites (Baca Light Novel, IndoWebNovel, MeioNovel, MTL Novel ID, SakuraNovel, Sekte Novel, Vanovel, WBNovel) already have corresponding source files and registered providers in this branch. The English Novel inventory is also substantially represented by existing adapters. Do not add duplicate implementations merely for alternate display names. Items that function only as discovery/index directories (for example, Novel Updates / Light Novel Updates) should not be treated as chapter-content adapters unless a permitted chapter-text source is separately identified. “Dragon Tea” currently maps to a comic/manhwa adapter in this repository; do not count that as a prose-novel adapter without confirming a separate novel-content source.
+- The eight-group implementation sweep remains `IN_PROGRESS`; test/build/CI are still deferred until the feasible inventory pass across all groups is reconciled.
+
+
 > Source of truth for resumable, language-batched implementation of site-specific adapters for manga, manhwa, manhua, and novels in **ShinigamiAppUi/Backend**.
 >
 > Keep this ledger updated on every implementation commit and before handoff. Inventory, a class, or a registry entry is not proof that an adapter is complete or healthy.
