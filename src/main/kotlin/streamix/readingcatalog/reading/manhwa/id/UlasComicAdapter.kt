@@ -5,6 +5,7 @@ import java.net.URLEncoder
 import org.json.JSONObject
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -21,9 +22,13 @@ class UlasComicReadingRuntimeProvider(private val documentFetcher: ((String) -> 
         val source = chapter.sources.firstOrNull {
             it.enabled && it.providerId.equals(id, true) && validChapter(it.url)
         } ?: return@withContext null
-        val doc = runCatching {
+        val doc = try {
             if (documentFetcher != null) documentFetcher.invoke(source.url) else fetchDoc(source.url)
-        }.getOrNull() ?: return@withContext null
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (_: Exception) {
+            null
+        } ?: return@withContext null
         val direct = doc.select("div.check-box div.separator img, article div.separator img, .readerarea img")
             .mapNotNull { image ->
                 sequenceOf("data-src", "data-lazy-src", "data-original", "src").map { image.attr(it).trim() }
