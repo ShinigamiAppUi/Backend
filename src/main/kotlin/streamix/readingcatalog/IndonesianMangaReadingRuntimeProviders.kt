@@ -21,7 +21,7 @@ class KomikuReadingRuntimeProvider(private val documentFetcher: ((String) -> Doc
             sequenceOf("data-lazy-src", "data-src", "data-original", "src")
                 .map { key -> img.attr(key).trim() }
                 .firstNotNullOfOrNull { raw ->
-                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:") }
+                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:", ignoreCase = true) }
                         ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }
                         ?.takeIf(::validImage)
                 }
