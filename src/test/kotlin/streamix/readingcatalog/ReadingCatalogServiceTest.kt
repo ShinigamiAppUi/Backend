@@ -91,7 +91,7 @@ class ReadingCatalogServiceTest{
    FileReadingCatalogRepository(createTempDirectory("reading-language-filter").resolve("reading.json")),
    handlers=mapOf(ReadingSourceType.DIRECT to ReadingSourceHandler{_,_,source->
     attempted+=source.id
-    ReadingContent(ReadingKind.NOVEL,source.id,text="chapter from "+source.id)
+    if(source.id=="indonesian") null else ReadingContent(ReadingKind.NOVEL,source.id,text="chapter from "+source.id)
    })
   )
   val entry=service.putManual(ReadingCatalogEntry(
