@@ -34,6 +34,7 @@ class StreamixHttpServer(
     private val port: Int = 8080,
     private val gson: Gson = Gson(),
     private val aniListProxy: AniListGateway = AniListProxy(),
+    private val readingMetadata: ReadingMetadataGateway = AniListReadingMetadataProxy(),
     private val aniListReadingGateway: AniListReadingGateway = AniListReadingProxy(),
     private val externalIdentityVerifier: streamix.auth.ExternalIdentityVerifier? = null,
     private val viewCounts: EpisodeViewCountStore = EpisodeViewCountStore()
@@ -1655,6 +1656,44 @@ class StreamixHttpServer(
                     }
                     else -> respond(exchange, 404, mapOf("error" to "catalog route not found"))
                 }
+            }
+        }
+        http.createContext(BackendApiContract.READING_METADATA) { exchange ->
+            if (!method(exchange, "GET")) return@createContext
+            val suffix = exchange.requestURI.path.removePrefix(BackendApiContract.READING_METADATA).removePrefix("/")
+            when {
+                suffix == "search" -> {
+                    val searchQuery = query(exchange, "q")?.trim().orEmpty()
+                    if (searchQuery.isBlank()) return@createContext respond(exchange, 400, mapOf("error" to "q is required"))
+                    val rawKind = query(exchange, "kind")?.trim()?.uppercase(java.util.Locale.ROOT)
+                        ?: return@createContext respond(exchange, 400, mapOf("error" to "kind is required"))
+                    val kind = try {
+                        ReadingMetadataKind.valueOf(rawKind)
+                    } catch (_: IllegalArgumentException) {
+                        return@createContext respond(exchange, 400, mapOf("error" to "kind must be MANGA, MANHWA, MANHUA, or NOVEL"))
+                    }
+                    val page = query(exchange, "page")?.toIntOrNull()?.coerceAtLeast(1) ?: 1
+                    try {
+                        respond(exchange, 200, readingMetadata.search(searchQuery, kind, page))
+                    } catch (_: AniListReadingMetadataException) {
+                        respond(exchange, 502, mapOf("error" to "AniList reading metadata request failed"))
+                    } catch (_: Exception) {
+                        respond(exchange, 500, mapOf("error" to "internal server error"))
+                    }
+                }
+                suffix.toLongOrNull() != null -> {
+                    val id = suffix.toLong()
+                    try {
+                        val metadata = readingMetadata.detail(id)
+                        if (metadata == null) respond(exchange, 404, mapOf("error" to "reading metadata not found"))
+                        else respond(exchange, 200, metadata)
+                    } catch (_: AniListReadingMetadataException) {
+                        respond(exchange, 502, mapOf("error" to "AniList reading metadata request failed"))
+                    } catch (_: Exception) {
+                        respond(exchange, 500, mapOf("error" to "internal server error"))
+                    }
+                }
+                else -> respond(exchange, 404, mapOf("error" to "route not found"))
             }
         }
         http.createContext(BackendApiContract.SEARCH) { exchange ->
