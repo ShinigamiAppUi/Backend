@@ -31,6 +31,8 @@
 
 ## Latest implementation note — 2026-10-29
 
+- Updated KomikStation and Apkomik image extraction to validate each candidate before selection; an invalid first lazy/source attribute no longer blocks trying later safe attributes. Code commit: `3714158b625e550210fda7c89c7a822751aa133f` (`fix(reading): fall through invalid theme image candidates`).
+- Updated KlikManga image extraction with the same per-candidate validation and fallback behavior. Code commit: `60f2a2f53d20eb02ae3b471d6b76197ae0d51c34` (`fix(reading): fall through invalid KlikManga image candidates`).
 - Updated Kiryuu and LepoyTL image extraction to resolve and validate each lazy/source attribute before selecting it. A malformed or unsafe first attribute now falls through to later candidates. Code commit: `4f0154a10a5bc96db9f288081394c1e8c74859dd` (`fix(reading): validate each Indonesian theme image candidate`). This improves parser fallback behavior only; source-specific completeness and live health remain unverified.
 - Hardened the MangaCan and Ngomik reader parsers to validate each lazy/source image candidate before selection, rather than choosing the first non-empty attribute and rejecting it afterward. This preserves fallback to later safe attributes. Code commit: `429327d1ee9d1695adcbeae90445f0e134665ed3` (`fix(reading): validate each Blogger reader image candidate`).
 - Fixed BacaKomik image candidate selection: each fallback/lazy/source attribute is now resolved and validated before selection, so an unsafe or malformed earlier candidate does not block a later safe image URL. Code commit: `6048f1fd11954e6055354caa890dfa638e826137` (`fix(reading): try later safe BacaKomik image candidates`). This is a parser robustness fix, not full adapter verification.
@@ -142,6 +144,8 @@ For each batch, check these in order:
 
 | Date (UTC) | Batch | Change | Commit | Evidence / follow-up |
 |---|---|---|---|---|
+| 2026-10-29 | Manga / Indonesian | KomikStation and Apkomik now validate each reader image candidate before selection, allowing safe fallback after malformed/unsafe earlier attributes. | `3714158b625e550210fda7c89c7a822751aa133f` | Parser fallback improvement only; tests/build/CI deferred. |
+| 2026-10-29 | Manga / Indonesian | KlikManga now validates each lazy/source image candidate before selection and falls through to later safe attributes. | `60f2a2f53d20eb02ae3b471d6b76197ae0d51c34` | Parser fallback improvement only; tests/build/CI deferred. |
 | 2026-10-29 | Manga / Indonesian | Kiryuu and LepoyTL now resolve and validate each image attribute before choosing a candidate, preserving safe fallback to later attributes. | `4f0154a10a5bc96db9f288081394c1e8c74859dd` | Targeted parser robustness fix; no tests/build/CI run. |
 | 2026-10-29 | Manga / Indonesian | MangaCan and Ngomik now validate each image candidate before selection so later safe attributes remain usable when earlier values are malformed/unsafe. | `429327d1ee9d1695adcbeae90445f0e134665ed3` | Parser robustness update; tests/build/CI remain deferred. |
 | 2026-10-29 | Manga / Indonesian | BacaKomik now validates each fallback/lazy/source image candidate before selecting it, allowing later safe candidates after an unsafe/malformed earlier value. | `6048f1fd11954e6055354caa890dfa638e826137` | Targeted source-specific parser robustness fix; no tests/build/CI run. |
