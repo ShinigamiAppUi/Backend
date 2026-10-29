@@ -5,7 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class WBNoveReadingRuntimeProvider(private val documentFetcher: ((String)->Document?)?=null):ReadingRuntimeProvider{
- override val id="wbnove"
+ override val id="wbnovel"
  override fun supports(entry:ReadingCatalogEntry,chapter:ReadingChapterEntry)=entry.kind==ReadingKind.NOVEL&&chapter.sources.any{it.enabled&&it.providerId.equals(id,true)&&valid(it.url)}
  override suspend fun chapter(entry:ReadingCatalogEntry,chapter:ReadingChapterEntry):ReadingContent?=withContext(Dispatchers.IO){
   if(entry.kind!=ReadingKind.NOVEL)return@withContext null
