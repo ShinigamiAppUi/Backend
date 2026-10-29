@@ -58,12 +58,5 @@ internal fun isSafeReadingChapterUrl(value: String, allowedHosts: Set<String>, p
     }
 }.getOrDefault(false)
 
-/** Accepts only HTTPS image URLs without credentials or non-standard ports. */
-internal fun isSafeReadingImageUrl(value: String): Boolean = runCatching {
-    URI(value).let { uri ->
-        uri.scheme.equals("https", ignoreCase = true) &&
-            !uri.host.isNullOrBlank() &&
-            uri.userInfo == null &&
-            (uri.port == -1 || uri.port == 443)
-    }
-}.getOrDefault(false)
+/** Image URLs use the same public HTTPS destination policy as other reading HTTP targets. */
+internal fun isSafeReadingImageUrl(value: String): Boolean = isSafeReadingHttpUrl(value)
