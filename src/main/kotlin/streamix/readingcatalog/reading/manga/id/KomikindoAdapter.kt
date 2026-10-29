@@ -62,7 +62,7 @@ class KomikindoReadingRuntimeProvider(
             }
         }
 
-    private fun isValidChapterUrl(value: String): Boolean = runCatching {
+    private fun isValidChapterUrl(value: String): Boolean = try {
         URI(value).let { uri ->
             isSafeReadingHttpUrl(value) &&
                 uri.host.equals("komikindo4.link", true) &&
@@ -71,5 +71,7 @@ class KomikindoReadingRuntimeProvider(
                 !uri.path.isNullOrBlank() &&
                 (uri.path.contains("chapter", true) || uri.path.contains("/read/", true))
         }
-    }.getOrDefault(false)
+    } catch (_: Exception) {
+        false
+    }
 }
