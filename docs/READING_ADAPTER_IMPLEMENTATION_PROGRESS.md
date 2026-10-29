@@ -9,10 +9,10 @@
 - **Repository:** `ShinigamiAppUi/Backend`
 - **Working branch:** `feature/manga-manhwa-novel-foundation`
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
-- **Current batch:** Batch 1 — Manga / Indonesian (`MANGA` / `id`)
-- **Batch status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `73ca3281ec8d6d5d2b76fc443873ca6b44ae99a9`
-- **Next concrete action:** implement first-pass site-specific adapters for all feasible sites in `READING_MANGA_ARCHITECTURE.md` across the eight content/language groups, recording uncertain, duplicate, inaccessible, and metadata-only sources separately; defer cleanup and full test/build until this implementation pass is reconciled.
+- **Current pass:** Implementation-first sweep across all eight content/language groups; preserve the eight separate batch records and language boundaries.
+- **Pass status:** `IN_PROGRESS`
+- **Latest confirmed code commit:** `d3a7fffd17cb50dbcc04169b57eab03640d3c9da`
+- **Next concrete action:** continue the implementation-first sweep from `docs/READING_MANGA_ARCHITECTURE.md`, creating site-specific adapters and registering each one for every feasible inventory source across the eight content/language groups. Record duplicate, metadata-only, language-uncertain, inaccessible, and access-restricted sources explicitly; defer cleanup and full test/build until the inventory implementation pass is reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
 
@@ -174,6 +174,8 @@ The class names and paths below were checked in this repository. Canonical URLs 
 | `west-manga` / `WestMangaReadingRuntimeProvider` | Needs source-specific canonical URL/reference review; code allowlist is not live proof | Manga | Indonesian (inventory label; verify chapter content) | `PARTIAL` | `IN_PROGRESS` | Not run — deferred | Not run — deferred | `src/main/kotlin/streamix/readingcatalog/reading/manga/id/WestMangaAdapter.kt` | Complete per-site parser/source-reference audit; record evidence and remaining work | Content-kind boundary pass only; not counted as fully implemented. |
 
 ## Changes made on this branch so far
+
+- 2026-10-29 — Started the cross-inventory implementation-first sweep (without running full tests/build/CI). Added and registered five English Manhua site adapters in dedicated files: `ManhuaHotAdapter.kt`, `ManhuaNextAdapter.kt`, `ManhuaPlusAdapter.kt`, `ManhuaUSAdapter.kt`, and `ManhuaTopAdapter.kt`. The first four parse their source-specific reader markup; ManhuaTop uses its documented reader JSON endpoint with bounded page pagination and a 2-request/second pacing gate. ManhuaUS accepts the source inventory's canonical `manhuaus.com` host plus its observed `.club` host. Registered all five in `BackendMain.kt`. Reference implementations audited in Keiyoushi's Apache-2.0 extension-source tree; Shinigami implementations were written against the backend contract rather than importing extension runtime classes. Code commits: `d88a7f75b6aa5005a1e58a3956c5b4f7ea625e3c`, `7075edb064467bc2a79635414be60974b3dae970`, `9f5ac5625ca07d9d6760dc5b06fa6396778f0dac`, `ecca20825a2d10d1ef500bbb243a087969e79300`, `542679f7cb7b8ee5bd05cfee59887750a3fe61b4`; registration commits: `d3bd64734d1afe0656806eecf8f04ad37e2e8aaf`, `8f08b61b16ade61656fac0fad892ed7d822fca67`; ManhuaUS canonical-host fix: `d3a7fffd17cb50dbcc04169b57eab03640d3c9da`. These adapters are `IMPLEMENTED_UNTESTED`, not verified/locked; build/tests/live checks remain deferred.
 
 - 2026-10-29 — Corrected the initial AllNovelFull and BoxNovel host guards to match the architecture inventory's canonical candidates (`novgo.net` and `novelnice.com`, respectively), rather than inferring domains from the display names. These remain untested and still require live canonical redirect/content checks.
 
