@@ -398,4 +398,36 @@ class ReadingProviderRuntimeRaceContractTest {
         assertEquals("https://reader.example/chapter/1", result?.contentUrl)
     }
 
+
+    @Test
+    fun novelSourcesUseTheSameCentralUrlSafetyPolicyBeforeProviderSelection() = runBlocking {
+        var supportsCalled = false
+        var chapterCalled = false
+        val provider = object : ReadingRuntimeProvider {
+            override val id = "novel-provider"
+            override fun supports(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): Boolean {
+                supportsCalled = true
+                return chapter.sources.any { it.providerId == id }
+            }
+            override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? {
+                chapterCalled = true
+                return ReadingContent(ReadingKind.NOVEL, id, text = "must not be reached")
+            }
+        }
+        val unsafeChapter = ReadingChapterEntry(
+            id = "chapter-1",
+            number = "1",
+            sources = listOf(
+                ReadingChapterSource("unsafe", "novel-provider", "https://127.0.0.1/internal")
+            )
+        )
+
+        val result = ReadingProviderRuntimeRace(listOf(provider))
+            .race(entry(ReadingKind.NOVEL), unsafeChapter, emptySet())
+
+        assertNull(result)
+        assertEquals(false, supportsCalled)
+        assertEquals(false, chapterCalled)
+    }
+
 }
