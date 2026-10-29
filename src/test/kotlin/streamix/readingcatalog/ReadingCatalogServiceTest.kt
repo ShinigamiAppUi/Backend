@@ -85,6 +85,28 @@ class ReadingCatalogServiceTest{
   assertEquals(listOf("https://cdn.reader.example/discovered.jpg"),result?.pageUrls)
   assertTrue(discovered)
  }
+ @Test fun requestedLanguageExcludesExplicitlyOppositeLanguageCatalogSources()=runBlocking{
+  val attempted=mutableListOf<String>()
+  val service=ReadingCatalogService(
+   FileReadingCatalogRepository(createTempDirectory("reading-language-filter").resolve("reading.json")),
+   handlers=mapOf(ReadingSourceType.DIRECT to ReadingSourceHandler{_,_,source->
+    attempted+=source.id
+    ReadingContent(ReadingKind.NOVEL,source.id,text="chapter from "+source.id)
+   })
+  )
+  val entry=service.putManual(ReadingCatalogEntry(
+   "language-filter",ReadingKind.NOVEL,"Novel","https://catalog.example/novel",ReadingEntryOrigin.MANUAL,
+   chapters=listOf(ReadingChapterEntry("chapter-1","1",sources=listOf(
+    ReadingChapterSource("english","reader-en","https://en.example/chapter/1",ReadingSourceType.DIRECT,language="en",priority=100),
+    ReadingChapterSource("indonesian","reader-id","https://id.example/chapter/1",ReadingSourceType.DIRECT,language="id",priority=1),
+    ReadingChapterSource("neutral","reader-neutral","https://neutral.example/chapter/1",ReadingSourceType.DIRECT)
+   )))
+  ))
+  val result=service.resolveChapter(entry.id,"chapter-1",language="id")
+  assertEquals("chapter from indonesian",result?.text)
+  assertEquals(listOf("indonesian","neutral"),attempted)
+ }
+
  @Test fun requestedLanguageReachesDiscoveryRuntimeWithoutPersistingSyntheticChapter()=runBlocking{
   var receivedLanguage:String?=null
   var receivedChapterId:String?=null
