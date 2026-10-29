@@ -10,6 +10,8 @@
 
 - **MangaDex language-normalization regression coverage (2026-10-30):** added a focused regression test for `id-ID` and `en_US` chapter discovery filters and for rejecting unsupported `fr-FR` without issuing an unfiltered chapter query. Test-source commit: `9eaef8696e53dad38625e4eb6a6db0109699988a`. The test is authored but **not run**; full tests/build/CI remain deferred until the adapter implementation sweep is reconciled.
 
+- **Indonesian Manhua — Komiku API chapter route correction (2026-10-30):** the Komiku.com manhua adapter parsed the final two URL segments as comic ID and chapter ID, but the API route contains an intervening language segment (`.../comics/{comicId}/chapters/id/{chapterId}`). This incorrectly treated literal `id` as the comic ID. Replaced the loose final-segment extraction with a site-specific canonical route match. Code commit: `f251dc911d520f9bf61ca0c4fa83205d0a50f8ab`. Added regression coverage for correct comic/chapter ID extraction and rejection of non-canonical language/extra-segment routes; test authoring commits: `1b623d2178b8aaa7fa850efbbaaf67c47d487ea6`, `f4b4baf4e041ea857582f42bc7b448c28ddaa071`. Tests/build/CI/live requests were not run; the adapter remains unverified pending the deferred batch verification pass.
+
 ## Current work state
 
 - **Repository:** `ShinigamiAppUi/Backend`
@@ -17,7 +19,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current pass:** Implementation-first sweep across all eight content/language groups; preserve the eight separate batch records and language boundaries.
 - **Pass status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `658e11f6394878f5528fa304c8a348166e6526d8`
+- **Latest confirmed code commit:** `f251dc911d520f9bf61ca0c4fa83205d0a50f8ab`
 - **Next concrete action:** continue the implementation-first sweep from `docs/READING_MANGA_ARCHITECTURE.md`, creating site-specific adapters and registering each one for every feasible inventory source across the eight content/language groups. Record duplicate, metadata-only, language-uncertain, inaccessible, and access-restricted sources explicitly; defer cleanup and full test/build until the inventory implementation pass is reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 
