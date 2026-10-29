@@ -174,6 +174,8 @@ import streamix.readingcatalog.BacaLightNovelReadingRuntimeProvider
 import streamix.readingcatalog.NovelCoolReadingRuntimeProvider
 import streamix.readingcatalog.NovelBookIdReadingRuntimeProvider
 import streamix.readingcatalog.ShinigamiReadingRuntimeProvider
+import streamix.readingcatalog.ShinigamiManhwaReadingRuntimeProvider
+import streamix.readingcatalog.ShinigamiManhuaReadingRuntimeProvider
 import streamix.readingcatalog.ManhuaHotReadingRuntimeProvider
 import streamix.readingcatalog.ManhuaNextReadingRuntimeProvider
 import streamix.readingcatalog.ManhuaPlusReadingRuntimeProvider
@@ -671,7 +673,9 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         BacaLightNovelReadingRuntimeProvider(),
         NovelCoolReadingRuntimeProvider(),
         NovelBookIdReadingRuntimeProvider(),
-        ShinigamiReadingRuntimeProvider()
+        ShinigamiReadingRuntimeProvider(),
+        ShinigamiManhwaReadingRuntimeProvider(),
+        ShinigamiManhuaReadingRuntimeProvider()
     )
     return providers
 }
