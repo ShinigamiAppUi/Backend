@@ -42,7 +42,7 @@ class KomikNesiaReadingRuntimeProvider(
             val data = payload.getAsJsonObject("data") ?: payload
             val images = data.getAsJsonArray("images")?.mapNotNull { item ->
                 item.takeIf { it.isJsonPrimitive }?.asString?.takeIf(::validImage)
-            }.orEmpty().distinct()
+            }.orEmpty().normalizedReadingPageUrls()
             images.takeIf { it.isNotEmpty() }?.let {
                 ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages")
             }
