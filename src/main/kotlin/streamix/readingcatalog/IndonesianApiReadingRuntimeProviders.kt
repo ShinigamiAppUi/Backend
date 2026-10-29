@@ -16,6 +16,7 @@ class KomikuAsiaReadingRuntimeProvider(private val responseFetcher: ((String) ->
         }
 
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
+        if (entry.kind != ReadingKind.MANGA) return@withContext null
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && chapterPath(it.url) != null }
             ?: return@withContext null
         val (comicId, chapterId) = chapterPath(source.url) ?: return@withContext null
@@ -81,11 +82,12 @@ class SiikomikReadingRuntimeProvider(private val documentFetcher: ((String) -> D
     override val id = "siikomik"
 
     override fun supports(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry) =
-        entry.kind != ReadingKind.NOVEL && chapter.sources.any {
+        entry.kind == ReadingKind.MANGA && chapter.sources.any {
             it.enabled && it.providerId.equals(id, true) && validChapter(it.url)
         }
 
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
+        if (entry.kind != ReadingKind.MANGA) return@withContext null
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) }
             ?: return@withContext null
         val doc = runCatching {
@@ -128,11 +130,12 @@ class NarasiNinjaReadingRuntimeProvider(private val documentFetcher: ((String) -
     override val id = "narasininja"
 
     override fun supports(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry) =
-        entry.kind != ReadingKind.NOVEL && chapter.sources.any {
+        entry.kind == ReadingKind.MANGA && chapter.sources.any {
             it.enabled && it.providerId.equals(id, true) && validChapter(it.url)
         }
 
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
+        if (entry.kind != ReadingKind.MANGA) return@withContext null
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) }
             ?: return@withContext null
         val doc = runCatching {
