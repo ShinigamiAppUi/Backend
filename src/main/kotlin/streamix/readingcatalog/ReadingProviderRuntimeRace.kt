@@ -33,6 +33,7 @@ class ReadingProviderRuntimeRace(
         chapter: ReadingChapterEntry,
         failedSourceIds: Set<String>
     ): ReadingContent? = coroutineScope {
+        if (!entry.enabled) return@coroutineScope null
         // Failure IDs may be provider IDs, source IDs, URLs, or serialized runtime aliases.
         // Normalize once and remove failed sources before asking adapters to select a chapter source.
         val failedIds = failedSourceIds.mapTo(mutableSetOf()) { it.trim().lowercase(Locale.ROOT) }
@@ -76,7 +77,7 @@ class ReadingProviderRuntimeRace(
                     provider.chapter(entry, eligibleChapter)?.takeIf { it.isUsableFor(entry.kind) }
                 } catch (error: CancellationException) {
                     throw error
-                } catch (_: Throwable) {
+                } catch (_: Exception) {
                     null
                 }
                 results.send(result)
