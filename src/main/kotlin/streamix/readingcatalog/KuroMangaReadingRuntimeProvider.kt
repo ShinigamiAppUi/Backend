@@ -24,7 +24,7 @@ class KuroMangaReadingRuntimeProvider(private val documentFetcher: ((String) -> 
                         ?.takeIf(::validImage)
                 }
                 .firstOrNull()
-        }.distinct()
+        }.normalizedReadingPageUrls()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
 
