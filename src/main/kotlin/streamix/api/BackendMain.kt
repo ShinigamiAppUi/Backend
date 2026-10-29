@@ -155,6 +155,12 @@ import streamix.readingcatalog.ManhuaNextReadingRuntimeProvider
 import streamix.readingcatalog.ManhuaPlusReadingRuntimeProvider
 import streamix.readingcatalog.ManhuaUSReadingRuntimeProvider
 import streamix.readingcatalog.ManhuaTopReadingRuntimeProvider
+import streamix.readingcatalog.AuntManhwaReadingRuntimeProvider
+import streamix.readingcatalog.ManhwaManhuaReadingRuntimeProvider
+import streamix.readingcatalog.ManhwaTopReadingRuntimeProvider
+import streamix.readingcatalog.Manhwa68ReadingRuntimeProvider
+import streamix.readingcatalog.ManhwaDenReadingRuntimeProvider
+import streamix.readingcatalog.MurimScanReadingRuntimeProvider
 import streamix.readingcatalog.ReadingProviderRuntimeRace
 import streamix.readingcatalog.ReadingRuntimeProvider
 import streamix.readingcatalog.ReadingSourceType
@@ -167,6 +173,12 @@ import kotlin.io.path.createDirectories
 internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
     val providers = listOf(
         MangaDexReadingRuntimeProvider(),
+        MurimScanReadingRuntimeProvider(),
+        ManhwaDenReadingRuntimeProvider(),
+        Manhwa68ReadingRuntimeProvider(),
+        ManhwaTopReadingRuntimeProvider(),
+        ManhwaManhuaReadingRuntimeProvider(),
+        AuntManhwaReadingRuntimeProvider(),
         ManhuaUSReadingRuntimeProvider(),
         ManhuaTopReadingRuntimeProvider(),
         ManhuaPlusReadingRuntimeProvider(),
