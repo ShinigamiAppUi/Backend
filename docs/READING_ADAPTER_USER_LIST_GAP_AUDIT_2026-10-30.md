@@ -1,3 +1,16 @@
+# Current status update — 2026-10-30
+
+The original gap list below is the **pre-implementation audit snapshot**. Follow-up implementation has now added the requested content-kind adapters for all gaps identified there:
+
+- Manga Indonesia — Komiku.com: `KomikuComMangaReadingRuntimeProvider` in `reading/manga/id/KomikuComMangaAdapter.kt`.
+- Manhwa Indonesia — Komiku, Komikindo, KomikNesia, West Manga, MG Komik: dedicated providers in `reading/manhwa/id/`.
+- Manhwa Indonesia — Shinigami: `ShinigamiManhwaReadingRuntimeProvider` in `reading/manhwa/id/ShinigamiManhwaAdapter.kt`.
+- Manhua Indonesia — Shinigami: `ShinigamiManhuaReadingRuntimeProvider` in `reading/manhua/id/ShinigamiManhuaAdapter.kt`.
+
+These additions are registered in `BackendMain.createSiteReadingProviders()`; focused tests were authored for the five Manhwa providers and for Komiku.com Manga / Shinigami Manhwa / Shinigami Manhua. **No tests, build, CI, or live upstream validation have been run**, so these are implementation-present, verification-pending. The inventory comparison did not justify creating duplicate files for list entries already represented by existing providers or for index-only sources (Novel Updates / Light Novel Updates) and aliases (Webnovel Unlocked).
+
+---
+
 # Reading Adapter User List Gap Audit — 2026-10-30
 
 ## Scope and method
