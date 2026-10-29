@@ -45,10 +45,22 @@ class KomikNesiaReadingRuntimeProvider(
                 runCatching { JsonParser.parseString(decrypt(encrypted, time)).asJsonObject }.getOrNull()
                     ?: return@withContext null
             } else root
-            val data = payload.getAsJsonObject("data") ?: payload
-            val images = data.getAsJsonArray("images")?.mapNotNull { item ->
-                item.takeIf { it.isJsonPrimitive }?.asString?.takeIf(::validImage)
-            }.orEmpty().normalizedReadingPageUrls()
+            // API error envelopes and version drift can change data/images to non-object or
+            // non-array values. Treat those shapes as an unavailable chapter instead of throwing.
+            val data = payload.get("data")
+                ?.takeIf { it.isJsonObject }
+                ?.asJsonObject
+                ?: payload
+            val images = data.get("images")
+                ?.takeIf { it.isJsonArray }
+                ?.asJsonArray
+                ?.mapNotNull { item ->
+                    item.takeIf { it.isJsonPrimitive && it.asJsonPrimitive.isString }
+                        ?.asString
+                        ?.takeIf(::validImage)
+                }
+                .orEmpty()
+                .normalizedReadingPageUrls()
             images.takeIf { it.isNotEmpty() }?.let {
                 ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages")
             }
