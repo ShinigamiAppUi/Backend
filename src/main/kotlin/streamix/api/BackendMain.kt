@@ -154,6 +154,7 @@ import streamix.readingcatalog.ManhuaHotReadingRuntimeProvider
 import streamix.readingcatalog.ManhuaNextReadingRuntimeProvider
 import streamix.readingcatalog.ManhuaPlusReadingRuntimeProvider
 import streamix.readingcatalog.ManhuaUSReadingRuntimeProvider
+import streamix.readingcatalog.ManhuaTopReadingRuntimeProvider
 import streamix.readingcatalog.ReadingProviderRuntimeRace
 import streamix.readingcatalog.ReadingRuntimeProvider
 import streamix.readingcatalog.ReadingSourceType
@@ -167,6 +168,7 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
     val providers = listOf(
         MangaDexReadingRuntimeProvider(),
         ManhuaUSReadingRuntimeProvider(),
+        ManhuaTopReadingRuntimeProvider(),
         ManhuaPlusReadingRuntimeProvider(),
         ManhuaNextReadingRuntimeProvider(),
         ManhuaHotReadingRuntimeProvider(),
