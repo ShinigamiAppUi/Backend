@@ -255,4 +255,32 @@ class MangaDexReadingRuntimeProviderTest {
         assertEquals(false, requestedChapterList)
     }
 
+
+    @Test
+    fun discoveryNormalizesRegionalLanguageTagsAndFailsClosedForUnsupportedLanguage() = runBlocking {
+        val requested = mutableListOf<String>()
+        val mangaId = "12345678-1234-1234-1234-123456789abc"
+        val provider = MangaDexReadingRuntimeProvider(jsonFetcher = { url ->
+            requested += url
+            when {
+                url.startsWith("https://api.mangadex.org/manga?") ->
+                    JsonParser.parseString("""{"data":[{"id":"$mangaId","attributes":{"title":{"en":"Example Title"}}}]}""").asJsonObject
+                else -> JsonParser.parseString("""{"data":[]}""").asJsonObject
+            }
+        })
+        val entry = ReadingCatalogEntry(
+            "m", ReadingKind.MANGA, "Example Title", "", ReadingEntryOrigin.MANUAL
+        )
+
+        provider.chapter(entry, ReadingChapterEntry("id-chapter", "1", language = "id-ID"))
+        assertTrue(requested.any { it.startsWith("https://api.mangadex.org/chapter?") && it.contains("translatedLanguage%5B%5D=id") })
+
+        requested.clear()
+        provider.chapter(entry, ReadingChapterEntry("en-chapter", "1", language = "en_US"))
+        assertTrue(requested.any { it.startsWith("https://api.mangadex.org/chapter?") && it.contains("translatedLanguage%5B%5D=en") })
+
+        requested.clear()
+        provider.chapter(entry, ReadingChapterEntry("fr-chapter", "1", language = "fr-FR"))
+        assertTrue(requested.none { it.startsWith("https://api.mangadex.org/chapter?") })
+    }
 }
