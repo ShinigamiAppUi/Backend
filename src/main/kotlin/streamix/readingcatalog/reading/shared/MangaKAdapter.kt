@@ -3,6 +3,7 @@ package streamix.readingcatalog
 import java.net.URI
 import org.json.JSONObject
 import org.jsoup.nodes.Document
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -13,7 +14,7 @@ class MangaKReadingRuntimeProvider(private val documentFetcher: ((String) -> Doc
         entry.kind == ReadingKind.MANGA && chapter.sources.any { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) }
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) } ?: return@withContext null
-        val doc = runCatching { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null }.getOrNull() ?: return@withContext null
+        val doc = try { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null } catch (cancelled: CancellationException) { throw cancelled } catch (_: Exception) { null } ?: return@withContext null
         val script = doc.select("script#__NEXT_DATA__").firstOrNull()?.data()?.takeIf(String::isNotBlank)
             ?: doc.select("script").firstNotNullOfOrNull { it.data().takeIf { data -> data.contains("\"initialChapter\"") && data.contains("\"images\"") } }
             ?: return@withContext null
