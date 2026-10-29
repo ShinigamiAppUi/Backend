@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current batch:** Batch 1 — Manga / Indonesian (`MANGA` / `id`)
 - **Batch status:** `IN_PROGRESS`
-- **Latest confirmed code commit: `bb453e5aca031468303ca1185fb64e9989f48c76`
+- **Latest confirmed code commit: `2396f66c22b89e5bfacdc9f1f58bcdf0e25a423a`
 - **Next concrete action:** continue source-by-source audit and implementation for the 25 Indonesian manga providers below. Do not start a new language batch until this batch's feasible implementations have been completed and its inventory reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
@@ -30,6 +30,9 @@
 | 8 | Novel | English (`en`) | `NOT_STARTED` | Reconcile the English novel inventory in `READING_MANGA_ARCHITECTURE.md`. |
 
 ## Latest implementation note — 2026-10-29
+
+- Hardened WestManga response fallback in `IndonesianSpecializedApiReadingRuntimeProviders.kt`: inspect `images` arrays at both the response root and nested `data` level, then normalize/deduplicate and reject unsafe URLs. A present-but-empty or partial `data` object no longer hides usable root-level pages. Code commit: `2396f66c22b89e5bfacdc9f1f58bcdf0e25a423a`. Tests/build/CI and live validation remain deferred; this is not a verified adapter completion.
+
 
 - Hardened Komiku.asia image URL normalization: trim candidate values before URI resolution and reject blank or textual `null` values (case-insensitive), then retain the existing safe-image URL guard. This tolerates harmless API whitespace without accepting unsafe destinations. Code commit: `264dea8f217d4e4bc8d260652eaabed38221f795`. Tests/build/CI and live validation remain deferred.
 
