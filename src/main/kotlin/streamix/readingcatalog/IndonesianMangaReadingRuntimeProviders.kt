@@ -77,13 +77,19 @@ class KomikIndoIdReadingRuntimeProvider(private val documentFetcher: ((String) -
         val doc = runCatching { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null }.getOrNull() ?: return@withContext null
         val pages = doc.select("div.img-landmine img").mapNotNull { img ->
             val onError = img.attr("onError")
-            val candidate = if (onError.contains("src='")) onError.substringAfter("src='").substringBefore("';") else
-                sequenceOf("data-lazy-src", "data-src", "data-original", "src").map(String::trim).firstNotNullOfOrNull { key -> img.attr(key).takeIf { value -> value.isNotBlank() && !value.startsWith("data:") } }
-            candidate?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }?.takeIf(::validImage)
+            val fallback = Regex("""src=['"]([^'"]+)['"]""").find(onError)?.groupValues?.get(1)
+            sequenceOf(fallback, img.attr("data-lazy-src"), img.attr("data-src"), img.attr("data-original"), img.attr("src"))
+                .filterNotNull()
+                .map(String::trim)
+                .firstNotNullOfOrNull { raw ->
+                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:") }
+                        ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }
+                        ?.takeIf(::validImage)
+                }
         }.distinct()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
-    private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("komikindo.ch", true) && it.path.isNotBlank() } }.getOrDefault(false)
+    private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("komikindo.ch", true) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80) && it.path.isNotBlank() } }.getOrDefault(false)
     private fun validImage(value: String) = isSafeReadingImageUrl(value)
     private fun fetch(value: String): Document? = fetchIndonesianReadingDocument(value)
 }
