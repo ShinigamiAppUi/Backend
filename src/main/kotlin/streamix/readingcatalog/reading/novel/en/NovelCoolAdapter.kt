@@ -23,6 +23,6 @@ class NovelCoolReadingRuntimeProvider(private val documentFetcher: ((String) -> 
         val text = extractFirstReadingNovelText(doc, "#content, .chapter-content, .txt")
         text.takeIf(String::isNotBlank)?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, text = it, format = "text") }
     }
-    private fun validChapter(value: String) = runCatching { URI(value).let { it.scheme == "https" && (it.host.equals("www.novelcool.com", true) || it.host.equals("novelcool.com", true)) && it.userInfo == null && it.port in setOf(-1, 443) && it.path.isNotBlank() } }.getOrDefault(false)
+    private fun validChapter(value: String) = runCatching { URI(value).let { it.scheme.equals("https", true) && (it.host.equals("www.novelcool.com", true) || it.host.equals("novelcool.com", true)) && it.userInfo == null && it.port in setOf(-1, 443) && it.path.isNotBlank() } }.getOrDefault(false)
     private fun fetch(value: String): Document? = fetchNovelDocument(value)
 }
