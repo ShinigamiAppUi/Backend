@@ -42,8 +42,14 @@ class KomikStationReadingRuntimeProvider(private val documentFetcher: ((String) 
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) } ?: return@withContext null
         val doc = runCatching { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null }.getOrNull() ?: return@withContext null
         val pages = doc.select("div#readerarea img").mapNotNull { img ->
-            sequenceOf("data-lazy-src", "data-src", "data-original", "src").map(String::trim).firstNotNullOfOrNull { key -> img.attr(key).takeIf { it.isNotBlank() && !it.startsWith("data:") } }
-                ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }?.takeIf(::validImage)
+            sequenceOf("data-lazy-src", "data-src", "data-original", "src")
+                .map { key -> img.attr(key).trim() }
+                .mapNotNull { raw ->
+                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:") }
+                        ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }
+                        ?.takeIf(::validImage)
+                }
+                .firstOrNull()
         }.distinct()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
@@ -62,8 +68,14 @@ class ApkomikReadingRuntimeProvider(private val documentFetcher: ((String) -> Do
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) } ?: return@withContext null
         val doc = runCatching { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null }.getOrNull() ?: return@withContext null
         val pages = doc.select(".reading-content img, .reader-area img, .page-break img, #readerarea img").mapNotNull { img ->
-            sequenceOf("data-lazy-src", "data-src", "data-original", "src").map(String::trim).firstNotNullOfOrNull { key -> img.attr(key).takeIf { it.isNotBlank() && !it.startsWith("data:") } }
-                ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }?.takeIf(::validImage)
+            sequenceOf("data-lazy-src", "data-src", "data-original", "src")
+                .map { key -> img.attr(key).trim() }
+                .mapNotNull { raw ->
+                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:") }
+                        ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }
+                        ?.takeIf(::validImage)
+                }
+                .firstOrNull()
         }.distinct()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
