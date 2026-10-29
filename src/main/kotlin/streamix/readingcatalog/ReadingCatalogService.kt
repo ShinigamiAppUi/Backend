@@ -2,6 +2,10 @@ package streamix.readingcatalog
 import java.security.MessageDigest
 import java.util.Locale
 import kotlinx.coroutines.CancellationException
+private fun normalizeReadingLanguageTag(value: String?): String? =
+ value?.trim()?.lowercase(Locale.ROOT)?.replace('_','-')?.substringBefore('-')
+  ?.takeIf { it == "id" || it == "en" }
+
 fun interface ReadingSourceHandler { suspend fun resolve(entry:ReadingCatalogEntry,chapter:ReadingChapterEntry,source:ReadingChapterSource):ReadingContent? }
 fun interface ReadingProviderRuntime { suspend fun race(entry:ReadingCatalogEntry,chapter:ReadingChapterEntry,failedSourceIds:Set<String>):ReadingContent? }
 class ReadingCatalogService(private val repository:ReadingCatalogRepository,private val handlers:Map<ReadingSourceType,ReadingSourceHandler> = emptyMap(),private val providerRuntime:ReadingProviderRuntime?=null){
@@ -55,7 +59,7 @@ class ReadingCatalogService(private val repository:ReadingCatalogRepository,priv
   val entry=repository.find(entryId)?:return null
   if (!entry.enabled) return null
   // Catalog chapters are optional: a selected AniList chapter can be passed to discovery-capable providers without persisting a synthetic chapter or URL.
-  val requestedLanguage=language?.trim()?.lowercase(Locale.ROOT)?.takeIf { it == "id" || it == "en" }
+  val requestedLanguage=normalizeReadingLanguageTag(language)
   val chapter=(entry.chapters.firstOrNull{it.id==chapterId||it.number==chapterId}
    ?: ReadingChapterEntry(id=chapterId.trim(),number=chapterId.trim())).let { selected ->
     selected.copy(
@@ -63,7 +67,7 @@ class ReadingCatalogService(private val repository:ReadingCatalogRepository,priv
      // Keep language-neutral sources as fallbacks, but never select a source explicitly
      // tagged for the opposite language when the caller requested id/en.
      sources=if(requestedLanguage==null) selected.sources else selected.sources.filter { source ->
-      source.language.isNullOrBlank() || source.language.trim().equals(requestedLanguage,ignoreCase=true)
+      source.language.isNullOrBlank() || normalizeReadingLanguageTag(source.language) == requestedLanguage
      }
     )
    }
