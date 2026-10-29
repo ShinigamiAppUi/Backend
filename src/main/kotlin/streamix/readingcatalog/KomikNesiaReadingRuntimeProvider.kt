@@ -51,15 +51,20 @@ class KomikNesiaReadingRuntimeProvider(
                 ?.takeIf { it.isJsonObject }
                 ?.asJsonObject
                 ?: payload
-            val images = data.get("images")
-                ?.takeIf { it.isJsonArray }
-                ?.asJsonArray
-                ?.mapNotNull { item ->
-                    item.takeIf { it.isJsonPrimitive && it.asJsonPrimitive.isString }
-                        ?.asString
-                        ?.takeIf(::validImage)
+            // Keep a root-level reader list as a fallback when a versioned API response
+            // includes a partial data object without a usable images array.
+            val images = sequenceOf(payload, data)
+                .mapNotNull { candidate ->
+                    candidate.get("images")
+                        ?.takeIf { it.isJsonArray }
+                        ?.asJsonArray
+                        ?.mapNotNull { item ->
+                            item.takeIf { it.isJsonPrimitive && it.asJsonPrimitive.isString }
+                                ?.asString
+                                ?.takeIf(::validImage)
+                        }
                 }
-                .orEmpty()
+                .flatten()
                 .normalizedReadingPageUrls()
             images.takeIf { it.isNotEmpty() }?.let {
                 ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages")
