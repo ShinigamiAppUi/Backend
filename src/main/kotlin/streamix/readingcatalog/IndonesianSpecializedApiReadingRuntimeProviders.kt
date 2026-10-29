@@ -165,7 +165,7 @@ class MikoRokuReadingRuntimeProvider(private val responseFetcher: ((String) -> S
         fun list(value: JSONObject?): List<String> {
             val a = value?.optJSONObject("arrayValue")?.optJSONArray("values") ?: return emptyList()
             return (0 until a.length()).mapNotNull { i ->
-                a.optJSONObject(i)?.optString("stringValue")?.trim()
+                (a.optJSONObject(i)?.opt("stringValue") as? String)?.trim()
                     ?.takeIf(String::isNotBlank)
                     ?.takeIf(::validImage)
             }
