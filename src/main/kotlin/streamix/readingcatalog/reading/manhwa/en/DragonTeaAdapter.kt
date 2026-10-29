@@ -33,7 +33,12 @@ class DragonTeaReadingRuntimeProvider(
 
         val document = try {
             documentFetcher?.invoke(source.url)
-                ?: if (documentFetcher == null) fetchManhwaDocument(source.url) else null
+                ?: if (documentFetcher == null) {
+                    // Novel prose uses the bounded novel response path; comic pages use
+                    // the regular HTML fetcher. Keep the same injectable fetcher for tests.
+                    if (entry.kind == ReadingKind.NOVEL) fetchNovelDocument(source.url)
+                    else fetchManhwaDocument(source.url)
+                } else null
         } catch (cancelled: CancellationException) {
             throw cancelled
         } catch (_: Exception) {
