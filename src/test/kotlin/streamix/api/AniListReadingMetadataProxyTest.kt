@@ -87,6 +87,16 @@ class AniListReadingMetadataProxyTest {
         assertEquals(429, error.upstreamStatusCode)
     }
 
+    @Test
+    fun oversizedUpstreamResponseIsRejectedAndSanitized() {
+        val oversized = """{"data":{"Page":{"media":[]}}}""" + " ".repeat(4 * 1024 * 1024)
+        val error = assertFailsWith<AniListReadingMetadataException> {
+            metadataResponse(oversized).search("Fixture", ReadingMetadataKind.MANGA)
+        }
+        assertNull(error.upstreamStatusCode)
+        assertFalse(error.message.orEmpty().contains("configured size limit"))
+    }
+
     private fun metadataResponse(
         body: String,
         status: Int = 200,
