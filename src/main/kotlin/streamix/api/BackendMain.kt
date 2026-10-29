@@ -194,6 +194,15 @@ import streamix.readingcatalog.KomikmuManhuaReadingRuntimeProvider
 import streamix.readingcatalog.ManhwaReadsReadingRuntimeProvider
 import streamix.readingcatalog.KomikuComManhuaReadingRuntimeProvider
 import streamix.readingcatalog.CManhuaReadingRuntimeProvider
+import streamix.readingcatalog.CitrusAuroraReadingRuntimeProvider
+import streamix.readingcatalog.DaoTranslateReadingRuntimeProvider
+import streamix.readingcatalog.DivineDaoLibraryReadingRuntimeProvider
+import streamix.readingcatalog.DragonholicReadingRuntimeProvider
+import streamix.readingcatalog.DuskBlossomsReadingRuntimeProvider
+import streamix.readingcatalog.EtudeTranslationsReadingRuntimeProvider
+import streamix.readingcatalog.FoxaholicReadingRuntimeProvider
+import streamix.readingcatalog.IndraTranslationsReadingRuntimeProvider
+import streamix.readingcatalog.LazyGirlTranslationsReadingRuntimeProvider
 import streamix.readingcatalog.ReadingProviderRuntimeRace
 import streamix.readingcatalog.ReadingRuntimeProvider
 import streamix.readingcatalog.ReadingSourceType
@@ -345,6 +354,15 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         ManhwaReadReadingRuntimeProvider(),
         ToonGodReadingRuntimeProvider(),
         RoyalRoadReadingRuntimeProvider(),
+        LazyGirlTranslationsReadingRuntimeProvider(),
+        IndraTranslationsReadingRuntimeProvider(),
+        FoxaholicReadingRuntimeProvider(),
+        EtudeTranslationsReadingRuntimeProvider(),
+        DuskBlossomsReadingRuntimeProvider(),
+        DragonholicReadingRuntimeProvider(),
+        DivineDaoLibraryReadingRuntimeProvider(),
+        DaoTranslateReadingRuntimeProvider(),
+        CitrusAuroraReadingRuntimeProvider(),
         NovelBuddyReadingRuntimeProvider(),
         NovelBinReadingRuntimeProvider(),
         NovelFireReadingRuntimeProvider(),
