@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current batch:** Batch 1 — Manga / Indonesian (`MANGA` / `id`)
 - **Batch status:** `IN_PROGRESS`
-- **Latest confirmed code commit: `2396f66c22b89e5bfacdc9f1f58bcdf0e25a423a`
+- **Latest confirmed code commit: `79efde97821c3a9f1ac6eb283bce008be4c00a64`
 - **Next concrete action:** continue source-by-source audit and implementation for the 25 Indonesian manga providers below. Do not start a new language batch until this batch's feasible implementations have been completed and its inventory reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
@@ -30,6 +30,9 @@
 | 8 | Novel | English (`en`) | `NOT_STARTED` | Reconcile the English novel inventory in `READING_MANGA_ARCHITECTURE.md`. |
 
 ## Latest implementation note — 2026-10-29
+
+- Hardened KomikNesia response fallback in `KomikNesiaReadingRuntimeProvider.kt`: inspect `images` at both the payload root and nested `data` object, then validate and normalize the combined candidates. A partial nested object no longer masks usable root-level pages. Code commit: `79efde97821c3a9f1ac6eb283bce008be4c00a64`. Tests/build/CI and live validation remain deferred; this is not a verified adapter completion.
+
 
 - Hardened WestManga response fallback in `IndonesianSpecializedApiReadingRuntimeProviders.kt`: inspect `images` arrays at both the response root and nested `data` level, then normalize/deduplicate and reject unsafe URLs. A present-but-empty or partial `data` object no longer hides usable root-level pages. Code commit: `2396f66c22b89e5bfacdc9f1f58bcdf0e25a423a`. Tests/build/CI and live validation remain deferred; this is not a verified adapter completion.
 
