@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current batch:** Batch 1 — Manga / Indonesian (`MANGA` / `id`)
 - **Batch status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `184b965bf2704259c849b698b2451dcfa7017996`
+- **Latest confirmed code commit:** `450bee673b2698a7ce96ad80cd48a0e22ce77067`
 - **Next concrete action:** continue source-by-source audit and implementation for the 25 Indonesian manga providers below. Do not start a new language batch until this batch's feasible implementations have been completed and its inventory reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
@@ -174,6 +174,8 @@ The class names and paths below were checked in this repository. Canonical URLs 
 | `west-manga` / `WestMangaReadingRuntimeProvider` | Needs source-specific canonical URL/reference review; code allowlist is not live proof | Manga | Indonesian (inventory label; verify chapter content) | `PARTIAL` | `IN_PROGRESS` | Not run — deferred | Not run — deferred | `src/main/kotlin/streamix/readingcatalog/reading/manga/id/WestMangaAdapter.kt` | Complete per-site parser/source-reference audit; record evidence and remaining work | Content-kind boundary pass only; not counted as fully implemented. |
 
 ## Changes made on this branch so far
+
+- 2026-10-29 — Six reading adapters (`KomikNextGOnline`, `OtaScans`, `SayManhwa`, `MangaK`, `MangaTaro`, and native `Shinigami`) now explicitly rethrow `CancellationException` at fetch boundaries while treating ordinary fetch exceptions as unavailable content. This prevents cancellation from being swallowed by broad `runCatching`/fetch error handling. These adapters remain `PARTIAL`; no tests/build/CI/live validation run. Code commits: `f8818629f716ef4520066bdcbfb667e2a3d83268`, `a683f37de88b1c5dc9f8bd3aa5edb9c0eff9a2f6`, `b948228e7c9ec127f3814535b3a22a995468ab67`, `cd3d07dab52222ddcc6444d5d76f2e45f59f221d`, `70525c27488c62a152891fbd3ecfbe5e8aa89fe7`, `450bee673b2698a7ce96ad80cd48a0e22ce77067`.
 
 - 2026-10-29 — MikoRoku Firestore image extraction now accepts `stringValue` only when the JSON field is actually a string, rather than coercing unexpected JSON types with `optString()`. Trimming, blank rejection, safe-image validation, normalized deduplication, and fallback to nested chapter images remain intact. Code commit: `bb453e5aca031468303ca1185fb64e9989f48c76`; fixture tests/build/CI/live validation remain deferred.
 
