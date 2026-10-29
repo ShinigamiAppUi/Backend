@@ -50,7 +50,7 @@ class BacamiReadingRuntimeProvider(private val documentFetcher: ((String) -> Doc
         val doc = try { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null } catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled } catch (_: Exception) { null } ?: return@withContext null
         val script = doc.select("script").firstOrNull { it.data().contains("imageUrls") || it.html().contains("imageUrls") }
             ?.let { it.data().ifBlank { it.html() } } ?: return@withContext null
-        val raw = Regex("""imageUrls\s*:\s*(\[[\s\S]*?\])""").find(script)?.groupValues?.get(1)
+        val raw = Regex("""imageUrls\s*[:=]\s*(\[[\s\S]*?\])""").find(script)?.groupValues?.get(1)
             ?: return@withContext null
         val values = runCatching { JsonParser.parseString(raw).asJsonArray }.getOrNull() ?: return@withContext null
         val pages = values.mapNotNull { value ->
