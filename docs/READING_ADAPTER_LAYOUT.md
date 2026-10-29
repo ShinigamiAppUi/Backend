@@ -4,11 +4,27 @@
 **Working branch:** `feature/manga-manhwa-novel-foundation`  
 **Purpose:** Keep site-specific adapter work discoverable by content type and language as the catalog expands.
 
-## Naming contract
+## Directory and filename contract
 
-Use this filename shape for language-scoped adapter files:
+Source files live under a content-type directory, then a language directory:
 
-`<ContentType><Language>[Purpose]ReadingRuntimeProvider(s).kt`
+```text
+streamix/readingcatalog/reading/
+├── manga/
+│   ├── id/
+│   └── en/
+├── manhwa/
+│   ├── id/
+│   └── en/
+├── manhua/
+│   ├── id/
+│   └── en/
+└── novel/
+    ├── id/
+    └── en/
+```
+
+Target naming is one adapter per file, using the site's adapter name, for example `reading/novel/id/BacaLightNovelAdapter.kt` and `reading/novel/en/RoyalRoadAdapter.kt`. Prefer `<SiteName>Adapter.kt`; do not bundle unrelated sites into one source file. Shared transport, parsing utilities and domain-neutral contracts remain outside these site folders.
 
 Examples:
 - `MangaIndonesianReadingRuntimeProviders.kt`
@@ -20,7 +36,7 @@ Examples:
 - `NovelIndonesianReadingRuntimeProviders.kt`
 - `NovelEnglishReadingRuntimeProviders.kt`
 
-Keep the content type first and language second. Add a purpose suffix such as `Api`, `Theme`, `Additional`, or a provider/site name only when a category needs more than one file. Keep each site parser in its own provider class; a shared file is only a source-file organization choice, not a shared parser contract.
+Directory path, not a class-name prefix, is the source of truth for content type and language. Keep each site's parser in its own adapter file. A file that genuinely serves multiple content types or languages must be source-audited and split where practical; do not infer classification from the provider name alone.
 
 ## Domain/language work matrix
 
@@ -37,9 +53,9 @@ Keep the content type first and language second. Add a purpose suffix such as `A
 
 File existence, provider registration, or a class name is not proof that an adapter is complete or live-verified. The implementation ledger remains the source of truth for provider-level status and evidence.
 
-## Current organization
+## Migration status
 
-Language-specific files were renamed without changing Kotlin package names, class names, provider IDs, parsing logic, or runtime registration:
+The first directory move places the already language-classified groups into the matching content/language folders. Kotlin package declarations, class names, provider IDs, parsing logic, and runtime registration remain unchanged, so existing imports remain compatible. These files are still grouped by category and are an intermediate migration step; split them into one site adapter per file after source-level classification:
 - `MangaIndonesianCoreReadingRuntimeProviders.kt`
 - `MangaIndonesianAdditionalReadingRuntimeProviders.kt`
 - `MangaIndonesianApiReadingRuntimeProviders.kt`
@@ -54,6 +70,13 @@ Language-specific files were renamed without changing Kotlin package names, clas
 - `ManhwaEnglishReadingRuntimeProviders.kt`
 - `ManhwaEnglishAdditionalReadingRuntimeProviders.kt`
 - `NovelIndonesianReadingRuntimeProviders.kt`
+
+New paths under `src/main/kotlin/streamix/readingcatalog/reading/`:
+- `manga/id/` — six Manga Indonesian source groups
+- `manga/en/` — two Manga English source groups
+- `manhwa/id/` — three Manhwa Indonesian source groups
+- `manhwa/en/` — two Manhwa English source groups
+- `novel/id/` — one Novel Indonesian source group
 
 Older shared files containing providers whose content type/language needs source-by-source confirmation remain separate for now. Do not move a site into a language bucket based only on its name. During the relevant batch audit, verify actual content/language, then split or relocate it without changing provider IDs or registration behavior.
 
