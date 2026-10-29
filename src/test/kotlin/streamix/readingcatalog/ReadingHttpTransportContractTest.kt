@@ -22,6 +22,7 @@ class ReadingHttpTransportContractTest {
         assertFalse(isSafeReadingHttpUrl("https://private.local/chapter/1"))
         assertFalse(isSafeReadingHttpUrl("https://127.0.0.1/chapter/1"))
         assertFalse(isSafeReadingHttpUrl("https://192.168.1.10/chapter/1"))
+        assertFalse(isSafeReadingHttpUrl("https://[::1]/chapter/1"))
         assertFalse(isSafeReadingHttpUrl("not a url"))
     }
 
