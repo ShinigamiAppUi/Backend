@@ -269,6 +269,11 @@ import streamix.readingcatalog.WuxiaClickReadingRuntimeProvider
 import streamix.readingcatalog.WuxiaDreamsReadingRuntimeProvider
 import streamix.readingcatalog.EmpireNovelReadingRuntimeProvider
 import streamix.readingcatalog.FAQWikiReadingRuntimeProvider
+import streamix.readingcatalog.R18NovelReadingRuntimeProvider
+import streamix.readingcatalog.ReadNovelMTLReadingRuntimeProvider
+import streamix.readingcatalog.ReigokaiTranslationsReadingRuntimeProvider
+import streamix.readingcatalog.ShanghaiFantasyReadingRuntimeProvider
+import streamix.readingcatalog.XNovelReadingRuntimeProvider
 import streamix.readingcatalog.ReadingProviderRuntimeRace
 import streamix.readingcatalog.AtsumaruNovelsReadingRuntimeProvider
 import streamix.readingcatalog.BotiTranslationReadingRuntimeProvider
@@ -545,6 +550,11 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         WuxiaDreamsReadingRuntimeProvider(),
         EmpireNovelReadingRuntimeProvider(),
         FAQWikiReadingRuntimeProvider(),
+        R18NovelReadingRuntimeProvider(),
+        ReadNovelMTLReadingRuntimeProvider(),
+        ReigokaiTranslationsReadingRuntimeProvider(),
+        ShanghaiFantasyReadingRuntimeProvider(),
+        XNovelReadingRuntimeProvider(),
         NovelArchiveReadingRuntimeProvider(),
         NovelDexReadingRuntimeProvider(),
         NovelLiveReadingRuntimeProvider(),
