@@ -16,6 +16,8 @@ object BackendApiContract {
     const val EXTRACTORS = "/api/v1/extractors"
     const val HEALTH = "/api/v1/health"
     const val READING = "/api/v1/reading"
+    const val READING_METADATA_SEARCH = "/api/v1/reading/metadata/search"
+    const val READING_METADATA_DETAIL = "/api/v1/reading/metadata/{id}"
     const val READING_METADATA = "/api/v1/reading/metadata"
     const val READING_CATALOG = "/api/v1/admin/reading/catalog"
 }
