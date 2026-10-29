@@ -39,6 +39,9 @@ class IdnovelandReadingRuntimeProvider(private val documentFetcher: ((String) ->
             }
         }
 
-    private fun validChapterUrl(value: String): Boolean =
-        novelHost(value, setOf("idnoveland.my.id")) && runCatching { URI(value).path.isNotBlank() }.getOrDefault(false)
+    private fun validChapterUrl(value: String): Boolean = try {
+        novelHost(value, setOf("idnoveland.my.id")) && URI(value).path.isNotBlank()
+    } catch (_: Exception) {
+        false
+    }
 }
