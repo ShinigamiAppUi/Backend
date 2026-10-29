@@ -59,7 +59,7 @@ class MangaCanReadingRuntimeProvider(private val documentFetcher: ((String) -> D
     private fun fetch(value: String): Document? = fetchIndonesianBatchDocument(value)
 }
 
-/** Mangalay is a Blogger source whose chapter pages are in .separator; the trailing Blogger image is a navigation artifact. */
+/** Mangalay is a Blogger source whose chapter reader images are collected from .separator in document order. */
 class MangalayReadingRuntimeProvider(private val documentFetcher: ((String) -> Document?)? = null) : ReadingRuntimeProvider {
     override val id = "mangalay"
     override fun supports(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry) =
