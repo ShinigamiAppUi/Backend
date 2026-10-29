@@ -250,6 +250,16 @@ import streamix.readingcatalog.ByteTranslationsReadingRuntimeProvider
 import streamix.readingcatalog.CrimsonScrollsReadingRuntimeProvider
 import streamix.readingcatalog.HoneyfeedReadingRuntimeProvider
 import streamix.readingcatalog.ReadingProviderRuntimeRace
+import streamix.readingcatalog.AtsumaruNovelsReadingRuntimeProvider
+import streamix.readingcatalog.BotiTranslationReadingRuntimeProvider
+import streamix.readingcatalog.BrightNovelsReadingRuntimeProvider
+import streamix.readingcatalog.ChikariReadingRuntimeProvider
+import streamix.readingcatalog.CyrisiaReadingRuntimeProvider
+import streamix.readingcatalog.FansMTLReadingRuntimeProvider
+import streamix.readingcatalog.FictionZoneReadingRuntimeProvider
+import streamix.readingcatalog.FreeGoodNovelReadingRuntimeProvider
+import streamix.readingcatalog.GenesisStudioReadingRuntimeProvider
+import streamix.readingcatalog.GreenzReadingRuntimeProvider
 import streamix.readingcatalog.ReadingRuntimeProvider
 import streamix.readingcatalog.ReadingSourceType
 import streamix.readingcatalog.ReadingSourceHandler
@@ -455,6 +465,16 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         DivineDaoLibraryReadingRuntimeProvider(),
         DaoTranslateReadingRuntimeProvider(),
         CitrusAuroraReadingRuntimeProvider(),
+        AtsumaruNovelsReadingRuntimeProvider(),
+        BotiTranslationReadingRuntimeProvider(),
+        BrightNovelsReadingRuntimeProvider(),
+        ChikariReadingRuntimeProvider(),
+        CyrisiaReadingRuntimeProvider(),
+        FansMTLReadingRuntimeProvider(),
+        FictionZoneReadingRuntimeProvider(),
+        FreeGoodNovelReadingRuntimeProvider(),
+        GenesisStudioReadingRuntimeProvider(),
+        GreenzReadingRuntimeProvider(),
         NovelBuddyReadingRuntimeProvider(),
         NovelBinReadingRuntimeProvider(),
         NovelFireReadingRuntimeProvider(),
