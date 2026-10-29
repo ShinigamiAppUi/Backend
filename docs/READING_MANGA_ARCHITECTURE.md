@@ -885,3 +885,151 @@ The sites below already appear in the broader English inventory in §15.2 and/or
 
 **Research caveat:** Website content, redirects, extension code, licensing and anti-bot behavior can change. The timestamps above are observations from the research pass dated 2026-10-29, not a continuing availability guarantee. Recheck them when an adapter is selected. Do not bypass authentication, paywalls, bot challenges, or other access controls; record a source as `UNAVAILABLE` when it cannot be accessed within permitted boundaries.
 
+## 18. Consolidated novel-source inventory — user-provided full list (2026-10-29)
+
+This section preserves the complete source-name inventory supplied for Shinigami research. It complements Section 17's live-site candidates and the repository-derived inventories above; it does not replace them. A source name in this list is an inventory record only, **not** proof of current availability, permission to ingest, a unique domain, or a working Shinigami adapter.
+
+### 18.1 Indonesian novel sources — core list (8)
+
+1. Baca Light Novel
+2. IndoWebNovel
+3. MeioNovel
+4. MTL Novel (ID)
+5. SakuraNovel
+6. Sekte Novel
+7. Vanovel
+8. WBNovel
+
+### 18.2 Indonesian plugin inventory — repository cross-reference (10)
+
+The earlier manifest review reported 10 plugins explicitly labelled Indonesian in LNReader. Keep these as plugin/source records and deduplicate by canonical website only after inspecting each plugin's URL and redirects.
+
+| No. | Plugin/source name | Reported repository presence |
+|---:|---|---|
+| 1 | Baca Light Novel | LNReader, NovelSourcery, WOX Tadami, NoveLA |
+| 2 | Grensia | LNReader |
+| 3 | IndoWebNovel | LNReader, WOX Tadami, NoveLA |
+| 4 | MeioNovel | LNReader, NovelSourcery, WOX Tadami, NoveLA |
+| 5 | MTL Novel (ID) | LNReader, WOX Tadami |
+| 6 | NovelBookID | LNReader, NovelSourcery |
+| 7 | SakuraNovel | LNReader, WOX Tadami |
+| 8 | Sekte Novel | LNReader, NovelSourcery, WOX Tadami |
+| 9 | Vanovel | LNReader, NovelSourcery, WOX Tadami |
+| 10 | WBNovel | LNReader, NovelSourcery, WOX Tadami |
+
+Additional Indonesian research candidates (not counted as verified active sources): **NovelRingan** (previously reported broken plugin; repair candidate only), **WTR-LAB** (test whether its Indonesian path genuinely serves Indonesian-language novel content), and **Legado** (ecosystem/directory for finding source definitions; no new specific Indonesian source confirmed by this inventory alone). Section 17 also records the additional live-site candidates **BacaLN, Idnovelland/Idnoveland, LexiNovel, Ranahnovel, BUBOC, and KimiNovel**. Do not merge similarly named sites without verifying canonical URLs.
+
+### 18.3 English novel sources — full user-provided list (99)
+
+The numbering below preserves the supplied list, including distinct product variants and similarly named sites. Treat each as a candidate record pending URL resolution, activity and access-policy review.
+
+1. Akknovel
+2. AllNovel
+3. AllNovelFull
+4. Arcane Translations
+5. Archive Of Our Own (AO3)
+6. BlumeVerse
+7. BoxNovel
+8. CPUnovel
+9. Chrysanthemum Garden
+10. Citrus Aurora
+11. Crimson Scrolls
+12. Daoist Quest
+13. DaoTranslate
+14. Divine Dao Library
+15. Dragon Tea
+16. Dragonholic
+17. Dusk Blossoms
+18. Eternalune
+19. Etude Translations
+20. FanNovel
+21. Fans MTL
+22. Fenrir Realm
+23. Fiction Zone
+24. Foxaholic
+25. Foxteller
+26. Free Web Novel
+27. FuckNovelpia
+28. Galaxy Translations
+29. Genesis
+30. Guavaread
+31. Hiraeth Translation
+32. Hyacinth in Bloom
+33. Indra Translations
+34. Inkitt
+35. iNovelTranslation
+36. Ippotranslations
+37. KDT Novels
+38. Keopi Translations
+39. KnoxT
+40. Lazy Girl Translations
+41. Lib Read
+42. Light Novel Translations
+43. Light Novel Updates
+44. LightNovelCave
+45. LightNovelHeaven
+46. LnMTL
+47. LNORI
+48. LulloBox
+49. Mistmint Haven
+50. MTL Novel
+51. MVLEMPYR
+52. NobleMTL
+53. Noice Translations
+54. Novel Arrow
+55. Novel Fire
+56. Novel Hall
+57. Novel Ninja
+58. Novel Updates
+59. NovelBuddy
+60. NovelCool
+61. NovelFull
+62. NovelHi
+63. Novelight
+64. NovelLib
+65. NovelRest
+66. Ocean Tales
+67. Pastel Tales
+68. PawRead
+69. Penguin Squad
+70. Ranobes
+71. Ranovel
+72. Re:Library
+73. Read From Net
+74. ReadNovelFull
+75. Requiem Translations
+76. Royal Road
+77. Scribble Hub
+78. SleepyTranslations
+79. SonicMTL
+80. Srank Manga
+81. StorySeedling
+82. Sweet Escape
+83. TranslatinOtaku
+84. Translation Weaver
+85. Universal Novel
+86. Vandy Translate
+87. Web Novel Translation
+88. Webnovel
+89. Webnovel (Unlocked)
+90. White Moonlight Novels
+91. Witch Cult Translations
+92. Wook's Teahouse
+93. WTR-LAB
+94. Wuxia Space
+95. Wuxia World
+96. Wuxiabox
+97. Wuxiafox
+98. WuxiaWorld.Site
+99. Zetro Translation
+
+### 18.4 Inventory counts and normalization rules
+
+- User-provided baseline: **8 Indonesian sources** and **99 English sources**.
+- Repository-derived Indonesian plugin list above: **10 plugin records**. These are not additive to the baseline count without checking overlap; several are the same sources represented in different extension repositories.
+- Section 17's six additional Indonesian live-site candidates and the English candidates highlighted there remain supplementary candidates, not silently folded into the 8/99 baseline.
+- Preserve the supplied English labels as written until canonical URL/domain checks are completed. Similar names (for example, Novel Fire / NovelFire, Free Web Novel / FreeWebNovel, Webnovel / Webnovel (Unlocked), Wuxia World / WuxiaWorld.Site) may be aliases, variants, or distinct services; do not deduplicate by name alone.
+- Classify platforms and indexes separately from chapter-hosting sources where appropriate (for example, Light Novel Updates, AO3, Royal Road, Scribble Hub, Inkitt). Their inclusion in the inventory does not imply that they should all use the same adapter type.
+- Before implementation, audit canonical domain and redirects, language, search and pagination, title/detail/chapter navigation, chapter ordering and content, recent chapter cadence, duplicate coverage, applicable terms/licensing, and permitted access. Never bypass login, paywalls, bot challenges, or other access controls.
+- Status for every item in this section: `INVENTORY` / `AUDIT_PENDING` unless a separate evidence-backed audit record explicitly changes it. A plugin entry or repository presence is not proof of a live, maintained website or a completed Shinigami adapter.
+
