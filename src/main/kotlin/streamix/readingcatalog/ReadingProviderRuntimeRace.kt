@@ -41,11 +41,9 @@ class ReadingProviderRuntimeRace(
         val eligibleSources = chapter.sources.filter { source ->
             val rawProviderId = source.providerId.trim().lowercase(Locale.ROOT)
             val canonicalProvider = canonicalProviderId(rawProviderId)
-            val sourceUrlAllowed = when (entry.kind) {
-                ReadingKind.MANGA, ReadingKind.MANHWA, ReadingKind.MANHUA ->
-                    isSafeReadingHttpUrl(source.url)
-                ReadingKind.NOVEL -> true
-            }
+            // Source URLs are untrusted for every reading kind. Novel adapters still
+            // apply their site-specific host/path allowlists before fetching.
+            val sourceUrlAllowed = isSafeReadingHttpUrl(source.url)
             source.enabled &&
                 sourceUrlAllowed &&
                 source.id.trim().lowercase(Locale.ROOT) !in failedIds &&
