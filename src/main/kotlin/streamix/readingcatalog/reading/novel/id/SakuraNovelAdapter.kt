@@ -16,5 +16,9 @@ class SakuraNovelReadingRuntimeProvider(private val documentFetcher: ((String)->
   val text=extractFirstReadingNovelText(doc, ".readerarea, .epcontent, .entry-content, .chapter-content, div:contains(Daftar Isi) + div")
   text.takeIf(String::isNotBlank)?.let{ReadingContent(entry.kind,"reading-provider:$id",source.url,text=it,format="text")}
  }
- private fun valid(v:String)=novelHost(v,setOf("sakuranovel.id"))&&URI(v).path.isNotBlank()
+ private fun valid(v: String): Boolean = try {
+  novelHost(v, setOf("sakuranovel.id")) && URI(v).path.isNotBlank()
+ } catch (_: Exception) {
+  false
+ }
 }
