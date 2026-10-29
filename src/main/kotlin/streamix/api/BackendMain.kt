@@ -249,6 +249,14 @@ import streamix.readingcatalog.BakaTsukiReadingRuntimeProvider
 import streamix.readingcatalog.ByteTranslationsReadingRuntimeProvider
 import streamix.readingcatalog.CrimsonScrollsReadingRuntimeProvider
 import streamix.readingcatalog.HoneyfeedReadingRuntimeProvider
+import streamix.readingcatalog.NoBadNovelReadingRuntimeProvider
+import streamix.readingcatalog.FuckNovelpiaReadingRuntimeProvider
+import streamix.readingcatalog.JadeScrollsReadingRuntimeProvider
+import streamix.readingcatalog.NovelsPlReadingRuntimeProvider
+import streamix.readingcatalog.OpenQuillReadingRuntimeProvider
+import streamix.readingcatalog.ReadHiveReadingRuntimeProvider
+import streamix.readingcatalog.RechaptersReadingRuntimeProvider
+import streamix.readingcatalog.OrvReaderReadingRuntimeProvider
 import streamix.readingcatalog.ReadingProviderRuntimeRace
 import streamix.readingcatalog.AtsumaruNovelsReadingRuntimeProvider
 import streamix.readingcatalog.BotiTranslationReadingRuntimeProvider
@@ -505,6 +513,14 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         MTLBooksReadingRuntimeProvider(),
         MTLWuxiaReadingRuntimeProvider(),
         MZNovelsReadingRuntimeProvider(),
+        NoBadNovelReadingRuntimeProvider(),
+        FuckNovelpiaReadingRuntimeProvider(),
+        JadeScrollsReadingRuntimeProvider(),
+        NovelsPlReadingRuntimeProvider(),
+        OpenQuillReadingRuntimeProvider(),
+        ReadHiveReadingRuntimeProvider(),
+        RechaptersReadingRuntimeProvider(),
+        OrvReaderReadingRuntimeProvider(),
         NovelArchiveReadingRuntimeProvider(),
         NovelDexReadingRuntimeProvider(),
         NovelLiveReadingRuntimeProvider(),
