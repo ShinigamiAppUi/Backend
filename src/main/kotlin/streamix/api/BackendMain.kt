@@ -275,6 +275,7 @@ import streamix.readingcatalog.ReigokaiTranslationsReadingRuntimeProvider
 import streamix.readingcatalog.ShanghaiFantasyReadingRuntimeProvider
 import streamix.readingcatalog.XNovelReadingRuntimeProvider
 import streamix.readingcatalog.KomikhwaReadingRuntimeProvider
+import streamix.readingcatalog.WeTriedTlsReadingRuntimeProvider
 import streamix.readingcatalog.ReadingProviderRuntimeRace
 import streamix.readingcatalog.AtsumaruNovelsReadingRuntimeProvider
 import streamix.readingcatalog.BotiTranslationReadingRuntimeProvider
@@ -423,6 +424,7 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         SekteNovelReadingRuntimeProvider(),
         VanovelReadingRuntimeProvider(),
         WBNovelReadingRuntimeProvider(),
+        WeTriedTlsReadingRuntimeProvider(),
         WestMangaReadingRuntimeProvider(),
         RiztranslationReadingRuntimeProvider(),
         MikoRokuReadingRuntimeProvider(),
