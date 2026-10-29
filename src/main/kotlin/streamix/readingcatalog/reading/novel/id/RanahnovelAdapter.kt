@@ -39,6 +39,9 @@ class RanahnovelReadingRuntimeProvider(private val documentFetcher: ((String) ->
             }
         }
 
-    private fun validChapterUrl(value: String): Boolean =
-        novelHost(value, setOf("ranahnovel.com")) && runCatching { URI(value).path.isNotBlank() }.getOrDefault(false)
+    private fun validChapterUrl(value: String): Boolean = try {
+        novelHost(value, setOf("ranahnovel.com")) && !URI(value).path.isNullOrBlank()
+    } catch (_: Exception) {
+        false
+    }
 }
