@@ -118,6 +118,10 @@ import streamix.readingcatalog.MikoRokuReadingRuntimeProvider
 import streamix.readingcatalog.KiryuuReadingRuntimeProvider
 import streamix.readingcatalog.KomikStationReadingRuntimeProvider
 import streamix.readingcatalog.KomikStationManhwaReadingRuntimeProvider
+import streamix.readingcatalog.MGKomikManhwaReadingRuntimeProvider
+import streamix.readingcatalog.WestMangaManhwaReadingRuntimeProvider
+import streamix.readingcatalog.KomikNesiaManhwaReadingRuntimeProvider
+import streamix.readingcatalog.KomikindoManhwaReadingRuntimeProvider
 import streamix.readingcatalog.ApkomikReadingRuntimeProvider
 import streamix.readingcatalog.ApkomikManhuaReadingRuntimeProvider
 import streamix.readingcatalog.KomikIndoIdManhuaReadingRuntimeProvider
@@ -473,6 +477,10 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         KiryuuReadingRuntimeProvider(),
         KomikStationReadingRuntimeProvider(),
         KomikStationManhwaReadingRuntimeProvider(),
+        KomikindoManhwaReadingRuntimeProvider(),
+        KomikNesiaManhwaReadingRuntimeProvider(),
+        WestMangaManhwaReadingRuntimeProvider(),
+        MGKomikManhwaReadingRuntimeProvider(),
         ApkomikReadingRuntimeProvider(),
         LepoyTlReadingRuntimeProvider(),
         KomikNesiaReadingRuntimeProvider(),
