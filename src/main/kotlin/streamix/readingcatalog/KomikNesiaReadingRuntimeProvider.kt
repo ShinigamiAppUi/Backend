@@ -1,6 +1,5 @@
 package streamix.readingcatalog
 
-import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import java.net.URI
 import java.nio.charset.StandardCharsets
@@ -51,7 +50,9 @@ class KomikNesiaReadingRuntimeProvider(
 
     private fun slug(value: String): String? = runCatching {
         val uri = URI(value)
-        if (!isSafeReadingHttpUrl(value) || !(uri.host.equals("v2.komiknesiaku.com", true) ||
+        if (!isSafeReadingHttpUrl(value) || uri.userInfo != null ||
+            (uri.port != -1 && uri.port != 80 && uri.port != 443) ||
+            !(uri.host.equals("v2.komiknesiaku.com", true) ||
                 uri.host.equals("v1.komiknesiaku.com", true) || uri.host.equals("komiknesiaku.com", true))) return null
         val path = uri.path.trimEnd('/')
         val result = path.substringAfterLast('/')
