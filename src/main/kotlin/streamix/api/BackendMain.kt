@@ -203,6 +203,10 @@ import streamix.readingcatalog.DragonholicReadingRuntimeProvider
 import streamix.readingcatalog.DuskBlossomsReadingRuntimeProvider
 import streamix.readingcatalog.EtudeTranslationsReadingRuntimeProvider
 import streamix.readingcatalog.FoxaholicReadingRuntimeProvider
+import streamix.readingcatalog.WuxiafoxReadingRuntimeProvider
+import streamix.readingcatalog.SweetEscapeReadingRuntimeProvider
+import streamix.readingcatalog.GalaxyTranslationsReadingRuntimeProvider
+import streamix.readingcatalog.FoxtellerReadingRuntimeProvider
 import streamix.readingcatalog.IndraTranslationsReadingRuntimeProvider
 import streamix.readingcatalog.LazyGirlTranslationsReadingRuntimeProvider
 import streamix.readingcatalog.ArchiveOfOurOwnReadingRuntimeProvider
@@ -500,6 +504,7 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         HyacinthInBloomReadingRuntimeProvider(),
         HiraethTranslationReadingRuntimeProvider(),
         GuavareadReadingRuntimeProvider(),
+        GalaxyTranslationsReadingRuntimeProvider(),
         FenrirRealmReadingRuntimeProvider(),
         FanNovelReadingRuntimeProvider(),
         EternaluneReadingRuntimeProvider(),
@@ -514,6 +519,7 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         LazyGirlTranslationsReadingRuntimeProvider(),
         IndraTranslationsReadingRuntimeProvider(),
         FoxaholicReadingRuntimeProvider(),
+        FoxtellerReadingRuntimeProvider(),
         EtudeTranslationsReadingRuntimeProvider(),
         DuskBlossomsReadingRuntimeProvider(),
         DragonholicReadingRuntimeProvider(),
@@ -552,6 +558,7 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         OrvReaderReadingRuntimeProvider(),
         NyxScansReadingRuntimeProvider(),
         StorySeedlingReadingRuntimeProvider(),
+        SweetEscapeReadingRuntimeProvider(),
         SufficientVelocityReadingRuntimeProvider(),
         TomatoMTLReadingRuntimeProvider(),
         TranslatinoReadingRuntimeProvider(),
@@ -605,6 +612,7 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         WuxiaSpaceReadingRuntimeProvider(),
         WebNovelReadingRuntimeProvider(),
         WuxiaWorldReadingRuntimeProvider(),
+        WuxiafoxReadingRuntimeProvider(),
         BacaLNReadingRuntimeProvider(),
         IdnovelandReadingRuntimeProvider(),
         LexiNovelReadingRuntimeProvider(),
