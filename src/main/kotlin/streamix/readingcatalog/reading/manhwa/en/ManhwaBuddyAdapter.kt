@@ -16,7 +16,7 @@ class ManhwaBuddyReadingRuntimeProvider(private val documentFetcher: ((String) -
         val pages = doc.select(".chapter-content img, .reading-content img").mapNotNull { img ->
             sequenceOf("data-src", "data-lazy-src", "data-original", "src").map(String::trim).firstNotNullOfOrNull { key -> img.attr(key).takeIf { it.isNotBlank() && !it.startsWith("data:") } }
                 ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }?.takeIf(::validImage)
-        }.distinct()
+        }.normalizedReadingPageUrls()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
     private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("manhwabuddy.com", true) && it.path.contains("/chapter", true) } }.getOrDefault(false)
