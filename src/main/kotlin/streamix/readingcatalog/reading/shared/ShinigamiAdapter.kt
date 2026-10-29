@@ -2,6 +2,7 @@ package streamix.readingcatalog
 
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -28,7 +29,7 @@ class ShinigamiReadingRuntimeProvider(
                 it.enabled && it.providerId.equals(id, true) && chapterId(it.url) != null
             } ?: return@withContext null
             val id = chapterId(source.url) ?: return@withContext null
-            val raw = fetch("$apiBase/v1/chapter/detail/$id") ?: return@withContext null
+            val raw = try { fetch("$apiBase/v1/chapter/detail/$id") } catch (cancelled: CancellationException) { throw cancelled } catch (_: Exception) { null } ?: return@withContext null
             val root = runCatching { JsonParser.parseString(raw).asJsonObject }.getOrNull()
                 ?: return@withContext null
             val pageList = root.getAsJsonObject("pageList")
