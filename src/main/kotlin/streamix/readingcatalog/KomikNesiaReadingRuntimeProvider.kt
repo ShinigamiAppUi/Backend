@@ -54,16 +54,15 @@ class KomikNesiaReadingRuntimeProvider(
             }
         }
 
-    private fun slug(value: String): String? = runCatching {
-        val uri = URI(value)
-        if (!isSafeReadingHttpUrl(value) || uri.userInfo != null ||
-            (uri.port != -1 && uri.port != 80 && uri.port != 443) ||
-            !(uri.host.equals("v2.komiknesiaku.com", true) ||
-                uri.host.equals("v1.komiknesiaku.com", true) || uri.host.equals("komiknesiaku.com", true))) return null
-        val path = uri.path.trimEnd('/')
-        val result = path.substringAfterLast('/')
-        result.takeIf { path.contains("/view/") && it.matches(Regex("[A-Za-z0-9_-]{1,180}")) }
-    }.getOrNull()
+    private fun slug(value: String): String? {
+        val allowedHosts = setOf("v2.komiknesiaku.com", "v1.komiknesiaku.com", "komiknesiaku.com")
+        if (!isSafeReadingChapterUrl(value, allowedHosts) { it.contains("/view/", ignoreCase = true) }) return null
+        return runCatching {
+            val path = URI(value).path.trimEnd('/')
+            path.substringAfterLast('/')
+                .takeIf { it.matches(Regex("[A-Za-z0-9_-]{1,180}")) }
+        }.getOrNull()
+    }
 
     private fun decrypt(encoded: String, time: Double): String {
         val keyText = String.format(java.util.Locale.US, "%.8f", time / 32.0).padEnd(32, '0').take(32)
