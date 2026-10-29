@@ -265,6 +265,7 @@ import streamix.readingcatalog.ReLibraryReadingRuntimeProvider
 import streamix.readingcatalog.RechaptersReadingRuntimeProvider
 import streamix.readingcatalog.OrvReaderReadingRuntimeProvider
 import streamix.readingcatalog.NyxScansReadingRuntimeProvider
+import streamix.readingcatalog.SrankMangaReadingRuntimeProvider
 import streamix.readingcatalog.StorySeedlingReadingRuntimeProvider
 import streamix.readingcatalog.SufficientVelocityReadingRuntimeProvider
 import streamix.readingcatalog.TomatoMTLReadingRuntimeProvider
@@ -557,6 +558,7 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         RechaptersReadingRuntimeProvider(),
         OrvReaderReadingRuntimeProvider(),
         NyxScansReadingRuntimeProvider(),
+        SrankMangaReadingRuntimeProvider(),
         StorySeedlingReadingRuntimeProvider(),
         SweetEscapeReadingRuntimeProvider(),
         SufficientVelocityReadingRuntimeProvider(),
