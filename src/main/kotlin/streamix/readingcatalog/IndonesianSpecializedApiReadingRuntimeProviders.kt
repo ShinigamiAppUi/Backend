@@ -93,8 +93,17 @@ class MikoRokuReadingRuntimeProvider(private val responseFetcher: ((String) -> S
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && chapterParts(it.url) != null } ?: return@withContext null
         val (slug, key) = chapterParts(source.url) ?: return@withContext null
         val urls = listOf("https://firestore.googleapis.com/v1/projects/mikoroku/databases/(default)/documents/manga/$slug/chapters/$key", "https://firestore.googleapis.com/v1/projects/mikoroku/databases/(default)/documents/manga/$slug")
-        val pages = urls.asSequence().mapNotNull { api -> runCatching { responseFetcher?.invoke(api) ?: if (responseFetcher == null) fetch(api) else null }.getOrNull() }
-            .mapNotNull { body -> runCatching { extractFirestoreImages(JSONObject(body), key) }.getOrNull() }.firstOrNull { it.isNotEmpty() }.orEmpty().distinct()
+        val pages = urls.asSequence().mapNotNull { api ->
+            try {
+                responseFetcher?.invoke(api) ?: if (responseFetcher == null) fetch(api) else null
+            } catch (cancelled: kotlinx.coroutines.CancellationException) {
+                throw cancelled
+            } catch (_: Exception) {
+                null
+            }
+        }.mapNotNull { body ->
+            runCatching { extractFirestoreImages(JSONObject(body), key) }.getOrNull()
+        }.firstOrNull { it.isNotEmpty() }.orEmpty().distinct()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
     private fun chapterParts(value: String): Pair<String, String>? = runCatching {
