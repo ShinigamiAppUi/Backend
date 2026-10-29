@@ -2,6 +2,7 @@ package streamix.readingcatalog
 
 import java.net.URI
 import org.json.JSONObject
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -17,7 +18,7 @@ class MangaTaroReadingRuntimeProvider(
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && chapterId(it.url) != null && validChapter(it.url) } ?: return@withContext null
         val chapterId = chapterId(source.url) ?: return@withContext null
         val apiUrl = "https://mangataro.org/auth/chapter-content?chapter_id=$chapterId"
-        val body = runCatching { responseFetcher?.invoke(apiUrl) ?: if (responseFetcher == null) fetch(apiUrl) else null }.getOrNull() ?: return@withContext null
+        val body = try { responseFetcher?.invoke(apiUrl) ?: if (responseFetcher == null) fetch(apiUrl) else null } catch (cancelled: CancellationException) { throw cancelled } catch (_: Exception) { null } ?: return@withContext null
         val images = runCatching {
             val root = JSONObject(body)
             val array = root.optJSONArray("images") ?: root.optJSONObject("data")?.optJSONArray("images") ?: return@runCatching emptyList<String>()
