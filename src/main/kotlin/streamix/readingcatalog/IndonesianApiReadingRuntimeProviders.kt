@@ -54,7 +54,7 @@ class KomikuAsiaReadingRuntimeProvider(private val responseFetcher: ((String) ->
         if (segments.size < 2) return@runCatching null
         val comicId = segments[segments.size - 2]
         val chapterId = segments.last()
-        if (!comicId.matches(Regex("""[A-Za-z0-9_-]+""")) || !chapterId.matches(Regex("""[A-Za-z0-9_-]+"""))) null
+        if (!comicId.matches(Regex("""[A-Za-z0-9_-]{1,160}""")) || !chapterId.matches(Regex("""[A-Za-z0-9_-]{1,160}"""))) null
         else comicId to chapterId
     }.getOrNull()
 
