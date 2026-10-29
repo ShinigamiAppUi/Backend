@@ -29,6 +29,8 @@
 
 - **MangaReader.site runtime registration (2026-10-30):** imported `MangaReaderSiteReadingRuntimeProvider` and added it to `createSiteReadingProviders()` on the feature branch. Registration commit: `cd40a0b068d2317f39c2bfc33b2d83e35576b90f`. This completes code+registry wiring for the adapter, but not its verification: tests/build/CI remain deferred, and it must not be counted as TESTED until the final batch verification pass.
 
+- **Indonesian Manhua — Komiku source adapter added (2026-10-30):** added `KomikuManhuaReadingRuntimeProvider` with a distinct `komiku-manhua` ID, strict `MANHUA` kind dispatch, Komiku host validation, reader-image extraction, promotion-image filtering, safe image URL handling, and cancellation propagation. Code commit: `b565cb0639506f4a8b7485a7178075e9f02f5c6a`. Registration and focused tests are still pending; this is implementation code only, not a tested/working adapter claim. Tests/build/CI remain deferred until the implementation sweep is reconciled.
+
 ## Current work state
 
 - **Repository:** `ShinigamiAppUi/Backend`
