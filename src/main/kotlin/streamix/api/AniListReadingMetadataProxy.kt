@@ -3,11 +3,15 @@ package streamix.api
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import java.io.ByteArrayOutputStream
 import java.io.IOException
+import java.io.InputStream
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+
+private const val MAX_READING_METADATA_RESPONSE_BYTES = 4 * 1024 * 1024
 
 /** Reading metadata comes from AniList and is deliberately separate from Reading Catalog. */
 enum class ReadingMetadataKind {
@@ -124,7 +128,7 @@ class AniListReadingMetadataProxy(
             .build()
         try {
             http.newCall(request).execute().use { response ->
-                return Response(response.code, response.body?.bytes() ?: ByteArray(0))
+                return Response(response.code, response.body?.byteStream()?.use(::readBoundedMetadataResponse) ?: ByteArray(0))
             }
         } catch (_: IOException) {
             throw AniListReadingMetadataException(null)
@@ -196,3 +200,21 @@ class AniListReadingMetadataProxy(
 /** Sanitized upstream failure; the AniList response body is never exposed. */
 class AniListReadingMetadataException(val upstreamStatusCode: Int?) :
     RuntimeException("AniList reading metadata request failed")
+
+/** Reads at most the configured cap plus one byte so oversized upstream bodies fail closed. */
+private fun readBoundedMetadataResponse(input: InputStream): ByteArray {
+    val output = ByteArrayOutputStream()
+    val buffer = ByteArray(8192)
+    var total = 0
+    while (true) {
+        val count = input.read(buffer)
+        if (count < 0) break
+        total += count
+        if (total > MAX_READING_METADATA_RESPONSE_BYTES) {
+            throw IOException("AniList reading metadata response exceeds configured size limit")
+        }
+        output.write(buffer, 0, count)
+    }
+    return output.toByteArray()
+}
+
