@@ -21,7 +21,11 @@ class WestMangaReadingRuntimeProvider(private val responseFetcher: ((String, Map
         val images = runCatching {
             val data = JSONObject(body).optJSONObject("data") ?: JSONObject(body)
             val arr = data.optJSONArray("images") ?: return@runCatching emptyList<String>()
-            (0 until arr.length()).mapNotNull { arr.optString(it).takeIf { u -> u.isNotBlank() }?.takeIf(::validImage) }
+            (0 until arr.length()).mapNotNull { index ->
+                arr.opt(index).takeIf { it is String }?.let { (it as String).trim() }
+                    ?.takeIf(String::isNotBlank)
+                    ?.takeIf(::validImage)
+            }
         }.getOrNull().orEmpty().normalizedReadingPageUrls()
         images.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
