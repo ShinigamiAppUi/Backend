@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current batch:** Batch 1 — Manga / Indonesian (`MANGA` / `id`)
 - **Batch status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `035ee82c85ea3d33cdd4ddeec6218fa3c0015d1f` — prefer non-empty Komiku Asia page arrays
+- **Latest confirmed code commit:** `a46ed2f2aa4e48016259d608e08d7bd61c9f0d08` — reject credentialed Komiku chapter URLs
 - **Next concrete action:** continue source-by-source audit and implementation for the 25 Indonesian manga providers below. Do not start a new language batch until this batch's feasible implementations have been completed and its inventory reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** the changes so far tighten content-kind dispatch/chapter boundaries only. They do **not** mean the source-specific parser work is complete or that these adapters are fully implemented.
@@ -80,6 +80,7 @@ The class names and paths below were checked in this repository. Canonical URLs 
 - Hardened WestManga and MikoRoku chapter URL parsing by constraining API path identifiers to bounded alphanumeric/underscore/hyphen segments before interpolating them into fixed API paths.
 - Updated Bacami chapter image parsing to resolve relative `imageUrls` values against the chapter URL before HTTPS image validation, while still rejecting invalid/non-HTTPS results.
 - Updated Komiku.asia response parsing to skip empty top-level `pages` arrays and continue checking nested response locations for actual page data.
+- Hardened Komiku.asia by rejecting credentialed source URLs and bounding comic/chapter identifiers to 1–160 safe characters; hardened the separate Komiku adapter to reject credentialed chapter URLs and nonstandard ports.
 - Added explicit chapter guards to the Indonesian Manhwa provider families.
 - **Scope limitation:** this is a boundary-safety pass, not a claim that all 25 manga adapters or the manhwa batch are fully implemented. Parser details, source references, API changes, image extraction, pagination, error states, and licensing/access constraints still need per-site review.
 - **Tests/build/CI:** not run, intentionally deferred by the agreed implementation-first policy.
@@ -105,7 +106,7 @@ For each batch, check these in order:
 
 ### Batch 1 — Manga / Indonesian
 
-- **Completed so far:** initial kind-boundary pass in the main Indonesian manga groups and chapter-boundary pass in dedicated Indonesian manhwa groups.
+- **Completed so far:** initial kind-boundary pass in the main Indonesian manga groups and chapter-boundary pass in dedicated Indonesian manhwa groups; targeted hardening for WestManga/MikoRoku identifiers, Bacami relative image URLs, Komiku.asia response parsing/source URLs/IDs, and Komiku chapter URL authority.
 - **Still remaining:** per-site source-reference verification and implementation review for every row above; do not count a boundary-only patch as a finished adapter.
 - **Testing/build:** deferred; not run.
 - **Next step:** continue Manga / Indonesian; inspect and implement site-specific parsing and URL/source rules in coherent commits, updating this ledger each time.
@@ -114,4 +115,4 @@ For each batch, check these in order:
 
 | Date (UTC) | Batch | Change | Commit | Evidence / follow-up |
 |---|---|---|---|---|
-| 2026-10-29 | Manga / Indonesian | Started exact content-kind dispatch and chapter-boundary hardening; added bounded path-identifier validation for WestManga and MikoRoku API routes; resolved relative Bacami image URLs; made Komiku.asia prefer non-empty page arrays; source-specific implementation remains partial | `035ee82c85ea3d33cdd4ddeec6218fa3c0015d1f` | No tests/build run; continue site-by-site implementation before moving to the next language batch |
+| 2026-10-29 | Manga / Indonesian | Initial exact content-kind dispatch and chapter-boundary hardening; bounded WestManga/MikoRoku API identifiers; resolved relative Bacami image URLs; improved Komiku.asia page-array selection and URL/identifier validation; hardened Komiku chapter URL authority. Source-specific implementation remains partial. | `a46ed2f2aa4e48016259d608e08d7bd61c9f0d08` (latest); earlier code commits: `30743cc37adbdb7f7f1286677685ed35eafa9268`, `97fae3b1318434c711dd86b9c0e7ec848d30ffea`, `035ee82c85ea3d33cdd4ddeec6218fa3c0015d1f`, `093ae83e1ecb2eba63f9f8dc57701b8b5e8d974e`, `3981e0c12398b3fb06480984bf16d0ac2ba70b67`, `57699761a3dde90b11de32221c694d0d24d7aca5` | No tests/build run; continue site-by-site implementation before moving to the next language batch |
