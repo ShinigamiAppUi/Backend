@@ -45,17 +45,16 @@ class AniListReadingMetadataProxy(
     private data class Response(val code: Int, val body: ByteArray)
 
     override fun search(query: String, kind: ReadingMetadataKind, page: Int): List<ReadingMetadata> {
-        val country = when (kind) {
-            ReadingMetadataKind.MANHWA -> "KR"
-            ReadingMetadataKind.MANHUA -> "CN"
-            ReadingMetadataKind.MANGA -> "JP"
-            ReadingMetadataKind.NOVEL -> null
+        val mediaFilter = when (kind) {
+            ReadingMetadataKind.MANGA -> ", countryOfOrigin: \"JP\""
+            ReadingMetadataKind.MANHWA -> ", countryOfOrigin: \"KR\""
+            ReadingMetadataKind.MANHUA -> ", countryOfOrigin: \"CN\""
+            ReadingMetadataKind.NOVEL -> ", format: NOVEL"
         }
-        val format = if (kind == ReadingMetadataKind.NOVEL) "NOVEL" else null
         val graphQl = """
-            query($search:String, $page:Int, $country:String, $format:MediaFormat) {
+            query($search:String, $page:Int) {
               Page(page:$page, perPage:20) {
-                media(search:$search, type:MANGA, countryOfOrigin:$country, format:$format) {
+                media(search:$search, type:MANGA$mediaFilter) {
                   id title { romaji english native userPreferred }
                   coverImage { large } bannerImage description(asHtml:false)
                   genres status format countryOfOrigin startDate { year }
@@ -68,9 +67,7 @@ class AniListReadingMetadataProxy(
                 "query" to graphQl,
                 "variables" to mapOf(
                     "search" to query,
-                    "page" to page.coerceAtLeast(1),
-                    "country" to country,
-                    "format" to format
+                    "page" to page.coerceAtLeast(1)
                 )
             )
         )
