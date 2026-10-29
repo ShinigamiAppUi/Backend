@@ -1,5 +1,7 @@
 # Reading Adapter Implementation Progress
 
+- **Registry deduplication — Komiku Manhua (2026-10-30):** the source registry contained `KomikuManhuaReadingRuntimeProvider()` twice. Removed the duplicate entry; the adapter remains registered once. Commit: `d78eb8cf4014773a56f6f4dc0c3e43d2b69b2eee`. This is a static registry cleanup; tests/build/CI were not run.
+
 ## List-based implementation update — 2026-10-30
 
 - **User-provided source inventory — Indonesian Manhua candidates:** the supplied list names general Indonesian aggregators (Komikindo, KomikIndoID, KomikNesia, and APKOMIK) in addition to the three existing Manhua-ID adapters. Added dedicated MANHUA dispatch adapters by adapting each site's existing host validation and chapter-page/API parser, while using distinct provider IDs so Catalog source selection stays explicit:
