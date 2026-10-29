@@ -34,6 +34,7 @@ class StreamixHttpServer(
     private val port: Int = 8080,
     private val gson: Gson = Gson(),
     private val aniListProxy: AniListGateway = AniListProxy(),
+    private val aniListReadingGateway: AniListReadingGateway = AniListReadingProxy(),
     private val externalIdentityVerifier: streamix.auth.ExternalIdentityVerifier? = null,
     private val viewCounts: EpisodeViewCountStore = EpisodeViewCountStore()
 ) : AutoCloseable {
@@ -843,6 +844,39 @@ class StreamixHttpServer(
             if (!method(exchange, "GET")) return@createContext
             val parts = path.removePrefix(base).trim('/').split('/').filter { it.isNotBlank() }
             withUser(exchange) { _, _ ->
+                if (parts.size == 2 && parts[0] == "metadata" && parts[1] == "search") {
+                    val q = query(exchange, "q")?.trim().orEmpty()
+                    if (q.isBlank()) return@withUser respond(exchange, 400, mapOf("error" to "q is required"))
+                    val rawKind = query(exchange, "kind")
+                    val kind = rawKind?.trim()?.uppercase(java.util.Locale.ROOT)
+                        ?.let { runCatching { ReadingKind.valueOf(it) }.getOrNull() }
+                    if (rawKind != null && kind == null) {
+                        return@withUser respond(exchange, 400, mapOf("error" to "kind must be MANGA, MANHWA, MANHUA, or NOVEL"))
+                    }
+                    val page = query(exchange, "page")?.toIntOrNull()?.coerceAtLeast(1) ?: 1
+                    val items = try {
+                        aniListReadingGateway.search(q, page).filter { kind == null || it.kind == kind }
+                    } catch (_: AniListUpstreamException) {
+                        return@withUser respond(exchange, 502, mapOf("error" to "AniList reading metadata request failed"))
+                    }
+                    return@withUser respond(exchange, 200, mapOf("items" to items, "page" to page, "hasNextPage" to (items.size >= 20)))
+                }
+                if (parts.size == 2 && parts[0] == "metadata") {
+                    val id = parts[1].toLongOrNull()?.takeIf { it > 0L }
+                        ?: return@withUser respond(exchange, 400, mapOf("error" to "AniList metadata ID must be positive"))
+                    val rawKind = query(exchange, "kind")
+                    val kind = rawKind?.trim()?.uppercase(java.util.Locale.ROOT)
+                        ?.let { runCatching { ReadingKind.valueOf(it) }.getOrNull() }
+                    if (rawKind != null && kind == null) {
+                        return@withUser respond(exchange, 400, mapOf("error" to "kind must be MANGA, MANHWA, MANHUA, or NOVEL"))
+                    }
+                    val item = try {
+                        aniListReadingGateway.detail(id)?.takeIf { kind == null || it.kind == kind }
+                    } catch (_: AniListUpstreamException) {
+                        return@withUser respond(exchange, 502, mapOf("error" to "AniList reading metadata request failed"))
+                    } ?: return@withUser respond(exchange, 404, mapOf("error" to "AniList reading metadata not found"))
+                    return@withUser respond(exchange, 200, item)
+                }
                 val reading = readingCatalog
                     ?: return@withUser respond(exchange, 503, mapOf("error" to "reading catalog is not configured"))
                 when {
