@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current batch:** Batch 1 — Manga / Indonesian (`MANGA` / `id`)
 - **Batch status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `992c8c00e6a01256d0eccc6f3a7ef86d00fe65a6`
+- **Latest confirmed code commit:** `184b965bf2704259c849b698b2451dcfa7017996`
 - **Next concrete action:** continue source-by-source audit and implementation for the 25 Indonesian manga providers below. Do not start a new language batch until this batch's feasible implementations have been completed and its inventory reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
@@ -30,6 +30,8 @@
 | 8 | Novel | English (`en`) | `NOT_STARTED` | Reconcile the English novel inventory in `READING_MANGA_ARCHITECTURE.md`. |
 
 ## Latest implementation note — 2026-10-29
+
+- Organized the cross-content-kind adapters under `reading/shared/` by supported language where known: English sources under `shared/en/`, Indonesian sources under `shared/id/`, and multilingual sources under `shared/multilingual/`. Providers whose language is not yet proven remain in the shared root pending source audit. File moves only; provider classes and IDs are unchanged. Latest code move commit: `184b965bf2704259c849b698b2451dcfa7017996`. Tests/build/CI/live validation remain deferred.
 
 - Post-refactor static re-audit: current branch tree contains 102 `*Adapter.kt` files under `src/main/kotlin/streamix/readingcatalog/reading/`; the 102 `ReadingRuntimeProvider` imports in `BackendMain.kt` each map to an expected adapter filename. A focused re-fetch also confirmed that the Bacami balanced-array helper and shared fetch helpers remain present in representative split files. This is a structural check only, not a build/test/CI/live-source pass. Batch 1 remains `IN_PROGRESS`.
 
