@@ -850,7 +850,7 @@ class StreamixHttpServer(
                 respond(exchange, 502, mapOf("error" to "AniList reading metadata request failed"))
             }
         }
-        http.createContext(BackendApiContract.READING_METADATA_DETAIL) { exchange ->
+        http.createContext(BackendApiContract.READING_METADATA_DETAIL.substringBefore("{id}")) { exchange ->
             if (!method(exchange, "GET")) return@createContext
             val id = exchange.requestURI.path.removePrefix(BackendApiContract.READING_METADATA_DETAIL.substringBefore("{id}"))
                 .toLongOrNull()?.takeIf { it > 0L }
