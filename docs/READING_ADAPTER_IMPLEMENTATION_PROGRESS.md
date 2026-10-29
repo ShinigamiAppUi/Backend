@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current batch:** Batch 1 — Manga / Indonesian (`MANGA` / `id`)
 - **Batch status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `1f3fcc55bf403750f2e962d94ecebb5497518931` — skip invalid Komiku image candidates and continue to later attributes
+- **Latest confirmed code commit:** `01b7d2a4e81e5644f7b5e4df74eb258f6ee59787` — reject nonstandard Komiku Asia URL ports
 - **Next concrete action:** continue source-by-source audit and implementation for the 25 Indonesian manga providers below. Do not start a new language batch until this batch's feasible implementations have been completed and its inventory reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** the changes so far tighten content-kind dispatch/chapter boundaries only. They do **not** mean the source-specific parser work is complete or that these adapters are fully implemented.
@@ -28,6 +28,12 @@
 | 6 | Manhua | English (`en`) | `NOT_STARTED` | Confirm actual source/content type; do not force manga-only sites into this group. |
 | 7 | Novel | Indonesian (`id`) | `NOT_STARTED` | Reconcile the Indonesian novel inventory in `READING_MANGA_ARCHITECTURE.md`. |
 | 8 | Novel | English (`en`) | `NOT_STARTED` | Reconcile the English novel inventory in `READING_MANGA_ARCHITECTURE.md`. |
+
+## Latest implementation note — 2026-10-29
+
+- Updated `KomikuAsiaReadingRuntimeProvider` so both chapter-source URL parsing and the API transport reject embedded credentials and nonstandard ports; accepted explicit ports are limited to 80/443, alongside the existing safe-URL and exact-host checks.
+- Code commit: `01b7d2a4e81e5644f7b5e4df74eb258f6ee59787` (`fix(reading): reject nonstandard Komiku Asia URL ports`).
+- This is a targeted source hardening fix, not proof the provider is fully implemented. Batch 1 remains `IN_PROGRESS`; tests/build/CI remain deferred per the all-batches-first instruction.
 
 ## Status vocabulary
 
