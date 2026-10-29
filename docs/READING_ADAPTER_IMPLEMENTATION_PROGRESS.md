@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current batch:** Batch 1 — Manga / Indonesian (`MANGA` / `id`)
 - **Batch status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `3265a58605b865e630f70bbb397a8f57f759b412` — validate Shinigami chapter URL authority
+- **Latest confirmed code commit:** `065f015fb239edbe38abb45e9e03fe39b71d03bc` — fall through unsafe image candidates in API-backed HTML adapters
 - **Next concrete action:** continue source-by-source audit and implementation for the 25 Indonesian manga providers below. Do not start a new language batch until this batch's feasible implementations have been completed and its inventory reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** the changes so far tighten content-kind dispatch/chapter boundaries only. They do **not** mean the source-specific parser work is complete or that these adapters are fully implemented.
@@ -30,6 +30,10 @@
 | 8 | Novel | English (`en`) | `NOT_STARTED` | Reconcile the English novel inventory in `READING_MANGA_ARCHITECTURE.md`. |
 
 ## Latest implementation note — 2026-10-29
+
+- Updated the four Blogger-style Indonesian adapters in `IndonesianAdditionalReadingRuntimeProviders.kt` (Mangalay, NgamenKomik, OkyyKomik, ShiyuraSub) to validate each resolved image candidate before selection, so invalid/unsafe lazy attributes do not block later valid image attributes. Code commit: `65756b71ea4ee206c5cee4de7f139c7f19ab2605` (`fix(reading): validate every Blogger manga image candidate`).
+- Updated Siikomik and NarasiNinja HTML image extraction to validate each resolved candidate as it is tried instead of rejecting only the first non-empty attribute. Code commit: `065f015fb239edbe38abb45e9e03fe39b71d03bc` (`fix(reading): fall through unsafe API adapter image candidates`). Tests/build/CI remain deferred.
+
 
 - Hardened the native Shinigami adapter's chapter URL parsing: HTTPS catalog URLs must use the Shinigami domain or its subdomains, contain no user-info credentials, use only the default/443 port, pass the shared safe-URL guard, and yield a bounded opaque chapter identifier. The adapter still constructs API requests against its fixed API origin. Code commit: `3265a58605b865e630f70bbb397a8f57f759b412` (`fix(reading): validate Shinigami chapter URL authority`).
 - Updated MGKomik reader extraction to resolve and validate each lazy/source image candidate before selection; malformed or unsafe earlier attributes no longer prevent fallback to a later valid image. Code commit: `d5c55a9cc8c8e4bf019765b9ad0e5cb43f1b687d` (`fix(reading): fall through invalid MGKomik image candidates`).
@@ -153,6 +157,8 @@ For each batch, check these in order:
 
 | Date (UTC) | Batch | Change | Commit | Evidence / follow-up |
 |---|---|---|---|---|
+| 2026-10-29 | Manga / Indonesian | Siikomik and NarasiNinja now validate each resolved image candidate before choosing it, preserving fallback after unsafe/malformed lazy attributes. | `065f015fb239edbe38abb45e9e03fe39b71d03bc` | Targeted parser fallback fix; tests/build/CI deferred. |
+| 2026-10-29 | Manga / Indonesian | Mangalay, NgamenKomik, OkyyKomik and ShiyuraSub now validate each resolved image candidate before choosing it, preserving fallback after unsafe/malformed lazy attributes. | `65756b71ea4ee206c5cee4de7f139c7f19ab2605` | Targeted parser fallback fix; tests/build/CI deferred. |
 | 2026-10-29 | Manga / Indonesian | KomikStation and Apkomik now validate each reader image candidate before selection, allowing safe fallback after malformed/unsafe earlier attributes. | `3714158b625e550210fda7c89c7a822751aa133f` | Parser fallback improvement only; tests/build/CI deferred. |
 | 2026-10-29 | Manga / Indonesian | KlikManga now validates each lazy/source image candidate before selection and falls through to later safe attributes. | `60f2a2f53d20eb02ae3b471d6b76197ae0d51c34` | Parser fallback improvement only; tests/build/CI deferred. |
 | 2026-10-29 | Manga / Indonesian | Kiryuu and LepoyTL now resolve and validate each image attribute before choosing a candidate, preserving safe fallback to later attributes. | `4f0154a10a5bc96db9f288081394c1e8c74859dd` | Targeted parser robustness fix; no tests/build/CI run. |
