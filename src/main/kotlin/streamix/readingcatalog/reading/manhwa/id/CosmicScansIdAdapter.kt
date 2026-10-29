@@ -4,6 +4,7 @@ import java.net.URI
 import org.json.JSONObject
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -21,9 +22,7 @@ class CosmicScansIdReadingRuntimeProvider(private val responseFetcher: ((String)
             ?: return@withContext null
         val chapterId = chapterIdentity(source.url) ?: return@withContext null
         val apiUrl = "https://cdncid.csmcscns.id/v1/manga/readingPage/$chapterId"
-        val body = runCatching {
-            if (responseFetcher != null) responseFetcher.invoke(apiUrl) else fetchJson(apiUrl)
-        }.getOrNull() ?: return@withContext null
+        val body = try { if (responseFetcher != null) responseFetcher.invoke(apiUrl) else fetchJson(apiUrl) } catch (cancelled: CancellationException) { throw cancelled } catch (_: Exception) { null } ?: return@withContext null
         val pages = runCatching {
             val root = JSONObject(body)
             val data = root.optJSONObject("data") ?: root
