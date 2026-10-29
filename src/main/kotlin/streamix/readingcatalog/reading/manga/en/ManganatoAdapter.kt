@@ -1,0 +1,27 @@
+package streamix.readingcatalog
+
+import java.net.URI
+import org.jsoup.nodes.Document
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
+class ManganatoReadingRuntimeProvider(private val documentFetcher: ((String) -> Document?)? = null) : ReadingRuntimeProvider {
+    override val id = "manganato"
+    override fun supports(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry) =
+        entry.kind != ReadingKind.NOVEL && chapter.sources.any { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) }
+    override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
+        val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) } ?: return@withContext null
+        val doc = runCatching { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null }.getOrNull() ?: return@withContext null
+        val pages = doc.select(".container-chapter-reader img, .page-chapter img").mapNotNull { img ->
+            sequenceOf("data-lazy-src", "data-src", "data-original", "src").map(String::trim).firstNotNullOfOrNull { key -> img.attr(key).takeIf { it.isNotBlank() && !it.startsWith("data:") } }
+                ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }?.takeIf(::validImage)
+        }.distinct()
+        pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
+    }
+    private fun validChapter(value: String) = isSafeReadingChapterUrl(value, setOf("manganato.com", "www.manganato.com", "manganato.gg", "www.manganato.gg", "chapmanganato.to")) { it.contains("chapter", true) }
+    private fun validImage(value: String) = isSafeReadingImageUrl(value)
+    private fun fetch(value: String): Document? = fetchReadingDocument(value)
+}
+
+private fun fetchReadingDocument(value: String): Document? =
+    fetchReadingHtmlDocument(value, mapOf("Accept" to "text/html,application/xhtml+xml"))
