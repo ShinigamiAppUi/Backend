@@ -57,10 +57,12 @@ class RiztranslationReadingRuntimeProvider(private val responseFetcher: ((String
     }
     private fun chapterId(value: String): String? {
         if (!isSafeReadingChapterUrl(value, setOf("riztranslation.pages.dev")) { it.isNotBlank() }) return null
-        return runCatching {
+        return try {
             URI(value).path.trimEnd('/').substringAfterLast('/')
                 .takeIf { s -> s.length in 1..160 && s.all(Char::isDigit) }
-        }.getOrNull()
+        } catch (_: Exception) {
+            null
+        }
     }
     private fun validImage(value: String) = isSafeReadingImageUrl(value)
     private fun fetch(value: String, headers: Map<String, String>): String? =
