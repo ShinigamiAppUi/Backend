@@ -43,6 +43,11 @@ import streamix.readingcatalog.MangaPlusReadingRuntimeProvider
 import streamix.readingcatalog.VizReadingRuntimeProvider
 import streamix.readingcatalog.MangaUpReadingRuntimeProvider
 import streamix.readingcatalog.ReaperScansReadingRuntimeProvider
+import streamix.readingcatalog.RoyalRoadReadingRuntimeProvider
+import streamix.readingcatalog.NovelBuddyReadingRuntimeProvider
+import streamix.readingcatalog.NovelBinReadingRuntimeProvider
+import streamix.readingcatalog.NovelFireReadingRuntimeProvider
+import streamix.readingcatalog.FreeWebNovelReadingRuntimeProvider
 import streamix.readingcatalog.JNovelClubReadingRuntimeProvider
 import streamix.readingcatalog.BacaKomikReadingRuntimeProvider
 import streamix.readingcatalog.MangaCanReadingRuntimeProvider
@@ -228,6 +233,11 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         MangaGekoReadingRuntimeProvider(),
         ManhwaReadReadingRuntimeProvider(),
         ToonGodReadingRuntimeProvider(),
+        RoyalRoadReadingRuntimeProvider(),
+        NovelBuddyReadingRuntimeProvider(),
+        NovelBinReadingRuntimeProvider(),
+        NovelFireReadingRuntimeProvider(),
+        FreeWebNovelReadingRuntimeProvider(),
         WebNovelReadingRuntimeProvider(),
         WuxiaWorldReadingRuntimeProvider(),
         BacaLNReadingRuntimeProvider(),
