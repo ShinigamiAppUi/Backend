@@ -25,5 +25,9 @@ class NovelBookIdReadingRuntimeProvider(private val documentFetcher: ((String) -
         text.takeIf(String::isNotBlank)?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, text = it, format = "text") }
     }
 
-    private fun valid(value: String) = novelHost(value, setOf("novelbook.id")) && runCatching { URI(value).path.isNotBlank() }.getOrDefault(false)
+    private fun valid(value: String): Boolean = try {
+        novelHost(value, setOf("novelbook.id")) && !URI(value).path.isNullOrBlank()
+    } catch (_: Exception) {
+        false
+    }
 }
