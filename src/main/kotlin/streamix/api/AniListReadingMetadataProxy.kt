@@ -46,9 +46,9 @@ class AniListReadingMetadataProxy(
 
     override fun search(query: String, kind: ReadingMetadataKind, page: Int): List<ReadingMetadata> {
         val country = when (kind) {
-            ReadingMetadataKind.MANHWA -> "KR"
-            ReadingMetadataKind.MANHUA -> "CN"
-            ReadingMetadataKind.MANGA -> "JP"
+            ReadingMetadataKind.MANHWA -> ", countryOfOrigin: \"KR\", format_in: [MANGA, ONE_SHOT]"
+            ReadingMetadataKind.MANHUA -> ", countryOfOrigin: \"CN\", format_in: [MANGA, ONE_SHOT]"
+            ReadingMetadataKind.MANGA -> ", countryOfOrigin: \"JP\", format_in: [MANGA, ONE_SHOT]"
             ReadingMetadataKind.NOVEL -> null
         }
         val format = if (kind == ReadingMetadataKind.NOVEL) "NOVEL" else null
