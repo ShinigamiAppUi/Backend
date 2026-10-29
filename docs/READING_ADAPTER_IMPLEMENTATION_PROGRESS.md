@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current batch:** Batch 1 — Manga / Indonesian (`MANGA` / `id`)
 - **Batch status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `01b7d2a4e81e5644f7b5e4df74eb258f6ee59787` — reject nonstandard Komiku Asia URL ports
+- **Latest confirmed code commit:** `c7d7eca05204b2485f4558b8daa993e069d5bf05` — continue to later safe lazy-image candidates in Siikomik and NarasiNinja
 - **Next concrete action:** continue source-by-source audit and implementation for the 25 Indonesian manga providers below. Do not start a new language batch until this batch's feasible implementations have been completed and its inventory reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** the changes so far tighten content-kind dispatch/chapter boundaries only. They do **not** mean the source-specific parser work is complete or that these adapters are fully implemented.
@@ -34,6 +34,9 @@
 - Updated `KomikuAsiaReadingRuntimeProvider` so both chapter-source URL parsing and the API transport reject embedded credentials and nonstandard ports; accepted explicit ports are limited to 80/443, alongside the existing safe-URL and exact-host checks.
 - Code commit: `01b7d2a4e81e5644f7b5e4df74eb258f6ee59787` (`fix(reading): reject nonstandard Komiku Asia URL ports`).
 - This is a targeted source hardening fix, not proof the provider is fully implemented. Batch 1 remains `IN_PROGRESS`; tests/build/CI remain deferred per the all-batches-first instruction.
+
+- Updated Siikomik and NarasiNinja image extraction to validate each lazy-image candidate before selecting it. An unsafe first candidate no longer prevents the parser from trying a later safe attribute.
+- Code commit: `c7d7eca05204b2485f4558b8daa993e069d5bf05` (`fix(reading): skip unsafe lazy images in Indonesian API adapters`).
 
 ## Status vocabulary
 
