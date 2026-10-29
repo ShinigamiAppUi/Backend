@@ -55,9 +55,17 @@ class ReadingCatalogService(private val repository:ReadingCatalogRepository,priv
   val entry=repository.find(entryId)?:return null
   if (!entry.enabled) return null
   // Catalog chapters are optional: a selected AniList chapter can be passed to discovery-capable providers without persisting a synthetic chapter or URL.
+  val requestedLanguage=language?.trim()?.lowercase(Locale.ROOT)?.takeIf { it == "id" || it == "en" }
   val chapter=(entry.chapters.firstOrNull{it.id==chapterId||it.number==chapterId}
    ?: ReadingChapterEntry(id=chapterId.trim(),number=chapterId.trim())).let { selected ->
-    selected.copy(language=language?.takeIf { it == "id" || it == "en" } ?: selected.language)
+    selected.copy(
+     language=requestedLanguage ?: selected.language,
+     // Keep language-neutral sources as fallbacks, but never select a source explicitly
+     // tagged for the opposite language when the caller requested id/en.
+     sources=if(requestedLanguage==null) selected.sources else selected.sources.filter { source ->
+      source.language.isNullOrBlank() || source.language.trim().equals(requestedLanguage,ignoreCase=true)
+     }
+    )
    }
   if (chapter.id.isBlank() || chapter.number.isBlank()) return null
   val failed=failedSourceIds.toMutableSet()
