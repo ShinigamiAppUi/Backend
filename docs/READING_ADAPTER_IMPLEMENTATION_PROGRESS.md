@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current batch:** Batch 1 — Manga / Indonesian (`MANGA` / `id`)
 - **Batch status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `c7d7eca05204b2485f4558b8daa993e069d5bf05` — continue to later safe lazy-image candidates in Siikomik and NarasiNinja
+- **Latest confirmed code commit:** `d296b902f76027a39b0ad2ec92761e61b97de32c` — validate KomikIndoID image fallbacks and chapter URL authority
 - **Next concrete action:** continue source-by-source audit and implementation for the 25 Indonesian manga providers below. Do not start a new language batch until this batch's feasible implementations have been completed and its inventory reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** the changes so far tighten content-kind dispatch/chapter boundaries only. They do **not** mean the source-specific parser work is complete or that these adapters are fully implemented.
@@ -30,6 +30,9 @@
 | 8 | Novel | English (`en`) | `NOT_STARTED` | Reconcile the English novel inventory in `READING_MANGA_ARCHITECTURE.md`. |
 
 ## Latest implementation note — 2026-10-29
+
+- Hardened MikoRoku chapter URL authority checks to reject embedded credentials and nonstandard ports. Commit: `0e090d2e4c8845be273799d678ccffa3baed25c8` (`fix(reading): harden MikoRoku chapter URL authority`).
+- Hardened KomikIndoID chapter URL authority checks and changed image selection to validate each candidate as it is tried, including parsing either quote style in the `onError` fallback. Commit: `d296b902f76027a39b0ad2ec92761e61b97de32c` (`fix(reading): validate KomikIndoID image fallbacks`).
 
 - Updated `KomikuAsiaReadingRuntimeProvider` so both chapter-source URL parsing and the API transport reject embedded credentials and nonstandard ports; accepted explicit ports are limited to 80/443, alongside the existing safe-URL and exact-host checks.
 - Code commit: `01b7d2a4e81e5644f7b5e4df74eb258f6ee59787` (`fix(reading): reject nonstandard Komiku Asia URL ports`).
