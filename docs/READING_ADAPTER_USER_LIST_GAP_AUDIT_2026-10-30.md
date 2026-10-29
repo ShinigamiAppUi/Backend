@@ -31,7 +31,7 @@ Compared the user's requested site list against adapter source files under `src/
 - The other listed site names have matching adapter files or a shared/multilingual adapter in the source tree; this statement only means a source/provider candidate exists, not that live behavior is verified.
 
 ## Unrequested change detected
-A recent implementation pass added `NewManhwaReadingRuntimeProvider`, but **New Manhwa was not in the user's supplied list**. It also conflicts with the existing `canonicalReadingProviderId("new-manhwa") -> "saymanhwa"` alias, which would normalize the new provider ID away from its own registry ID. This adapter should be removed or explicitly approved; it must not be counted as fulfilling the requested list.
+A recent implementation pass added `NewManhwaReadingRuntimeProvider`, but **New Manhwa was not in the user's supplied list**. It also conflicts with the existing `canonicalReadingProviderId("new-manhwa") -> "saymanhwa"` alias, which would normalize the new provider ID away from its own registry ID. The unrequested adapter and its registry entry have now been removed. Removal commits: registry `d97ac45848a726580cb6f7ed627230ec237c570f`; adapter file `844ba19d78b51d5f574db67c9de84a638340da18`.
 
 ## Recommended implementation order
 1. Add dedicated MANHWA adapters for Komiku, Komikindo, KomikNesia, West Manga, MG Komik, and Shinigami.
