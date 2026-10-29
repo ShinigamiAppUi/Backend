@@ -56,10 +56,12 @@ class GrensiaReadingRuntimeProvider(
         }
     }
 
-    private fun validChapterUrl(value: String): Boolean = runCatching {
+    private fun validChapterUrl(value: String): Boolean = try {
         val uri = URI(value)
         novelHost(value, setOf("grensia.blogspot.com")) &&
             uri.userInfo == null && uri.port in setOf(-1, 443) &&
             uri.path.matches(Regex("/\\d{4}/\\d{2}/[^/]+\\.html"))
-    }.getOrDefault(false)
+    } catch (_: Exception) {
+        false
+    }
 }
