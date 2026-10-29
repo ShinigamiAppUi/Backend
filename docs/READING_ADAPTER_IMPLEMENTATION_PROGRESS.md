@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current batch:** Batch 1 — Manga / Indonesian (`MANGA` / `id`)
 - **Batch status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `e089d2a4a6abc0ae1df4ecd343cbf80d74f1ac73` — merge partial Komiku.asia page payloads
+- **Latest confirmed code commit:** `852b49876a8ce0a31bc941c75c144afff67b9dcd` — preserve single-page Mangalay chapters
 - **Next concrete action:** continue source-by-source audit and implementation for the 25 Indonesian manga providers below. Do not start a new language batch until this batch's feasible implementations have been completed and its inventory reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** the changes so far tighten content-kind dispatch/chapter boundaries only. They do **not** mean the source-specific parser work is complete or that these adapters are fully implemented.
@@ -31,7 +31,8 @@
 
 ## Latest implementation note — 2026-10-29
 
-- Improved Komiku.asia response parsing again: instead of stopping at the first nested `pages` array that contains any usable image, the adapter now merges candidate arrays from the root, `data`, and `chapter` payload levels. This preserves pages when an upstream response exposes only a partial list at a higher level; the shared normalizer then removes duplicates and unsafe URLs. Code commit: `e089d2a4a6abc0ae1df4ecd343cbf80d74f1ac73`. Tests/build/CI remain deferred; behavior is not yet fixture-tested.
+- Fixed a Mangalay edge case: the adapter previously always dropped the last extracted image because Blogger chapters commonly include a trailing navigation image. If a chapter contained only one image, that rule erased the whole chapter. It now preserves the extracted list when dropping the final item would leave no pages. Code commit: `852b49876a8ce0a31bc941c75c144afff67b9dcd`. This is a defensive edge-case fix; source markup and page semantics still need fixture/live verification.
+- Improved Komiku.asia response parsing: merge candidate `pages` arrays from root, `data`, and `chapter` payload levels to retain partial page lists; shared normalization removes duplicates and unsafe URLs. Code commit: `e089d2a4a6abc0ae1df4ecd343cbf80d74f1ac73`. Fixture tests remain deferred.
 - Previous Komiku.asia fallback fix `b573a974b8cbdd28326800ae4a44bed78a403532` ensured unusable top-level arrays did not suppress valid nested arrays. The merge supersedes the earlier first-usable-array strategy.
 
 ## Previous implementation notes — 2026-10-29
