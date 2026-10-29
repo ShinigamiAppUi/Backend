@@ -821,3 +821,67 @@ Repository maintenance notes mention fixes for Novel Fire, NovelBin, Riwyat, Bel
 - Archive Of Our Own, Inkitt, Royal Road, Scribble Hub, and similar community-fiction sites should be classified separately from translated light novels.
 - Novel Updates is primarily a discovery/index site, and Srank Manga needs media-type verification; neither should be assumed to provide normal novel chapter text.
 - Prioritize sources with recent source-specific maintenance **and** recent live chapter updates. Track those signals independently per section 16.3.
+
+## 17. Additional live-site candidates — Indonesian and English (2026-10-29)
+
+This section adds candidates found by checking live public site pages alongside the extension/source inventories above. Live homepage visibility and recent chapter timestamps are preliminary evidence only: they do not establish permission to scrape, stable chapter extraction, uniqueness of the source, or Shinigami implementation status. All entries remain `INVENTORY` / `AUDIT_PENDING` until the per-source audit in §15.3 and §16.3 is recorded.
+
+### 17.1 Indonesian-language novel sites — additional candidates
+
+| Site | Canonical URL | Preliminary evidence observed | Initial classification / follow-up |
+|---|---|---|---|
+| BacaLN | https://bacaln.com/ | Homepage displayed several Indonesian chapter entries dated 28 Oct 2026, including *Supreme Sword God* Ch. 621 and *The Quest for Immortality* Ch. 1243. | `AUDIT_PENDING`. Compare canonical domains and catalogue overlap against Baca Light Novel at `bacalightnovel.co`; do not assume they are the same source or independent coverage until checked. |
+| Idnovelland / Idnoveland | https://idnoveland.my.id/ | Homepage displayed chapter updates with relative ages of about 4, 10, 20 and 23 hours, and entries dated 24–27 Oct 2026. | `AUDIT_PENDING`. Verify canonical spelling/domain, redirects, prior `idnovelland.com` links, chapter text language, and duplicates. |
+| LexiNovel | https://lexinovel.web.id/ | Homepage identifies itself as an Indonesian light-novel/web-novel translation catalogue and exposes a latest-updates section. | `AUDIT_PENDING`. Inspect title search, chapter pagination, actual chapter text, domain stability, and release cadence over multiple days. |
+| Ranahnovel | https://ranahnovel.com/ | Homepage advertises translated web/light novels across Chinese cultivation, Korean murim, and Western fantasy; latest-chapter entries were visible. Its About page describes AI-assisted translation with per-novel glossaries and a DMCA/takedown contact process. | `AUDIT_PENDING`. Review site terms and rights/access constraints; check actual chapter extraction and distinguish translated text from source metadata. |
+| BUBOC | https://buboc.com/ | Homepage reported 763 novels and 250.1K chapters, with a latest-release section. | `AUDIT_PENDING`. Catalogue totals are site-reported, not independently validated. Check chapter text quality, unique coverage, canonical links, and permitted access before prioritizing. |
+| KimiNovel | https://www.kiminovel.com/ | Site About information describes Indonesian fan translations of Japanese, Mandarin, and English light novels and identifies the project as dating back to 2014. | `AUDIT_PENDING` / activity not yet established. Verify current chapter dates and recent release cadence before assigning implementation priority. |
+
+These sites are additions to the candidate inventory, not replacements for the existing Indonesian extension list in §15.1. In particular, a website discovered through live browsing is not automatically represented by an LNReader, NovelSourcery, Tadami, or NoveLA extension.
+
+### 17.2 English-language novel sites — priority candidates and classification
+
+The sites below already appear in the broader English inventory in §15.2 and/or the Tadami list in §16.4. They are highlighted here because source-code maintenance was reported in the reviewed inventories; recheck both repository history and live-site behavior before implementation.
+
+| Site | Canonical URL | Preliminary signal | Initial classification / follow-up |
+|---|---|---|---|
+| Royal Road | https://www.royalroad.com/ | English original/community fiction platform; source history in the LNReader plugin repository was reported active through 28 Oct 2026. | `AUDIT_PENDING`. Classify separately from translated light novels. Bot-check/access controls must not be bypassed. |
+| NovelBin | https://novelbin.com/ | NovelBin source maintenance was reported on 28 Oct 2026, including a move toward a standalone JSON API plugin; aliases and mirrors appear in source inventories. | `AUDIT_PENDING`. Confirm canonical domain and API terms, and deduplicate aliases such as NovelBin.com / NovelBin.net / NovelBin.xyz before counting adapters. |
+| WebNovel | https://www.webnovel.com/ | Source fixes were reported on 26 Oct 2026 for chapter date/statistics and ongoing-status handling, with earlier search fixes in Sep 2026. | `AUDIT_PENDING`. Check access restrictions, login/paywall behavior, permitted access, and whether each target chapter is readable without bypassing controls. |
+| NovelBuddy | https://novelbuddy.me/ | Source search/query-length fix was reported on 19 Oct 2026 and a domain change in Jul 2026. | `AUDIT_PENDING`. Verify canonical domain, live search/chapter retrieval, and duplicate coverage. |
+| FreeWebNovel | https://freewebnovel.com/ | Listed in the NovelSourcery and Tadami source inventories; source-pool changes were reported in late Oct 2026. | `AUDIT_PENDING`. Verify source-specific changes, actual chapter content, domain redirects, and release cadence. |
+| NovelFire | https://novelfire.net/ | Source changes were reported in Aug–Oct 2026 in the reviewed inventories. | `AUDIT_PENDING`. Confirm current canonical domain, chapter extraction, and whether another alias maps to the same site. |
+| NovelPhoenix | https://novelphoenix.com/ | A source entry/change was reported in the broader extension inventory during 2026; current canonical availability is not yet established by this review. | `AUDIT_PENDING`. Resolve the current canonical domain before implementation; do not infer availability from a descriptor alone. |
+| Scribble Hub | https://www.scribblehub.com/ | Community-fiction platform included in the English source inventory. | `AUDIT_PENDING`. Keep in a separate original/community-fiction category; check terms, API/robots guidance, and chapter order. |
+
+### 17.3 Research references
+
+**Live Indonesian sites**
+- BacaLN homepage and latest chapter entries: https://bacaln.com/
+- Idnovelland / Idnoveland homepage and latest updates: https://idnoveland.my.id/
+- LexiNovel homepage and latest-updates section: https://lexinovel.web.id/
+- Ranahnovel homepage: https://ranahnovel.com/
+- Ranahnovel About, translation approach and takedown information: https://ranahnovel.com/tentang
+- BUBOC homepage and reported catalogue totals: https://buboc.com/
+- KimiNovel: https://www.kiminovel.com/
+
+**Extension inventories and source-code history**
+- LNReader official plugin directory (reports the overall plugin/language inventory): https://www.lnreader.app/plugins
+- LNReader Indonesian plugins: https://github.com/LNReader/lnreader-plugins/tree/master/plugins/indonesian
+- LNReader English plugins: https://github.com/LNReader/lnreader-plugins/tree/master/plugins/english
+- NovelSourcery source code — Indonesian sources: https://github.com/NovelSourcery/extensions-source/tree/main/src/id
+- NovelSourcery source code — English sources: https://github.com/NovelSourcery/extensions-source/tree/main/src/en
+- NovelSourcery source repository and license/disclaimer: https://github.com/NovelSourcery/extensions-source
+- NoveLA external sources — Indonesian: https://github.com/HnDK0/external-sources/tree/main/id
+- NoveLA external sources — English: https://github.com/HnDK0/external-sources/tree/main/en
+- WOX Tadami novel extensions: https://github.com/WizardOfXerox/WOX-Tadami-Extensions/tree/main/apks/novel
+- WOX Tadami novel manifest: https://github.com/WizardOfXerox/WOX-Tadami-Extensions/blob/main/apks/novel/index.json
+- LNReader Grensia source history: https://github.com/LNReader/lnreader-plugins/commits/master/plugins/indonesian/grensia.ts
+- LNReader IndoWebNovel source history: https://github.com/LNReader/lnreader-plugins/commits/master/plugins/indonesian/indowebnovel.ts
+- LNReader Royal Road source history: https://github.com/LNReader/lnreader-plugins/commits/master/plugins/english/royalroad.ts
+- LNReader NovelBin source history: https://github.com/LNReader/lnreader-plugins/commits/master/plugins/english/novelbin.ts
+- LNReader WebNovel source history: https://github.com/LNReader/lnreader-plugins/commits/master/plugins/english/webnovel.ts
+- LNReader NovelBuddy source history: https://github.com/LNReader/lnreader-plugins/commits/master/plugins/english/novelbuddy.ts
+
+**Research caveat:** Website content, redirects, extension code, licensing and anti-bot behavior can change. The timestamps above are observations from the research pass dated 2026-10-29, not a continuing availability guarantee. Recheck them when an adapter is selected. Do not bypass authentication, paywalls, bot challenges, or other access controls; record a source as `UNAVAILABLE` when it cannot be accessed within permitted boundaries.
+
