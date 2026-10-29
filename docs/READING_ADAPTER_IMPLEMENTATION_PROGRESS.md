@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current batch:** Batch 1 — Manga / Indonesian (`MANGA` / `id`)
 - **Batch status:** `IN_PROGRESS`
-- **Latest confirmed code commit: `cce3c472f26f71abf99cdd56f8904ae8a7417fa0`
+- **Latest confirmed code commit: `c06363f2f833e95b526a035f1dbd20b606f8711e`
 - **Next concrete action:** continue source-by-source audit and implementation for the 25 Indonesian manga providers below. Do not start a new language batch until this batch's feasible implementations have been completed and its inventory reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
@@ -30,6 +30,8 @@
 | 8 | Novel | English (`en`) | `NOT_STARTED` | Reconcile the English novel inventory in `READING_MANGA_ARCHITECTURE.md`. |
 
 ## Latest implementation note — 2026-10-29
+
+- MikoRoku chapter URL validation now requires the exact `manga/{slug}/chapter/{key}` suffix after any optional prefix segments. Previously extra path segments after the chapter key were silently ignored while the adapter fetched the API resource for the earlier key. The host, HTTPS, slug/key character and length checks remain enforced. Code commit: `c06363f2f833e95b526a035f1dbd20b606f8711e`. Tests/build/CI and live validation remain deferred.
 
 - WestManga now rejects a route whose extracted final segment is exactly `chapter` (case-insensitive). The route validator previously allowed a multi-segment path containing a chapter marker even if no chapter identifier followed it, which could construct `/api/v/chapter`. Slug syntax and length checks remain enforced. Code commit: `cce3c472f26f71abf99cdd56f8904ae8a7417fa0`. Tests/build/CI and live validation remain deferred.
 
