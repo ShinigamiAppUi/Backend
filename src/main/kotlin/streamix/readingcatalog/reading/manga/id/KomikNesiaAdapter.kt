@@ -76,11 +76,13 @@ class KomikNesiaReadingRuntimeProvider(
     private fun slug(value: String): String? {
         val allowedHosts = setOf("v2.komiknesiaku.com", "v1.komiknesiaku.com", "komiknesiaku.com")
         if (!isSafeReadingChapterUrl(value, allowedHosts) { it.contains("/view/", ignoreCase = true) }) return null
-        return runCatching {
+        return try {
             val path = URI(value).path.trimEnd('/')
             path.substringAfterLast('/')
                 .takeIf { it.matches(Regex("[A-Za-z0-9_-]{1,180}")) }
-        }.getOrNull()
+        } catch (_: Exception) {
+            null
+        }
     }
 
     private fun decrypt(encoded: String, time: Double): String {
