@@ -152,7 +152,11 @@ class MikoRokuReadingRuntimeProvider(private val responseFetcher: ((String) -> S
         val fields = root.optJSONObject("fields") ?: return emptyList()
         fun list(value: JSONObject?): List<String> {
             val a = value?.optJSONObject("arrayValue")?.optJSONArray("values") ?: return emptyList()
-            return (0 until a.length()).mapNotNull { i -> a.optJSONObject(i)?.optString("stringValue")?.takeIf(::validImage) }
+            return (0 until a.length()).mapNotNull { i ->
+                a.optJSONObject(i)?.optString("stringValue")?.trim()
+                    ?.takeIf(String::isNotBlank)
+                    ?.takeIf(::validImage)
+            }
         }
         // Prefer direct images only when they survive shared normalization. A non-empty
         // array may still contain only duplicate/unsafe entries; in that case inspect the
