@@ -71,10 +71,12 @@ class MangalayReadingRuntimeProvider(private val documentFetcher: ((String) -> D
         val all = doc.select(".separator img").mapNotNull { img ->
             sequenceOf("data-lazy-src", "data-src", "data-original", "src")
                 .map { key -> img.attr(key).trim() }
-                .firstNotNullOfOrNull { raw ->
-                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:") }
+                .mapNotNull { raw ->
+                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:", ignoreCase = true) }
                         ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }
-                }?.takeIf(::validImage)
+                        ?.takeIf(::validImage)
+                }
+                .firstOrNull()
         }.distinct()
         all.dropLast(1).takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
@@ -95,10 +97,12 @@ class NgamenKomikReadingRuntimeProvider(private val documentFetcher: ((String) -
         val pages = doc.select(".separator img").mapNotNull { img ->
             sequenceOf("data-lazy-src", "data-src", "data-original", "src")
                 .map { key -> img.attr(key).trim() }
-                .firstNotNullOfOrNull { raw ->
-                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:") }
+                .mapNotNull { raw ->
+                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:", ignoreCase = true) }
                         ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }
-                }?.takeIf(::validImage)
+                        ?.takeIf(::validImage)
+                }
+                .firstOrNull()
         }.distinct()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
@@ -145,10 +149,12 @@ class OkyyKomikReadingRuntimeProvider(private val documentFetcher: ((String) -> 
         val pages = doc.select("article div.separator img").mapNotNull { img ->
             sequenceOf("data-lazy-src", "data-src", "data-original", "src")
                 .map { key -> img.attr(key).trim() }
-                .firstNotNullOfOrNull { raw ->
-                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:") }
+                .mapNotNull { raw ->
+                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:", ignoreCase = true) }
                         ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }
-                }?.takeIf(::validImage)
+                        ?.takeIf(::validImage)
+                }
+                .firstOrNull()
         }.distinct()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
@@ -169,10 +175,12 @@ class ShiyuraSubReadingRuntimeProvider(private val documentFetcher: ((String) ->
         val pages = doc.select(".separator img").mapNotNull { img ->
             sequenceOf("data-lazy-src", "data-src", "data-original", "src")
                 .map { key -> img.attr(key).trim() }
-                .firstNotNullOfOrNull { raw ->
-                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:") }
+                .mapNotNull { raw ->
+                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:", ignoreCase = true) }
                         ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }
-                }?.takeIf(::validImage)
+                        ?.takeIf(::validImage)
+                }
+                .firstOrNull()
         }.distinct()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
