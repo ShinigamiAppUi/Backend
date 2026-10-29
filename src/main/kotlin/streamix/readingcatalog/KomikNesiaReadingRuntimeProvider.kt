@@ -31,7 +31,13 @@ class KomikNesiaReadingRuntimeProvider(
             val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && slug(it.url) != null }
                 ?: return@withContext null
             val slug = slug(source.url) ?: return@withContext null
-            val raw = fetch("$apiBase/chapters/slug/$slug") ?: return@withContext null
+            val raw = try {
+                fetch("$apiBase/chapters/slug/$slug")
+            } catch (cancelled: kotlinx.coroutines.CancellationException) {
+                throw cancelled
+            } catch (_: Exception) {
+                null
+            } ?: return@withContext null
             val root = runCatching { JsonParser.parseString(raw).asJsonObject }.getOrNull() ?: return@withContext null
             val payload = if (root.get("encrypted")?.takeIf { it.isJsonPrimitive }?.asBoolean == true) {
                 val encrypted = root.get("data")?.takeIf { it.isJsonPrimitive }?.asString ?: return@withContext null
