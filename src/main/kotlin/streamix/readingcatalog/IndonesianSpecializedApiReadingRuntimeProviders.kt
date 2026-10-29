@@ -25,7 +25,20 @@ class WestMangaReadingRuntimeProvider(private val responseFetcher: ((String, Map
         }.getOrNull().orEmpty().distinct()
         images.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
-    private fun chapterSlug(value: String): String? = runCatching { URI(value).let { u -> val parts = u.path.split('/').filter(String::isNotBlank); if (isSafeReadingHttpUrl(value) && u.host.equals("v1.westmanga.my", true) && parts.size >= 2 && parts.any { it.contains("chapter", true) }) parts.first() else null } }.getOrNull()
+    private fun chapterSlug(value: String): String? = runCatching {
+        URI(value).let { u ->
+            val parts = u.path.split('/').filter(String::isNotBlank)
+            val slug = parts.firstOrNull()
+            if (
+                isSafeReadingHttpUrl(value) &&
+                u.host.equals("v1.westmanga.my", true) &&
+                parts.size >= 2 &&
+                parts.any { it.contains("chapter", true) } &&
+                slug != null &&
+                slug.matches(Regex("[A-Za-z0-9_-]{1,160}"))
+            ) slug else null
+        }
+    }.getOrNull()
     private fun signedHeaders(value: String): Map<String, String> {
         val timestamp = (System.currentTimeMillis() / 1000).toString()
         val accessKey = "WM_WEB_FRONT_END"
@@ -89,7 +102,13 @@ class MikoRokuReadingRuntimeProvider(private val responseFetcher: ((String) -> S
         val p = u.path.split('/').filter(String::isNotBlank)
         val i = p.indexOf("manga")
         if (i < 0 || p.getOrNull(i + 2) != "chapter") return@runCatching null
-        p.getOrNull(i + 1)?.let { slug -> p.getOrNull(i + 3)?.let { key -> slug to key } }
+        p.getOrNull(i + 1)
+            ?.takeIf { it.matches(Regex("[A-Za-z0-9_-]{1,160}")) }
+            ?.let { slug ->
+                p.getOrNull(i + 3)
+                    ?.takeIf { it.matches(Regex("[A-Za-z0-9_-]{1,160}")) }
+                    ?.let { key -> slug to key }
+            }
     }.getOrNull()
     private fun extractFirestoreImages(root: JSONObject, key: String): List<String> {
         val fields = root.optJSONObject("fields") ?: return emptyList()
