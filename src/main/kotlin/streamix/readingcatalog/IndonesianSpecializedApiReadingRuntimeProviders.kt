@@ -31,6 +31,7 @@ class WestMangaReadingRuntimeProvider(private val responseFetcher: ((String, Map
             val slug = parts.firstOrNull()
             if (
                 isSafeReadingHttpUrl(value) &&
+                u.userInfo == null && (u.port == -1 || u.port == 443 || u.port == 80) &&
                 u.host.equals("v1.westmanga.my", true) &&
                 parts.size >= 2 &&
                 parts.any { it.contains("chapter", true) } &&
