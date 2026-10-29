@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current pass:** Implementation-first sweep across all eight content/language groups; preserve the eight separate batch records and language boundaries.
 - **Pass status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `d81937a21f5df084966aaa35807ce4b3a49c4554`
+- **Latest confirmed code commit:** `ba69b1e3fe76ab07552f73c969c7d82bdd60e562`
 - **Next concrete action:** continue the implementation-first sweep from `docs/READING_MANGA_ARCHITECTURE.md`, creating site-specific adapters and registering each one for every feasible inventory source across the eight content/language groups. Record duplicate, metadata-only, language-uncertain, inaccessible, and access-restricted sources explicitly; defer cleanup and full test/build until the inventory implementation pass is reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
@@ -39,6 +39,9 @@
 
 
 - **Shared comic adapter cancellation hardening (2026-10-29):** continued the static scan of shared comic providers. WebtoonXYZ and WeebCentral also wrapped document fetches in `runCatching`, which could swallow an injected fetcher's coroutine cancellation. Both now rethrow `CancellationException` and treat only ordinary exceptions as fetch failures. Commits: WebtoonXYZ `bff4d68c3449dca405393c36ee82946cda6b66af`; WeebCentral `d81937a21f5df084966aaa35807ce4b3a49c4554`. Combined with the previous Noromax/SekteKomik fixes, this is static cancellation hardening only; source-specific selectors/routes and chapter output remain pending focused fixtures/live verification. No tests/build/CI run.
+
+
+- **English Manga adapter cancellation hardening (2026-10-29):** a targeted source scan found the same fetch-wrapper issue in MangaGeko and MangaHere. Their document-fetch calls now propagate `CancellationException` instead of converting cancellation into a missing chapter. Commits: MangaGeko `1ad3de0e551f6058d288d05bcd9c7292709c7df8`; MangaHere `ba69b1e3fe76ab07552f73c969c7d82bdd60e562`. Nearby sampled providers MangaBat, MangaDemon, and MangaGG already explicitly rethrow cancellation. This remains static hardening; no tests/build/CI run and no claim of live-source verification.
 
 ## Batch plan
 
