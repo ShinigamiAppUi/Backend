@@ -31,17 +31,17 @@ class MikoRokuReadingRuntimeProvider(private val responseFetcher: ((String) -> S
         }.firstOrNull { it.isNotEmpty() }.orEmpty()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
-    private fun chapterParts(value: String): Pair<String, String>? = runCatching {
+    private fun chapterParts(value: String): Pair<String, String>? = try {
         if (!isSafeReadingChapterUrl(value, setOf("mikoroku.com")) { path ->
                 val segments = path.split('/').filter(String::isNotBlank)
                 val index = segments.indexOf("manga")
                 index >= 0 &&
                     segments.size == index + 4 &&
                     segments.getOrNull(index + 2) == "chapter"
-            }) return@runCatching null
+            }) return null
         val p = URI(value).path.split('/').filter(String::isNotBlank)
         val i = p.indexOf("manga")
-        if (i < 0 || p.size != i + 4 || p.getOrNull(i + 2) != "chapter") return@runCatching null
+        if (i < 0 || p.size != i + 4 || p.getOrNull(i + 2) != "chapter") return null
         p.getOrNull(i + 1)
             ?.takeIf { it.matches(Regex("[A-Za-z0-9_-]{1,160}")) }
             ?.let { slug ->
@@ -49,7 +49,9 @@ class MikoRokuReadingRuntimeProvider(private val responseFetcher: ((String) -> S
                     ?.takeIf { it.matches(Regex("[A-Za-z0-9_-]{1,160}")) }
                     ?.let { key -> slug to key }
             }
-    }.getOrNull()
+    } catch (_: Exception) {
+        null
+    }
     private fun extractFirestoreImages(root: JSONObject, key: String): List<String> {
         val fields = root.optJSONObject("fields") ?: return emptyList()
         fun list(value: JSONObject?): List<String> {
