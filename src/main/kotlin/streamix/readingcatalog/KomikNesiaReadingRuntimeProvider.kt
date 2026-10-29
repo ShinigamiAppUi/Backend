@@ -28,7 +28,7 @@ class KomikNesiaReadingRuntimeProvider(
 
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? =
         withContext(Dispatchers.IO) {
-            if (entry.kind == ReadingKind.NOVEL) return@withContext null
+            if (entry.kind != ReadingKind.MANGA) return@withContext null
             val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && slug(it.url) != null }
                 ?: return@withContext null
             val slug = slug(source.url) ?: return@withContext null
