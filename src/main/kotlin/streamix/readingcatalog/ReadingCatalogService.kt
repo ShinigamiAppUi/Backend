@@ -53,6 +53,7 @@ class ReadingCatalogService(private val repository:ReadingCatalogRepository,priv
  /** Anime Catalog tier order: DIRECT -> RESOLVER -> EXTRACTOR -> multi-provider runtime race. */
  suspend fun resolveChapter(entryId:String,chapterId:String,failedSourceIds:Set<String> = emptySet(),language:String?=null):ReadingContent?{
   val entry=repository.find(entryId)?:return null
+  if (!entry.enabled) return null
   // Catalog chapters are optional: a selected AniList chapter can be passed to discovery-capable providers without persisting a synthetic chapter or URL.
   val chapter=(entry.chapters.firstOrNull{it.id==chapterId||it.number==chapterId}
    ?: ReadingChapterEntry(id=chapterId.trim(),number=chapterId.trim())).let { selected ->
@@ -68,7 +69,7 @@ class ReadingCatalogService(private val repository:ReadingCatalogRepository,priv
      if(handler!=null) handler.resolve(entry,chapter,source)
      else if(type==ReadingSourceType.DIRECT) ReadingContent(entry.kind,source.id,contentUrl=source.url)
      else null
-    }catch(e:CancellationException){throw e}catch(_:Throwable){null}
+    }catch(e:CancellationException){throw e}catch(_:Exception){null}
     if(result?.isUsableFor(entry.kind)==true)return result
     // If no explicit EXTRACTOR handler exists, this chapter is intended for the
     // site-specific runtime adapter. Do not poison that adapter's provider/source
@@ -80,7 +81,7 @@ class ReadingCatalogService(private val repository:ReadingCatalogRepository,priv
     }
    }
   }
-  return try{providerRuntime?.race(entry,chapter,failedSourceIds+failed)?.takeIf{it.isUsableFor(entry.kind)}}catch(e:CancellationException){throw e}catch(_:Throwable){null}
+  return try{providerRuntime?.race(entry,chapter,failedSourceIds+failed)?.takeIf{it.isUsableFor(entry.kind)}}catch(e:CancellationException){throw e}catch(_:Exception){null}
  }
  fun putChapter(entryId:String,chapter:ReadingChapterEntry):ReadingCatalogEntry? {
   val entry=repository.find(entryId)?:return null
