@@ -233,6 +233,16 @@ import streamix.readingcatalog.ReadFromReadingRuntimeProvider
 import streamix.readingcatalog.RequiemTranslationsReadingRuntimeProvider
 import streamix.readingcatalog.SleepyTranslationsReadingRuntimeProvider
 import streamix.readingcatalog.SonicMTLReadingRuntimeProvider
+import streamix.readingcatalog.TransWeaverReadingRuntimeProvider
+import streamix.readingcatalog.UniversalNovelReadingRuntimeProvider
+import streamix.readingcatalog.VandyTranslateReadingRuntimeProvider
+import streamix.readingcatalog.WebNovelTranslationReadingRuntimeProvider
+import streamix.readingcatalog.WhiteMoonlightNovelsReadingRuntimeProvider
+import streamix.readingcatalog.WitchCultTranslationsReadingRuntimeProvider
+import streamix.readingcatalog.WooksTeahouseReadingRuntimeProvider
+import streamix.readingcatalog.WTRLABReadingRuntimeProvider
+import streamix.readingcatalog.WuxiaBoxReadingRuntimeProvider
+import streamix.readingcatalog.ZetroTranslationReadingRuntimeProvider
 import streamix.readingcatalog.ReadingProviderRuntimeRace
 import streamix.readingcatalog.ReadingRuntimeProvider
 import streamix.readingcatalog.ReadingSourceType
@@ -384,6 +394,16 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         ManhwaReadReadingRuntimeProvider(),
         ToonGodReadingRuntimeProvider(),
         RoyalRoadReadingRuntimeProvider(),
+        ZetroTranslationReadingRuntimeProvider(),
+        WuxiaBoxReadingRuntimeProvider(),
+        WTRLABReadingRuntimeProvider(),
+        WooksTeahouseReadingRuntimeProvider(),
+        WitchCultTranslationsReadingRuntimeProvider(),
+        WhiteMoonlightNovelsReadingRuntimeProvider(),
+        WebNovelTranslationReadingRuntimeProvider(),
+        VandyTranslateReadingRuntimeProvider(),
+        UniversalNovelReadingRuntimeProvider(),
+        TransWeaverReadingRuntimeProvider(),
         SonicMTLReadingRuntimeProvider(),
         SleepyTranslationsReadingRuntimeProvider(),
         RequiemTranslationsReadingRuntimeProvider(),
