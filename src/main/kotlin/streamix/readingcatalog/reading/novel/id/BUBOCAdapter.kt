@@ -39,6 +39,9 @@ class BubocReadingRuntimeProvider(private val documentFetcher: ((String) -> Docu
             }
         }
 
-    private fun validChapterUrl(value: String): Boolean =
-        novelHost(value, setOf("buboc.com")) && runCatching { URI(value).path.isNotBlank() }.getOrDefault(false)
+    private fun validChapterUrl(value: String): Boolean = try {
+        novelHost(value, setOf("buboc.com")) && URI(value).path.isNotBlank()
+    } catch (_: Exception) {
+        false
+    }
 }
