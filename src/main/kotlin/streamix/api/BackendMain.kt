@@ -243,6 +243,11 @@ import streamix.readingcatalog.WooksTeahouseReadingRuntimeProvider
 import streamix.readingcatalog.WTRLABReadingRuntimeProvider
 import streamix.readingcatalog.WuxiaBoxReadingRuntimeProvider
 import streamix.readingcatalog.ZetroTranslationReadingRuntimeProvider
+import streamix.readingcatalog.AsianNovelReadingRuntimeProvider
+import streamix.readingcatalog.BakaTsukiReadingRuntimeProvider
+import streamix.readingcatalog.ByteTranslationsReadingRuntimeProvider
+import streamix.readingcatalog.CrimsonScrollsReadingRuntimeProvider
+import streamix.readingcatalog.HoneyfeedReadingRuntimeProvider
 import streamix.readingcatalog.ReadingProviderRuntimeRace
 import streamix.readingcatalog.ReadingRuntimeProvider
 import streamix.readingcatalog.ReadingSourceType
@@ -394,6 +399,11 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         ManhwaReadReadingRuntimeProvider(),
         ToonGodReadingRuntimeProvider(),
         RoyalRoadReadingRuntimeProvider(),
+        HoneyfeedReadingRuntimeProvider(),
+        CrimsonScrollsReadingRuntimeProvider(),
+        ByteTranslationsReadingRuntimeProvider(),
+        BakaTsukiReadingRuntimeProvider(),
+        AsianNovelReadingRuntimeProvider(),
         ZetroTranslationReadingRuntimeProvider(),
         WuxiaBoxReadingRuntimeProvider(),
         WTRLABReadingRuntimeProvider(),
