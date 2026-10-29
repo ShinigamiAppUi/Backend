@@ -32,14 +32,17 @@ class KomikuAsiaReadingRuntimeProvider(private val responseFetcher: ((String) ->
                 .firstOrNull { it != null && it.length() > 0 } ?: return@runCatching emptyList<String>()
             (0 until pageArray.length()).mapNotNull { index ->
                 val item = pageArray.opt(index)
-                val raw = when (item) {
+                when (item) {
                     is JSONObject -> sequenceOf("url", "src", "image", "image_url")
-                        .mapNotNull { key -> item.optString(key).takeIf { it.isNotBlank() && it != "null" } }
+                        .mapNotNull { key ->
+                            item.optString(key)
+                                .takeIf { it.isNotBlank() && it != "null" }
+                                ?.let { resolveSafeImage(it, apiUrl) }
+                        }
                         .firstOrNull()
-                    is String -> item.takeIf { it.isNotBlank() && it != "null" }
+                    is String -> item.takeIf { it.isNotBlank() && it != "null" }?.let { resolveSafeImage(it, apiUrl) }
                     else -> null
-                } ?: return@mapNotNull null
-                resolveSafeImage(raw, apiUrl)
+                }
             }
         }.getOrNull().orEmpty().filter(String::isNotBlank).distinct()
         pages.takeIf { it.isNotEmpty() }?.let {
