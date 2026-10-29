@@ -33,6 +33,8 @@
 
 - **Runtime registry wiring for list-based additions (2026-10-30):** registered `KomikuManhuaReadingRuntimeProvider` and `MangaReaderSiteReadingRuntimeProvider` in `createSiteReadingProviders()`. Registration commit: `88438a333ce075cce609bcc191793293222ca7f5`. Both remain `IMPLEMENTED / NOT TESTED`; registration alone is not functional verification. The full adapter test/build/CI pass remains deferred.
 
+- **Progress pointer refresh (2026-10-30):** latest code commit pointer advanced to `b565cb0639506f4a8b7485a7178075e9f02f5c6a` after adding the Indonesian Komiku MANHUA adapter. Latest registration commit is `88438a333ce075cce609bcc191793293222ca7f5`. This refresh updates only the handoff pointer and next action; it does not assert tests or live validation.
+
 ## Current work state
 
 - **Repository:** `ShinigamiAppUi/Backend`
@@ -40,8 +42,8 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current pass:** Implementation-first sweep across all eight content/language groups; preserve the eight separate batch records and language boundaries.
 - **Pass status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `f251dc911d520f9bf61ca0c4fa83205d0a50f8ab`
-- **Next concrete action:** continue the implementation-first sweep from `docs/READING_MANGA_ARCHITECTURE.md`, creating site-specific adapters and registering each one for every feasible inventory source across the eight content/language groups. Record duplicate, metadata-only, language-uncertain, inaccessible, and access-restricted sources explicitly; defer cleanup and full test/build until the inventory implementation pass is reconciled.
+- **Latest confirmed code commit:** `b565cb0639506f4a8b7485a7178075e9f02f5c6a`
+- **Next concrete action:** continue the missing-source delta sweep across all eight groups against the supplied inventory and `createSiteReadingProviders()`. Prioritize site-specific adapters for list entries not yet represented, while explicitly classifying index-only sources (for example Novel Updates / Light Novel Updates) and same-site variants that should not become duplicate adapters. Keep every code/registration commit recorded here; defer full tests/build/CI until the implementation pass is reconciled. Record duplicate, metadata-only, language-uncertain, inaccessible, and access-restricted sources explicitly; defer cleanup and full test/build until the inventory implementation pass is reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 
 
