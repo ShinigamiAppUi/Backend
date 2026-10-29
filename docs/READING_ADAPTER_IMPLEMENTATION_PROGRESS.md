@@ -12,6 +12,8 @@
 
 - **Indonesian Manhua — Komiku API chapter route correction (2026-10-30):** the Komiku.com manhua adapter parsed the final two URL segments as comic ID and chapter ID, but the API route contains an intervening language segment (`.../comics/{comicId}/chapters/id/{chapterId}`). This incorrectly treated literal `id` as the comic ID. Replaced the loose final-segment extraction with a site-specific canonical route match. Code commit: `f251dc911d520f9bf61ca0c4fa83205d0a50f8ab`. Added regression coverage for correct comic/chapter ID extraction and rejection of non-canonical language/extra-segment routes; test authoring commits: `1b623d2178b8aaa7fa850efbbaaf67c47d487ea6`, `f4b4baf4e041ea857582f42bc7b448c28ddaa071`. Tests/build/CI/live requests were not run; the adapter remains unverified pending the deferred batch verification pass.
 
+- **English Manga — MangaReader.site adapter added (2026-10-30):** added a dedicated `MangaReaderSiteReadingRuntimeProvider` for the distinct `mangareader.site` domain, rather than assuming it is the same source as MangaReader.to/.org. The chapter route is constrained to HTTPS `/chapter/...`; extraction is scoped to reader image elements and the observed `mghcdn.com` image CDN, with coroutine cancellation propagated. Code commit: `7e542e7ebdf5f06def12302c969126097cf7795f`. This adapter is not yet registered in `BackendMain.createSiteReadingProviders()` and is therefore not runtime-available yet; registration is the next step. The live page structure was inspected, but no automated tests/build/CI or live HTTP fetch from backend were run; selector/CDN coverage remains unverified.
+
 ## Current work state
 
 - **Repository:** `ShinigamiAppUi/Backend`
