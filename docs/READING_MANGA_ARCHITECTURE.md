@@ -694,3 +694,130 @@ For each shortlisted site, record separate measurements:
 - **Decision:** `PRIORITY_A`, `PRIORITY_B`, `LOW_ACTIVITY`, `BROKEN`, `DUPLICATE`, or `UNAVAILABLE`, with dated evidence.
 
 Do not equate a repository's frequent commits with frequent chapter releases. Use source-code freshness to decide what to audit first, then use live publication evidence to decide which providers deserve implementation priority.
+
+### 16.4 Additional source pool — WOX Tadami Extensions (2026-10-29)
+
+Add **[WizardOfXerox/WOX-Tadami-Extensions](https://github.com/WizardOfXerox/WOX-Tadami-Extensions/tree/main/apks/novel)** as another discovery pool, alongside NovelSourcery, LNReader plugins, NoveLA, NovelScraper, IReader and Shosetsu. Its novel manifest is [index.json](https://github.com/WizardOfXerox/WOX-Tadami-Extensions/blob/main/apks/novel/index.json) and contains **192 entries total** across languages. The manifest lists **8 Indonesian** and **99 English** entries. These are *source descriptors*, not proof of site activity, unique canonical domains, or Shinigami-ready adapters.
+
+Repository maintenance notes mention fixes for Novel Fire, NovelBin, Riwyat, Belle Repository, Genesis, SakuraNovel and Foxaholic. That is a useful adapter-maintenance signal, but not live chapter-cadence evidence. Before implementation, check canonical domain, chapter text language, actual novel content (not comics/index-only sites), duplicate domains/aliases, access restrictions, search, chapter order and recent chapter timestamps. Keep separate labels for translated light novels, original/community fiction, MTL and discovery/index sites.
+
+#### Indonesian candidates from Tadami manifest (8)
+
+- [ ] **Baca Light Novel** — https://bacalightnovel.co/ — ID: bacalightnovel
+- [ ] **IndoWebNovel** — https://indowebnovel.id/ — ID: IDWN.id
+- [ ] **MeioNovel** — https://meionovels.com/ — ID: meionovel
+- [ ] **MTL Novel (ID)** — https://mtlnovel.me — ID: mtlnovel-id
+- [ ] **SakuraNovel** — https://sakuranovel.id/ — ID: sakura.id
+- [ ] **Sekte Novel** — https://sektenovel.web.id/ — ID: sektenovel
+- [ ] **Vanovel** — https://vanovel.com/ — ID: morenovel
+- [ ] **WBNovel** — https://wbnovel.com/ — ID: wbnovel
+
+#### English candidates from Tadami manifest (99)
+
+- [ ] **Akknovel** — https://www.akknovel.com/ — ID: akknovel
+- [ ] **AllNovel** — https://allnovel.org/ — ID: allnovel
+- [ ] **AllNovelFull** — https://novgo.net/ — ID: anf.net
+- [ ] **Arcane Translations** — https://arcanetranslations.com/ — ID: arcane
+- [ ] **Archive Of Our Own** — https://archiveofourown.org/ — ID: archiveofourown
+- [ ] **BlumeVerse** — https://blume-verse.com/ — ID: blumeverse
+- [ ] **BoxNovel** — https://novelnice.com/ — ID: boxnovel
+- [ ] **Chrysanthemum Garden** — https://chrysanthemumgarden.com — ID: chrysanthemumgarden
+- [ ] **Citrus Aurora** — https://citrusaurora.com/ — ID: citrusaurora
+- [ ] **CPUnovel** — https://cpunovel.com/ — ID: cpunovel
+- [ ] **Crimson Scrolls** — https://crimsonscrolls.net — ID: crimsonscrolls
+- [ ] **Daoist Quest** — https://daoist.quest — ID: daoistquest
+- [ ] **DaoTranslate** — https://daotranslate.com/ — ID: daotranslate
+- [ ] **Divine Dao Library** — https://www.divinedaolibrary.com/ — ID: DDL.com
+- [ ] **Dragon Tea** — https://dragontea.ink/ — ID: dragontea
+- [ ] **Dragonholic** — https://dragonholic.com/ — ID: dragonholic
+- [ ] **Dusk Blossoms** — https://duskblossoms.com/ — ID: duskblossoms
+- [ ] **Eternalune** — https://eternalune.com/ — ID: eternalune
+- [ ] **Etude Translations** — https://etudetranslations.com/ — ID: etudetranslations
+- [ ] **FanNovel** — https://www.fanmtl.com — ID: fannovel
+- [ ] **Fans MTL** — https://www.fanmtl.com — ID: wuxiamtl
+- [ ] **Fenrir Realm** — https://fenrirealm.com — ID: fenrir
+- [ ] **Fiction Zone** — https://fictionzone.net — ID: fictionzone
+- [ ] **Foxaholic** — https://www.foxaholic.com/ — ID: foxaholic
+- [ ] **Foxteller** — https://www.foxteller.com — ID: foxteller
+- [ ] **Free Web Novel** — https://freewebnovel.com/ — ID: FWN.com
+- [ ] **FuckNovelpia** — https://fucknovelpia.com/ — ID: FuckNovelpia
+- [ ] **Galaxy Translations** — https://darkstartranslations.com/ — ID: galaxytranslations
+- [ ] **Genesis** — https://genesistudio.com — ID: genesistudio
+- [ ] **Guavaread** — https://guavaread.com/ — ID: guavaread
+- [ ] **Hiraeth Translation** — https://hiraethtranslation.com/ — ID: hiraethtranslation
+- [ ] **Hyacinth in Bloom** — https://hyacinthbloom.com/ — ID: hyacinthbloom
+- [ ] **Indra Translations** — https://indratranslations.com — ID: indratranslations
+- [ ] **Inkitt** — https://www.inkitt.com — ID: inkitt
+- [ ] **iNovelTranslation** — https://inoveltranslation.com — ID: inoveltranslation
+- [ ] **Ippotranslations** — https://ippotranslations.com/ — ID: ippotranslations
+- [ ] **KDT Novels** — https://kdtnovels.net/ — ID: kdtnovels
+- [ ] **Keopi Translations** — https://www.keopitranslations.com — ID: keopi
+- [ ] **KnoxT** — https://knoxt.space/ — ID: knoxt
+- [ ] **Lazy Girl Translations** — https://lazygirltranslations.com — ID: lazygirltranslations
+- [ ] **Lib Read** — https://libread.com/ — ID: libread
+- [ ] **Light Novel Translations** — https://lightnovelstranslations.com/ — ID: lightnoveltranslations
+- [ ] **Light Novel Updates** — https://lightnovelupdates.com — ID: LightNovelUpdates
+- [ ] **LightNovelCave** — https://www.lightnovelcave.com/ — ID: lightnovelcave
+- [ ] **LightNovelHeaven** — https://lightnovelheaven.com/ — ID: lnheaven
+- [ ] **LnMTL** — https://lnmtl.com/ — ID: lnmtl
+- [ ] **LNORI** — https://lnori.com/ — ID: lnori
+- [ ] **LulloBox** — https://lullobox.com/ — ID: lullobox
+- [ ] **Mistmint Haven** — https://www.mistminthaven.com/ — ID: mistminthaven
+- [ ] **MTL Novel** — https://mtlnovel.me — ID: mtlnovel
+- [ ] **MVLEMPYR** — https://www.mvlempyr.io/ — ID: mvlempyr.com
+- [ ] **NobleMTL** — https://noblemtl.com/ — ID: noblemtl
+- [ ] **Noice Translations** — https://noicetranslations.com/ — ID: noicetranslations
+- [ ] **Novel Arrow** — https://novelarrow.com/ — ID: novelarrow
+- [ ] **Novel Fire** — https://novelfire.net/ — ID: novelfire
+- [ ] **Novel Hall** — https://novelhall.com/ — ID: novelhall
+- [ ] **Novel Ninja** — https://novelninja.xyz/ — ID: novelninja
+- [ ] **Novel Updates** — https://www.novelupdates.com/ — ID: novelupdates
+- [ ] **NovelBuddy** — https://novelbuddy.me/ — ID: novelbuddy
+- [ ] **NovelCool** — https://www.novelcool.com — ID: novelcool
+- [ ] **NovelFull** — https://novelfull.com/ — ID: novelfull
+- [ ] **NovelHi** — https://novelhi.com/ — ID: novelhi
+- [ ] **Novelight** — https://novelight.net/ — ID: novelight
+- [ ] **NovelLib** — https://novelib.com — ID: novelib
+- [ ] **NovelRest** — https://novelrest.vercel.app — ID: novelrest
+- [ ] **Ocean Tales** — https://oceantales.com/ — ID: oceantales
+- [ ] **Pastel Tales** — https://pasteltales.com/ — ID: pasteltales
+- [ ] **PawRead** — https://m.pawread.com/ — ID: pawread
+- [ ] **Penguin Squad** — https://penguin-squad.com — ID: penguinsquad
+- [ ] **Ranobes** — https://ranobes.top — ID: ranobes
+- [ ] **Ranovel** — https://ranovel.com/ — ID: ranovel
+- [ ] **Re:Library** — https://re-library.com — ID: ReLib
+- [ ] **Read From Net** — https://readfrom.net/ — ID: readfrom
+- [ ] **ReadNovelFull** — https://readnovelfull.com/ — ID: readnovelfull
+- [ ] **Requiem Translations** — https://requiemtls.com/ — ID: requiemtls
+- [ ] **Royal Road** — https://www.royalroad.com/ — ID: royalroad
+- [ ] **Scribble Hub** — https://www.scribblehub.com/ — ID: scribblehub
+- [ ] **SleepyTranslations** — https://sleepytranslations.com/ — ID: sleeptTLS
+- [ ] **SonicMTL** — https://www.sonicmtl.com/ — ID: sonicmtl
+- [ ] **Srank Manga** — https://srankmanga.com/ — ID: asuralightnovel
+- [ ] **StorySeedling** — https://storyseedling.com/ — ID: storyseedling
+- [ ] **Sweet Escape** — https://sweetescapetranslations.com/ — ID: sweetescape
+- [ ] **TranslatinOtaku** — https://translatinotaku.net/ — ID: translatinotaku
+- [ ] **Translation Weaver** — https://transweaver.com/ — ID: transweaver
+- [ ] **Universal Novel** — https://universalnovel.com/ — ID: universalnovel
+- [ ] **Vandy Translate** — https://vandytranslate.com — ID: vandytranslate
+- [ ] **Web Novel Translation** — https://wntl.net — ID: WebNovelTraslation
+- [ ] **Webnovel** — https://www.webnovel.com — ID: webnovel
+- [ ] **Webnovel (Unlocked)** — https://www.webnovel.com — ID: webnovelunlocked
+- [ ] **White Moonlight Novels** — https://whitemoonlightnovels.com/ — ID: whitemoonlightnovels
+- [ ] **Witch Cult Translations** — https://witchculttranslation.com — ID: witchculttranslations
+- [ ] **Wook's Teahouse** — https://wooksteahouse.com/ — ID: wooksteahouse
+- [ ] **WTR-LAB** — https://wtr-lab.com/ — ID: WTRLAB
+- [ ] **Wuxia Space** — https://www.wuxiaspot.com — ID: wuxiaspace
+- [ ] **Wuxia World** — https://www.wuxiaworld.com/ — ID: wuxiaworld
+- [ ] **Wuxiabox** — https://www.wuxiabox.com — ID: wuxiap
+- [ ] **Wuxiafox** — https://www.wuxiafox.com — ID: wuxiacity
+- [ ] **WuxiaWorld.Site** — https://wuxiaworld.site/ — ID: wuxiaworld.site
+- [ ] **Zetro Translation** — https://zetrotranslation.com/ — ID: zetroTL
+
+#### Merge/deduplication rules
+
+- Treat these as **discovery candidates** until live validation; do not mark implemented or frequently updated just because the manifest contains them.
+- Deduplicate by canonical site/domain and actual backend implementation, not plugin name. For example, multiple aliases may point to the same site, and one domain may appear in more than one language.
+- Archive Of Our Own, Inkitt, Royal Road, Scribble Hub, and similar community-fiction sites should be classified separately from translated light novels.
+- Novel Updates is primarily a discovery/index site, and Srank Manga needs media-type verification; neither should be assumed to provide normal novel chapter text.
+- Prioritize sources with recent source-specific maintenance **and** recent live chapter updates. Track those signals independently per section 16.3.
