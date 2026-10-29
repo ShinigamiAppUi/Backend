@@ -13,7 +13,7 @@ class KomikStationReadingRuntimeProvider(private val documentFetcher: ((String) 
         if (entry.kind != ReadingKind.MANGA) return@withContext null
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) } ?: return@withContext null
         val doc = try { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null } catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled } catch (_: Exception) { null } ?: return@withContext null
-        val pages = doc.select("div#readerarea img").mapNotNull { img ->
+        val pages = doc.select("div#readerarea img, .reading-content img, .reader-area img, .chapter-content img").mapNotNull { img ->
             sequenceOf("data-lazy-src", "data-src", "data-original", "src")
                 .map { key -> img.attr(key).trim() }
                 .mapNotNull { raw ->
