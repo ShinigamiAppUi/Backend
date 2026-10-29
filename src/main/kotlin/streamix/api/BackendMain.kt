@@ -269,6 +269,16 @@ import streamix.readingcatalog.LightNovelToReadingRuntimeProvider
 import streamix.readingcatalog.LNCrawlerReadingRuntimeProvider
 import streamix.readingcatalog.LunoxScansReadingRuntimeProvider
 import streamix.readingcatalog.MTLBooksReadingRuntimeProvider
+import streamix.readingcatalog.MTLWuxiaReadingRuntimeProvider
+import streamix.readingcatalog.MZNovelsReadingRuntimeProvider
+import streamix.readingcatalog.NovelArchiveReadingRuntimeProvider
+import streamix.readingcatalog.NovelDexReadingRuntimeProvider
+import streamix.readingcatalog.NovelLiveReadingRuntimeProvider
+import streamix.readingcatalog.NovelLunarReadingRuntimeProvider
+import streamix.readingcatalog.NovelPhoenixNetReadingRuntimeProvider
+import streamix.readingcatalog.NovelPingReadingRuntimeProvider
+import streamix.readingcatalog.NovelsHavenReadingRuntimeProvider
+import streamix.readingcatalog.NovelsOnlineReadingRuntimeProvider
 import streamix.readingcatalog.ReadingRuntimeProvider
 import streamix.readingcatalog.ReadingSourceType
 import streamix.readingcatalog.ReadingSourceHandler
@@ -493,6 +503,16 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         LNCrawlerReadingRuntimeProvider(),
         LunoxScansReadingRuntimeProvider(),
         MTLBooksReadingRuntimeProvider(),
+        MTLWuxiaReadingRuntimeProvider(),
+        MZNovelsReadingRuntimeProvider(),
+        NovelArchiveReadingRuntimeProvider(),
+        NovelDexReadingRuntimeProvider(),
+        NovelLiveReadingRuntimeProvider(),
+        NovelLunarReadingRuntimeProvider(),
+        NovelPhoenixNetReadingRuntimeProvider(),
+        NovelPingReadingRuntimeProvider(),
+        NovelsHavenReadingRuntimeProvider(),
+        NovelsOnlineReadingRuntimeProvider(),
         NovelBuddyReadingRuntimeProvider(),
         NovelBinReadingRuntimeProvider(),
         NovelFireReadingRuntimeProvider(),
