@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current batch:** Batch 1 — Manga / Indonesian (`MANGA` / `id`)
 - **Batch status:** `IN_PROGRESS`
-- **Latest confirmed code commit: `11bb559cc61015c5c89c56233606fefb8f663711`
+- **Latest confirmed code commit: `0adc5546c1bcbe6be50a0c71723642f60f32efca`
 - **Next concrete action:** continue source-by-source audit and implementation for the 25 Indonesian manga providers below. Do not start a new language batch until this batch's feasible implementations have been completed and its inventory reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
@@ -143,6 +143,9 @@ The class names and paths below were checked in this repository. Canonical URLs 
 | `west-manga` / `WestMangaReadingRuntimeProvider` | Needs source-specific canonical URL/reference review; code allowlist is not live proof | Manga | Indonesian (inventory label; verify chapter content) | `PARTIAL` | `IN_PROGRESS` | Not run — deferred | Not run — deferred | `src/main/kotlin/streamix/readingcatalog/IndonesianSpecializedApiReadingRuntimeProviders.kt` | Complete per-site parser/source-reference audit; record evidence and remaining work | Content-kind boundary pass only; not counted as fully implemented. |
 
 ## Changes made on this branch so far
+
+- 2026-10-29 — WestManga API image parsing now accepts only actual JSON string entries, trims surrounding whitespace, rejects blanks, then validates each URL. Previously `optString()` could coerce non-string JSON values into strings and whitespace-padded URLs were passed to validation unchanged. Code commit: `0adc5546c1bcbe6be50a0c71723642f60f32efca`; fixture tests/build/CI/live validation remain deferred.
+
 
 - 2026-10-29 — MikoRoku Firestore image candidates now trim `stringValue`, reject blank values, then run the existing image URL safety validator. This avoids discarding otherwise valid URLs solely because the API value contains surrounding whitespace. Code commit: `11bb559cc61015c5c89c56233606fefb8f663711`; fixture tests/build/CI/live validation remain deferred.
 
