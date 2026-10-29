@@ -40,7 +40,9 @@ class WestMangaReadingRuntimeProvider(private val responseFetcher: ((String, Map
     private fun chapterSlug(value: String): String? = runCatching {
         URI(value).let { u ->
             val parts = u.path.split('/').filter(String::isNotBlank)
-            val slug = parts.firstOrNull()
+            // The API endpoint is keyed by the chapter slug, not the first route segment
+            // (which may literally be "chapter" or a parent manga route).
+            val slug = parts.lastOrNull()
             if (
                 isSafeReadingChapterUrl(value, setOf("v1.westmanga.my")) {
                     it.split('/').filter(String::isNotBlank).let { segments ->
