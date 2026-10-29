@@ -45,7 +45,7 @@ class ShinigamiReadingRuntimeProvider(
             }.orEmpty()
             val pages = names.mapNotNull { name ->
                 safeImageUrl(baseUrl.trimEnd('/') + "/" + path.trim('/') + "/" + name.trimStart('/'))
-            }.distinct()
+            }.normalizedReadingPageUrls()
             pages.takeIf { it.isNotEmpty() }?.let {
                 ReadingContent(entry.kind, "reading-provider:${this@ShinigamiReadingRuntimeProvider.id}", contentUrl = source.url, pageUrls = it, format = "image-pages")
             }
