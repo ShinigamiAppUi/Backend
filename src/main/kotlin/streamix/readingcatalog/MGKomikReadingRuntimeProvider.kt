@@ -24,7 +24,7 @@ class MGKomikReadingRuntimeProvider(private val documentFetcher: ((String) -> Do
                         ?.takeIf(::validImage)
                 }
                 .firstOrNull()
-        }.distinct()
+        }.normalizedReadingPageUrls()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
 
