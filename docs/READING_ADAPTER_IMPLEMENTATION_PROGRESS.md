@@ -41,6 +41,9 @@
 - Updated Siikomik and NarasiNinja image extraction to validate each lazy-image candidate before selecting it. An unsafe first candidate no longer prevents the parser from trying a later safe attribute.
 - Code commit: `c7d7eca05204b2485f4558b8daa993e069d5bf05` (`fix(reading): skip unsafe lazy images in Indonesian API adapters`).
 
+- Hardened KlikManga chapter URL validation to reject embedded credentials and explicit ports other than 80/443, consistent with the other Indonesian manga HTML adapters. This is source-URL hardening only; parser coverage remains under audit.
+- Code commit: `a95c9524ca6fdd521f26c82d2deafbe80a0aa39f` (`fix(reading): harden KlikManga chapter URL authority`).
+
 ## Status vocabulary
 
 - Inventory/audit: `INVENTORIED`, `AUDIT_PENDING`, `AUDITED`, `PARTIAL`
