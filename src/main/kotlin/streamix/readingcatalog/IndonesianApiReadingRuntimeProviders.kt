@@ -59,16 +59,17 @@ class KomikuAsiaReadingRuntimeProvider(private val responseFetcher: ((String) ->
         }
     }
 
-    private fun chapterPath(value: String): Pair<String, String>? = runCatching {
-        val uri = URI(value)
-        if (!isSafeReadingHttpUrl(value) || !uri.host.equals("01.komiku.asia", true) || uri.userInfo != null || (uri.port != -1 && uri.port != 443 && uri.port != 80)) return@runCatching null
-        val segments = uri.path.split('/').filter(String::isNotBlank)
-        if (segments.size < 2) return@runCatching null
-        val comicId = segments[segments.size - 2]
-        val chapterId = segments.last()
-        if (!comicId.matches(Regex("""[A-Za-z0-9_-]{1,160}""")) || !chapterId.matches(Regex("""[A-Za-z0-9_-]{1,160}"""))) null
-        else comicId to chapterId
-    }.getOrNull()
+    private fun chapterPath(value: String): Pair<String, String>? {
+        if (!isSafeReadingChapterUrl(value, setOf("01.komiku.asia")) { it.isNotBlank() }) return null
+        return runCatching {
+            val segments = URI(value).path.split('/').filter(String::isNotBlank)
+            if (segments.size < 2) return null
+            val comicId = segments[segments.size - 2]
+            val chapterId = segments.last()
+            if (!comicId.matches(Regex("""[A-Za-z0-9_-]{1,160}""")) || !chapterId.matches(Regex("""[A-Za-z0-9_-]{1,160}"""))) null
+            else comicId to chapterId
+        }.getOrNull()
+    }
 
     private fun resolveSafeImage(value: String, base: String): String? = runCatching {
         val image = URI(base).resolve(value)
@@ -123,9 +124,7 @@ class SiikomikReadingRuntimeProvider(private val documentFetcher: ((String) -> D
         }
     }
 
-    private fun validChapter(value: String) = runCatching {
-        URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("siikomik.id", true) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80) && it.path.isNotBlank() }
-    }.getOrDefault(false)
+    private fun validChapter(value: String) = isSafeReadingChapterUrl(value, setOf("siikomik.id")) { it.isNotBlank() }
 
     private fun resolveSafeImage(value: String, base: String): String? = runCatching {
         val image = URI(base).resolve(value)
@@ -179,9 +178,7 @@ class NarasiNinjaReadingRuntimeProvider(private val documentFetcher: ((String) -
         }
     }
 
-    private fun validChapter(value: String) = runCatching {
-        URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("narasininja.net", true) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80) && it.path.contains("/komik", true) }
-    }.getOrDefault(false)
+    private fun validChapter(value: String) = isSafeReadingChapterUrl(value, setOf("narasininja.net")) { it.contains("/komik", true) }
 
     private fun resolveSafeImage(value: String, base: String): String? = runCatching {
         val image = URI(base).resolve(value)
