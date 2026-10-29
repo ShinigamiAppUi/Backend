@@ -1114,3 +1114,67 @@ The mandatory site-specific adapter and language-separation rules in Section 19 
 - Never count a generic parser, source descriptor, registry entry, or unverified language label as a completed adapter. Never mark a source `LOCKED` without recorded source-specific evidence.
 - These rules supplement existing catalog-first and metadata rules: metadata remains separate from Reading Catalog source URLs; do not put metadata into the Reading Catalog merely to support an adapter.
 
+## 21. Mandatory language-batch workflow and persistent progress ledger
+
+Adapter implementation must be planned and executed **in language batches**, not as a stop-start sequence that fully tests one adapter before beginning the next. This workflow applies to manga, manhwa, manhua, and novels.
+
+### 21.1 Batch boundaries
+
+- Keep Indonesian (`id`) and English (`en`) adapter work in separate batches and progress records for every content type.
+- Default batch order:
+  1. Manga — Indonesian
+  2. Manga — English
+  3. Manhwa — Indonesian
+  4. Manhwa — English
+  5. Manhua — Indonesian
+  6. Manhua — English
+  7. Novel — Indonesian
+  8. Novel — English
+- The order may be adjusted based on the audited inventory, dependencies, or source availability, but the reason and current batch must be recorded. Do not force a source into a language/content-type group it does not actually support.
+- Complete the implementation pass for the current batch as a group. Do not require a full test run after each individual adapter. Commit coherent, reviewable implementation increments during the batch so progress is preserved and resumable.
+- Once the batch's implementation pass is complete, perform a completeness audit and then run the planned test/verification pass for the batch. Fix failures and re-test before locking it. Testing may be deferred until the batch implementation pass is complete, but must not be silently skipped or reported as passed without evidence.
+
+### 21.2 Required Markdown progress ledger
+
+Maintain a persistent Markdown progress ledger in the repository, recommended path:
+
+`docs/READING_ADAPTER_IMPLEMENTATION_PROGRESS.md`
+
+Update it whenever a batch starts, an adapter changes status, a commit is made, a blocker is discovered, or a batch is handed off. The ledger must be the handoff source of truth so work can resume without re-auditing from scratch.
+
+The ledger must contain:
+
+- Current batch, content type, language, and next concrete action.
+- The exact branch and last known commit SHA worked on.
+- Overall counts per content type and language: inventoried, audited, implementation started, implemented, fixture-tested, live-verified, blocked, unavailable, and language-unverified.
+- One row per source/adapter, with at least: source name, canonical URL/reference, content type, verified language, audit status, implementation status, fixture-test status, live-verification status/date, latest commit or change reference, blocker/next action, and notes/evidence.
+- A list of adapters not started, partially implemented, missing source references, awaiting fixtures, awaiting testing, failed tests, and blocked/unavailable sources.
+- A batch handoff section that states what was completed, what remains, relevant paths/commits, known risks, and the exact next step.
+- A change log so status changes are traceable. Never replace a detailed status with a vague statement such as "batch in progress".
+
+### 21.3 Status vocabulary and counting rules
+
+Use explicit statuses rather than inferring completion from filenames or registry entries:
+
+- `INVENTORIED` — source listed, not yet audited.
+- `AUDIT_PENDING` / `AUDITED` — audit state is explicit and evidence is recorded.
+- `NOT_STARTED` / `IN_PROGRESS` / `IMPLEMENTED_UNTESTED` — implementation state.
+- `FIXTURE_TESTED` / `LIVE_VERIFIED` — only when the corresponding tests or permitted live checks actually passed, with evidence.
+- `TEST_FAILED` — a test was run and failed; record the failure and next action.
+- `BLOCKED` / `UNAVAILABLE` / `LANGUAGE_UNVERIFIED` — reason must be recorded.
+- `LOCKED` — only after implementation, required tests, re-audit, and evidence meet the acceptance criteria.
+
+An adapter may be counted as implemented before the batch test pass only if its site-specific implementation exists and has been reviewed for basic completeness; label it `IMPLEMENTED_UNTESTED` until testing evidence exists. Do not describe an untested batch as verified, production-ready, or locked.
+
+### 21.4 Required batch cycle
+
+For each content-type/language batch, use:
+
+`INVENTORY/RESUME FROM LEDGER → AUDIT SOURCES → IMPLEMENT ALL FEASIBLE SITE-SPECIFIC ADAPTERS → COMMIT COHERENT INCREMENTS → UPDATE LEDGER → BATCH COMPLETENESS AUDIT → FIXTURE TESTS → LIVE SMOKE TESTS (WHERE PERMITTED) → FIX FAILURES AND RE-TEST → RE-AUDIT → LOCK ELIGIBLE ADAPTERS`
+
+- Preserve useful prior audit work; consult the ledger and existing evidence instead of restarting from scratch.
+- Do not block implementation of all remaining sources just because one site is inaccessible; record that source as blocked/unavailable and continue with other feasible adapters.
+- Do not bypass authentication, paywalls, bot challenges, or other access controls to force a source to work.
+- The ledger must be updated before ending or handing off a work session, even if the batch is incomplete.
+- A commit is evidence of a code change, not evidence that tests passed. Record implementation and verification statuses independently.
+
