@@ -207,6 +207,7 @@ import streamix.readingcatalog.WuxiafoxReadingRuntimeProvider
 import streamix.readingcatalog.SweetEscapeReadingRuntimeProvider
 import streamix.readingcatalog.GalaxyTranslationsReadingRuntimeProvider
 import streamix.readingcatalog.FoxtellerReadingRuntimeProvider
+import streamix.readingcatalog.IsekaiKomikReadingRuntimeProvider
 import streamix.readingcatalog.IndraTranslationsReadingRuntimeProvider
 import streamix.readingcatalog.LazyGirlTranslationsReadingRuntimeProvider
 import streamix.readingcatalog.ArchiveOfOurOwnReadingRuntimeProvider
@@ -418,6 +419,7 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         BacamiReadingRuntimeProvider(),
         KomikIndoIdReadingRuntimeProvider(),
         KlikMangaReadingRuntimeProvider(),
+        IsekaiKomikReadingRuntimeProvider(),
         ManhwaIndoReadingRuntimeProvider(),
         KomikhwaReadingRuntimeProvider(),
         HolotoonReadingRuntimeProvider(),
