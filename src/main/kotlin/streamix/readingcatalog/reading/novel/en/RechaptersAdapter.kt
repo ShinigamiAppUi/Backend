@@ -43,7 +43,7 @@ class RechaptersReadingRuntimeProvider(
     private fun validChapterUrl(value: String): Boolean = runCatching {
         val uri = URI(value)
         uri.scheme.equals("https", true) &&
-            uri.host?.lowercase() in setOf("rechapters.com", "www.rechapters.com".map(String::lowercase) &&
+            uri.host?.lowercase()?.let { it in setOf("rechapters.com", "www.rechapters.com") } == true &&
             uri.userInfo == null && uri.port in setOf(-1, 443) &&
             (uri.path.contains("/book/", true) || uri.path.contains("/chapter", true))
     }.getOrDefault(false)
