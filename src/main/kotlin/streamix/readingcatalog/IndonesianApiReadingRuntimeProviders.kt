@@ -31,8 +31,17 @@ class KomikuAsiaReadingRuntimeProvider(private val responseFetcher: ((String) ->
         val pages = runCatching {
             val root = JSONObject(body)
             val data = root.optJSONObject("data") ?: root
-            val chapterData = data.optJSONObject("chapter") ?: data
-            sequenceOf(root.optJSONArray("pages"), data.optJSONArray("pages"), chapterData.optJSONArray("pages"))
+            // APIs can wrap chapter details either directly at the root or under data.
+            // Keep both chapter objects in the candidate sequence so an unrelated/partial
+            // data object cannot hide a usable root-level chapter.pages array.
+            val rootChapter = root.optJSONObject("chapter")
+            val dataChapter = data.optJSONObject("chapter")
+            sequenceOf(
+                root.optJSONArray("pages"),
+                data.optJSONArray("pages"),
+                rootChapter?.optJSONArray("pages"),
+                dataChapter?.optJSONArray("pages"),
+            )
                 .filterNotNull()
                 // Payloads can expose overlapping or partial page lists at multiple nesting levels.
                 // Merge all candidates; normalizedReadingPageUrls() below removes duplicates and unsafe URLs.
