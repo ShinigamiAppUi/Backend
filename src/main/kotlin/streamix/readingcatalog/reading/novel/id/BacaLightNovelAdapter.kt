@@ -17,6 +17,16 @@ class BacaLightNovelReadingRuntimeProvider(private val documentFetcher: ((String
         val text = extractFirstReadingNovelText(doc, ".epcontent, .entry-content, .post-content")
         text.takeIf(String::isNotBlank)?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, text = it, format = "text") }
     }
-    private fun validChapter(value: String) = runCatching { URI(value).let { it.scheme == "https" && (it.host.equals("bacalightnovel.co", true) || it.host.equals("bacalightnovel.com", true)) && it.userInfo == null && it.port in setOf(-1, 443) && it.path.isNotBlank() } }.getOrDefault(false)
+    private fun validChapter(value: String): Boolean = try {
+        URI(value).let { uri ->
+            uri.scheme.equals("https", true) &&
+                (uri.host.equals("bacalightnovel.co", true) || uri.host.equals("bacalightnovel.com", true)) &&
+                uri.userInfo == null &&
+                uri.port in setOf(-1, 443) &&
+                uri.path.isNotBlank()
+        }
+    } catch (_: Exception) {
+        false
+    }
     private fun fetch(value: String): Document? = fetchNovelDocument(value)
 }
