@@ -262,6 +262,11 @@ import streamix.readingcatalog.StorySeedlingReadingRuntimeProvider
 import streamix.readingcatalog.SufficientVelocityReadingRuntimeProvider
 import streamix.readingcatalog.TomatoMTLReadingRuntimeProvider
 import streamix.readingcatalog.TranslatinoReadingRuntimeProvider
+import streamix.readingcatalog.WattpadReadingRuntimeProvider
+import streamix.readingcatalog.WoopReadReadingRuntimeProvider
+import streamix.readingcatalog.WordExcerptReadingRuntimeProvider
+import streamix.readingcatalog.WuxiaClickReadingRuntimeProvider
+import streamix.readingcatalog.WuxiaDreamsReadingRuntimeProvider
 import streamix.readingcatalog.ReadingProviderRuntimeRace
 import streamix.readingcatalog.AtsumaruNovelsReadingRuntimeProvider
 import streamix.readingcatalog.BotiTranslationReadingRuntimeProvider
@@ -531,6 +536,11 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         SufficientVelocityReadingRuntimeProvider(),
         TomatoMTLReadingRuntimeProvider(),
         TranslatinoReadingRuntimeProvider(),
+        WattpadReadingRuntimeProvider(),
+        WoopReadReadingRuntimeProvider(),
+        WordExcerptReadingRuntimeProvider(),
+        WuxiaClickReadingRuntimeProvider(),
+        WuxiaDreamsReadingRuntimeProvider(),
         NovelArchiveReadingRuntimeProvider(),
         NovelDexReadingRuntimeProvider(),
         NovelLiveReadingRuntimeProvider(),
