@@ -34,7 +34,9 @@ class KomikuAsiaReadingRuntimeProvider(private val responseFetcher: ((String) ->
             val chapterData = data.optJSONObject("chapter") ?: data
             sequenceOf(root.optJSONArray("pages"), data.optJSONArray("pages"), chapterData.optJSONArray("pages"))
                 .filterNotNull()
-                .map { pageArray ->
+                // Payloads can expose overlapping or partial page lists at multiple nesting levels.
+                // Merge all candidates; normalizedReadingPageUrls() below removes duplicates and unsafe URLs.
+                .flatMap { pageArray ->
                     (0 until pageArray.length()).mapNotNull { index ->
                         val item = pageArray.opt(index)
                         when (item) {
@@ -50,10 +52,7 @@ class KomikuAsiaReadingRuntimeProvider(private val responseFetcher: ((String) ->
                         }
                     }
                 }
-                // Some responses include a non-empty placeholder array before the actual chapter pages.
-                // Continue through nested payload locations until one yields safe, usable image URLs.
-                .firstOrNull { candidatePages -> candidatePages.any { !it.isNullOrBlank() } }
-                .orEmpty()
+                .toList()
         }.getOrNull().orEmpty().filter(String::isNotBlank).normalizedReadingPageUrls()
         pages.takeIf { it.isNotEmpty() }?.let {
             ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages")
