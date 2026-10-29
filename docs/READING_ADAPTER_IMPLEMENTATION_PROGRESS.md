@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current pass:** Implementation-first sweep across all eight content/language groups; preserve the eight separate batch records and language boundaries.
 - **Pass status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `ab34b362debece8d130c68177a490a7512a69bcd`
+- **Latest confirmed code commit:** `73805789e5ed0df7a1ef0b986717e616130285a7`
 - **Next concrete action:** continue the implementation-first sweep from `docs/READING_MANGA_ARCHITECTURE.md`, creating site-specific adapters and registering each one for every feasible inventory source across the eight content/language groups. Record duplicate, metadata-only, language-uncertain, inaccessible, and access-restricted sources explicitly; defer cleanup and full test/build until the inventory implementation pass is reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
@@ -30,6 +30,9 @@
 | 8 | Novel | English (`en`) | `IN_PROGRESS` | Reconcile the English novel inventory in `READING_MANGA_ARCHITECTURE.md`. |
 
 ## Latest implementation note — 2026-10-29
+
+- **Implementation-first sweep — English Manhua site adapters (2026-10-29):** added and registered individual providers for ManhuaHot, Manhuanext, Manhua Plus, ManhuaTop, and ManhuaUS under `reading/manhua/en/`. Keiyoushi source definitions were checked for canonical domains and the site-specific reader contracts for these candidates; ManhuaTop uses its `/api/reader` content endpoint with pagination, while the other four currently use site-specific reader markup selectors pending fixture/live validation. ManhuaUS canonical host corrected to `manhuaus.com`. Source evidence references: Keiyoushi extensions-source paths `src/en/manhuahot`, `src/en/manhuanext`, `src/en/manhuaplus`, `src/en/manhuatop`, and `src/en/manhuaus`. Code commits in this pass: `d88a7f75b6aa5005a1e58a3956c5b4f7ea625e3c`, `7075edb064467bc2a79635414be60974b3dae970`, `9f5ac5625ca07d9d6760dc5b06fa6396778f0dac`, `ecca20825a2d10d1ef500bbb243a087969e79300`, `d3bd64734d1afe0656806eecf8f04ad37e2e8aaf`, `73805789e5ed0df7a1ef0b986717e616130285a7`. Static inspection confirms all five providers have imports and constructor registrations in `BackendMain.kt`. Tests/build/CI/live chapter verification remain deferred; do not mark these inventory rows complete.
+
 
 - Organized the cross-content-kind adapters under `reading/shared/` by supported language where known: English sources under `shared/en/`, Indonesian sources under `shared/id/`, and multilingual sources under `shared/multilingual/`. Providers whose language is not yet proven remain in the shared root pending source audit. File moves only; provider classes and IDs are unchanged. Latest code move commit: `184b965bf2704259c849b698b2451dcfa7017996`. Tests/build/CI/live validation remain deferred.
 
