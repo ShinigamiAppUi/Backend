@@ -87,6 +87,13 @@ import streamix.readingcatalog.KomikuAsiaReadingRuntimeProvider
 import streamix.readingcatalog.SiikomikReadingRuntimeProvider
 import streamix.readingcatalog.NarasiNinjaReadingRuntimeProvider
 import streamix.readingcatalog.KomikuReadingRuntimeProvider
+import streamix.readingcatalog.KomikuManhuaReadingRuntimeProvider
+import streamix.readingcatalog.KomikStationManhuaReadingRuntimeProvider
+import streamix.readingcatalog.WestMangaManhuaReadingRuntimeProvider
+import streamix.readingcatalog.MGKomikManhuaReadingRuntimeProvider
+import streamix.readingcatalog.NgamenKomikManhuaReadingRuntimeProvider
+import streamix.readingcatalog.KiryuuManhuaReadingRuntimeProvider
+import streamix.readingcatalog.KlikMangaManhuaReadingRuntimeProvider
 import streamix.readingcatalog.BacamiReadingRuntimeProvider
 import streamix.readingcatalog.KomikIndoIdReadingRuntimeProvider
 import streamix.readingcatalog.KlikMangaReadingRuntimeProvider
@@ -338,6 +345,13 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         MangaDexReadingRuntimeProvider(),
         CManhuaReadingRuntimeProvider(),
         KomikuComManhuaReadingRuntimeProvider(),
+        KomikuManhuaReadingRuntimeProvider(),
+        KomikStationManhuaReadingRuntimeProvider(),
+        WestMangaManhuaReadingRuntimeProvider(),
+        MGKomikManhuaReadingRuntimeProvider(),
+        NgamenKomikManhuaReadingRuntimeProvider(),
+        KiryuuManhuaReadingRuntimeProvider(),
+        KlikMangaManhuaReadingRuntimeProvider(),
         KomikuManhuaReadingRuntimeProvider(),
         ApkomikManhuaReadingRuntimeProvider(),
         KomikIndoIdManhuaReadingRuntimeProvider(),
