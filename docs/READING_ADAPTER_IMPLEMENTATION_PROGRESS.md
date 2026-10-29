@@ -31,6 +31,8 @@
 
 - **Indonesian Manhua — Komiku source adapter added (2026-10-30):** added `KomikuManhuaReadingRuntimeProvider` with a distinct `komiku-manhua` ID, strict `MANHUA` kind dispatch, Komiku host validation, reader-image extraction, promotion-image filtering, safe image URL handling, and cancellation propagation. Code commit: `b565cb0639506f4a8b7485a7178075e9f02f5c6a`. Registration and focused tests are still pending; this is implementation code only, not a tested/working adapter claim. Tests/build/CI remain deferred until the implementation sweep is reconciled.
 
+- **Runtime registry wiring for list-based additions (2026-10-30):** registered `KomikuManhuaReadingRuntimeProvider` and `MangaReaderSiteReadingRuntimeProvider` in `createSiteReadingProviders()`. Registration commit: `88438a333ce075cce609bcc191793293222ca7f5`. Both remain `IMPLEMENTED / NOT TESTED`; registration alone is not functional verification. The full adapter test/build/CI pass remains deferred.
+
 ## Current work state
 
 - **Repository:** `ShinigamiAppUi/Backend`
