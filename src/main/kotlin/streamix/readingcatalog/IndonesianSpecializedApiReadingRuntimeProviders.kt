@@ -108,8 +108,10 @@ class MikoRokuReadingRuntimeProvider(private val responseFetcher: ((String) -> S
                 null
             }
         }.mapNotNull { body ->
-            runCatching { extractFirestoreImages(JSONObject(body), key) }.getOrNull()
-        }.firstOrNull { it.isNotEmpty() }.orEmpty().normalizedReadingPageUrls()
+            // Normalize each endpoint's candidate list before selecting a fallback. Otherwise a
+            // non-empty list containing only unsafe/invalid URLs can block the usable fallback.
+            runCatching { extractFirestoreImages(JSONObject(body), key).normalizedReadingPageUrls() }.getOrNull()
+        }.firstOrNull { it.isNotEmpty() }.orEmpty()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
     private fun chapterParts(value: String): Pair<String, String>? = runCatching {
