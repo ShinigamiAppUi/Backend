@@ -37,7 +37,7 @@ class WestMangaReadingRuntimeProvider(private val responseFetcher: ((String, Map
         }.getOrNull().orEmpty().normalizedReadingPageUrls()
         images.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
-    private fun chapterSlug(value: String): String? = runCatching {
+    private fun chapterSlug(value: String): String? = try {
         URI(value).let { u ->
             val parts = u.path.split('/').filter(String::isNotBlank)
             // The API endpoint is keyed by the chapter slug, not the first route segment
@@ -54,7 +54,9 @@ class WestMangaReadingRuntimeProvider(private val responseFetcher: ((String, Map
                 slug.matches(Regex("[A-Za-z0-9_-]{1,160}"))
             ) slug else null
         }
-    }.getOrNull()
+    } catch (_: Exception) {
+        null
+    }
     private fun signedHeaders(value: String): Map<String, String> {
         val timestamp = (System.currentTimeMillis() / 1000).toString()
         val accessKey = "WM_WEB_FRONT_END"
