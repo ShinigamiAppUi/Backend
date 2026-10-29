@@ -12,7 +12,7 @@ class MangaUpReadingRuntimeProvider(private val documentFetcher: ((String)->Docu
  override suspend fun chapter(entry:ReadingCatalogEntry,chapter:ReadingChapterEntry):ReadingContent?=withContext(Dispatchers.IO){
   val source=chapter.sources.firstOrNull{it.enabled&&it.providerId.equals(id,true)&&valid(it.url)}?:return@withContext null
   val doc=try{documentFetcher?.invoke(source.url)?:if(documentFetcher==null)fetch(source.url)else null}catch(cancelled:CancellationException){throw cancelled}catch(_:Exception){null}?:return@withContext null
-  val pages=doc.select(".viewer-page img, .chapter-viewer img, img.page-image").mapNotNull{img->sequenceOf("data-lazy-src","data-src","data-original","src").map{img.attr(it).trim()}.firstNotNullOfOrNull{raw->raw.takeIf{it.isNotBlank()&&!it.startsWith("data:")}?.let{runCatching{URI(source.url).resolve(it).toString()}.getOrNull()}}?.takeIf(::validImage)}.distinct()
+  val pages=doc.select(".viewer-page img, .chapter-viewer img, img.page-image").mapNotNull{img->sequenceOf("data-lazy-src","data-src","data-original","src").map{img.attr(it).trim()}.firstNotNullOfOrNull{raw->raw.takeIf{it.isNotBlank()&&!it.startsWith("data:")}?.let{runCatching{URI(source.url).resolve(it).toString()}.getOrNull()}}?.takeIf(::validImage)}.normalizedReadingPageUrls()
   pages.takeIf{it.isNotEmpty()}?.let{ReadingContent(entry.kind,"reading-provider:$id",source.url,it,format="image-pages")}
  }
  private fun valid(v:String)=isSafeReadingChapterUrl(v,setOf("global.manga-up.com")){it.startsWith("/manga/")}
