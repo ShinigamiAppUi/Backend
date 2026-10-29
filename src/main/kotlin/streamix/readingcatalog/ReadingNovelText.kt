@@ -54,7 +54,11 @@ internal fun extractReadingNovelText(element: Element): String {
  */
 internal fun extractFirstReadingNovelText(document: org.jsoup.nodes.Document, selectorList: String): String {
     for (selector in selectorList.split(',').map(String::trim).filter(String::isNotEmpty)) {
-        val candidates = runCatching { document.select(selector) }.getOrNull() ?: continue
+        val candidates = try {
+            document.select(selector)
+        } catch (_: Exception) {
+            continue
+        }
         for (candidate in candidates) {
             val text = extractReadingNovelText(candidate)
             if (text.isNotBlank()) return text
