@@ -43,6 +43,40 @@ class BacamiReadingRuntimeProvider(private val documentFetcher: ((String) -> Doc
     private fun fetch(value: String): Document? = fetchIndonesianReadingDocument(value)
 }
 
+/**
+ * Extracts a balanced JSON array assigned to imageUrls. A non-greedy regex stops at the
+ * first closing bracket, which breaks when an image entry contains a nested array/object.
+ * Scan brackets while respecting quoted strings and escapes instead.
+ */
+private fun extractBacamiImageUrlsArray(script: String): String? {
+    val assignment = Regex("""\b["']?imageUrls["']?\s*[:=]\s*\[""").find(script) ?: return null
+    val start = assignment.range.last
+    var depth = 0
+    var inString = false
+    var escaped = false
+    for (index in start until script.length) {
+        val char = script[index]
+        if (inString) {
+            when {
+                escaped -> escaped = false
+                char == '\\' -> escaped = true
+                char == '"' -> inString = false
+            }
+            continue
+        }
+        when (char) {
+            '"' -> inString = true
+            '[' -> depth++
+            ']' -> {
+                depth--
+                if (depth == 0) return script.substring(start, index + 1)
+                if (depth < 0) return null
+            }
+        }
+    }
+    return null
+}
+
 private fun fetchIndonesianReadingDocument(value: String): Document? =
     fetchReadingHtmlDocument(
         value,
