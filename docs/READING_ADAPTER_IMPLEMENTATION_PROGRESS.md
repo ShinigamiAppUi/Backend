@@ -180,6 +180,7 @@ For each batch, check these in order:
 - **Next step:** continue Manga / Indonesian; inspect and implement site-specific parsing and URL/source rules in coherent commits, updating this ledger each time.
 
 ## Change log
+| 2026-10-29 | Manga / Indonesian | Three additional Indonesian manga readers now reject mixed-case `data:` placeholders consistently before resolving image candidates. | `d9d064560a51d06fdf73a057e09c884f529e5684` | Targeted image-candidate hardening; fixture tests/build/CI and live validation remain pending. |
 | 2026-10-29 | Manga / Indonesian | Kiryuu, Komik Station, APKOMIK and LepoyTL now reject mixed-case `data:` image placeholders before resolving reader image candidates. | `9d8c6869866a630757e6463708e898aecc0c5429` | Targeted image-candidate hardening; fixture tests/build/CI and live validation remain pending. |
 | 2026-10-29 | Manga / Indonesian | KomikIndoID and KlikManga now reject mixed-case `data:` image placeholders before URL resolution, matching the case-insensitive handling already used by neighboring adapters. | `d3f710b44b3cefeef2ca763cd74457537d87c018` | Targeted image-candidate hardening; fixture tests/build/CI and live validation remain pending. |
 
