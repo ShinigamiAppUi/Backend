@@ -30,11 +30,11 @@ class WestMangaReadingRuntimeProvider(private val responseFetcher: ((String, Map
             val parts = u.path.split('/').filter(String::isNotBlank)
             val slug = parts.firstOrNull()
             if (
-                isSafeReadingHttpUrl(value) &&
-                u.userInfo == null && (u.port == -1 || u.port == 443 || u.port == 80) &&
-                u.host.equals("v1.westmanga.my", true) &&
-                parts.size >= 2 &&
-                parts.any { it.contains("chapter", true) } &&
+                isSafeReadingChapterUrl(value, setOf("v1.westmanga.my")) {
+                    it.split('/').filter(String::isNotBlank).let { segments ->
+                        segments.size >= 2 && segments.any { segment -> segment.contains("chapter", true) }
+                    }
+                } &&
                 slug != null &&
                 slug.matches(Regex("[A-Za-z0-9_-]{1,160}"))
             ) slug else null
@@ -76,7 +76,13 @@ class RiztranslationReadingRuntimeProvider(private val responseFetcher: ((String
         }.getOrNull().orEmpty().normalizedReadingPageUrls()
         images.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:riztranslation", source.url, it, format = "image-pages") }
     }
-    private fun chapterId(value: String): String? = runCatching { URI(value).let { if (isSafeReadingHttpUrl(value) && it.host.equals("riztranslation.pages.dev", true) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80)) it.path.trimEnd('/').substringAfterLast('/').takeIf { s -> s.length in 1..160 && s.all(Char::isDigit) } else null } }.getOrNull()
+    private fun chapterId(value: String): String? {
+        if (!isSafeReadingChapterUrl(value, setOf("riztranslation.pages.dev")) { it.isNotBlank() }) return null
+        return runCatching {
+            URI(value).path.trimEnd('/').substringAfterLast('/')
+                .takeIf { s -> s.length in 1..160 && s.all(Char::isDigit) }
+        }.getOrNull()
+    }
     private fun validImage(value: String) = isSafeReadingImageUrl(value)
     private fun fetch(value: String, headers: Map<String, String>): String? =
         ReadingHttpTransport.getText(value, headers)
@@ -107,9 +113,12 @@ class MikoRokuReadingRuntimeProvider(private val responseFetcher: ((String) -> S
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
     private fun chapterParts(value: String): Pair<String, String>? = runCatching {
-        val u = URI(value)
-        if (!isSafeReadingHttpUrl(value) || !u.host.equals("mikoroku.com", true) || u.userInfo != null || (u.port != -1 && u.port != 443 && u.port != 80)) return@runCatching null
-        val p = u.path.split('/').filter(String::isNotBlank)
+        if (!isSafeReadingChapterUrl(value, setOf("mikoroku.com")) { path ->
+                val segments = path.split('/').filter(String::isNotBlank)
+                val index = segments.indexOf("manga")
+                index >= 0 && segments.getOrNull(index + 2) == "chapter"
+            }) return@runCatching null
+        val p = URI(value).path.split('/').filter(String::isNotBlank)
         val i = p.indexOf("manga")
         if (i < 0 || p.getOrNull(i + 2) != "chapter") return@runCatching null
         p.getOrNull(i + 1)
