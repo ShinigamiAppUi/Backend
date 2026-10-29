@@ -191,6 +191,7 @@ import streamix.readingcatalog.Manhwa18ReadingRuntimeProvider
 import streamix.readingcatalog.KomiktapManhuaReadingRuntimeProvider
 import streamix.readingcatalog.KomikmuManhuaReadingRuntimeProvider
 import streamix.readingcatalog.ManhwaReadsReadingRuntimeProvider
+import streamix.readingcatalog.KomikuComManhuaReadingRuntimeProvider
 import streamix.readingcatalog.ReadingProviderRuntimeRace
 import streamix.readingcatalog.ReadingRuntimeProvider
 import streamix.readingcatalog.ReadingSourceType
@@ -203,6 +204,7 @@ import kotlin.io.path.createDirectories
 internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
     val providers = listOf(
         MangaDexReadingRuntimeProvider(),
+        KomikuComManhuaReadingRuntimeProvider(),
         ManhwaReadsReadingRuntimeProvider(),
         KomikmuManhuaReadingRuntimeProvider(),
         KomiktapManhuaReadingRuntimeProvider(),
@@ -389,12 +391,12 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
  * the rest of the chapter's source order and state. Site adapters select their own source
  * by providerId, so normalizing only the dispatch key is not enough.
  */
-internal fun canonicalReadingProviderId(rawProviderId: String): String =
+internal fun canonicalReadingProviderId(rawProviderId: String, kind: ReadingKind? = null): String =
     when (rawProviderId.trim().lowercase(java.util.Locale.ROOT)) {
         "mangadex-manhwa", "mangadex-manhua" -> "mangadex"
         "weebcentral-manhwa" -> "weebcentral"
         "new-manhwa" -> "saymanhwa"
-        "komiku.com", "komiku-com" -> "komiku-asia"
+        "komiku.com", "komiku-com" -> if (kind == ReadingKind.MANHUA) "komiku-com-manhua" else "komiku-asia"
         "mangaread.org", "manga-read-org" -> "mangaread"
         "comick-fanmade", "comick-fan-made" -> "comick"
         "comick-unoriginal" -> "comick"
@@ -431,7 +433,7 @@ fun main() {
     )
     val siteReadingProviders = createSiteReadingProviders()
     val readingSourceHandler = ReadingSourceHandler { entry, chapter, source ->
-        val providerId = canonicalReadingProviderId(source.providerId)
+        val providerId = canonicalReadingProviderId(source.providerId, entry.kind)
         val provider = siteReadingProviders.firstOrNull { it.id.equals(providerId, ignoreCase = true) }
         provider?.chapter(entry, normalizeReadingSourceAlias(chapter, source, providerId))
     }
