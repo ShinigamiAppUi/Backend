@@ -99,6 +99,11 @@ Catalog remains source-URL configuration, not a duplicate metadata catalog. AniL
 5. Record implementation, fixture, live-validation and CI evidence separately. Do not mark a batch `LOCKED` without proof.
 
 
+## Current per-adapter layout progress
+
+- The Indonesian/English Manga and Indonesian/English Manhwa language directories have been further split from grouped `*Providers.kt` files into site-specific `*Adapter.kt` files for the providers audited in this refactor. This is a file-organization change only; provider class names, IDs, and the existing `streamix.readingcatalog` package remain unchanged.
+- The directory structure is not yet complete: root-level mixed-domain files still need source-by-source classification and relocation, and the Manhua buckets need their own audited inventory/implementations.
+
 ## Per-adapter file rule
 
 Use one provider class per site-specific adapter file, following the requested shape: `reading/<content-type>/<language>/<SiteName>Adapter.kt` (for example `reading/novel/id/BacaLightNovelAdapter.kt` and `reading/novel/en/RoyalRoadAdapter.kt`). Do not group unrelated sites into `*Providers.kt` files inside the language directories. Shared parsing/transport helpers stay in shared files and are not counted as adapters. Existing provider class names and IDs remain stable while the source files are split.
