@@ -5,6 +5,7 @@ import java.net.URLEncoder
 import org.json.JSONObject
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -24,9 +25,7 @@ class ComicasoReadingRuntimeProvider(private val responseFetcher: ((String) -> S
         val parts = chapterParts(source.url) ?: return@withContext null
         val apiUrl = "https://v3.comicaso.pro/api/chapter.php?source=${enc(parts[0])}" +
             "&manga=${enc(parts[1])}&chapter=${enc(parts[2])}&token=${enc(parts[3])}"
-        val body = runCatching {
-            if (responseFetcher != null) responseFetcher.invoke(apiUrl) else fetchText(apiUrl, "application/json")
-        }.getOrNull() ?: return@withContext null
+        val body = try { if (responseFetcher != null) responseFetcher.invoke(apiUrl) else fetchText(apiUrl, "application/json") } catch (cancelled: CancellationException) { throw cancelled } catch (_: Exception) { null } ?: return@withContext null
         val pages = runCatching {
             val root = JSONObject(body)
             val data = root.optJSONObject("data") ?: root
