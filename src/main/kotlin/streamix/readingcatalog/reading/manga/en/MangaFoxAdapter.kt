@@ -1,6 +1,7 @@
 package streamix.readingcatalog
 
 import java.net.URI
+import kotlinx.coroutines.CancellationException
 import org.jsoup.nodes.Document
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -13,7 +14,13 @@ class MangaFoxReadingRuntimeProvider(private val documentFetcher: ((String) -> D
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) } ?: return@withContext null
         val mobileUrl = source.url.replace("://", "://m.")
         val readerUrl = mobileUrl.replace("/manga/", "/roll_manga/")
-        val doc = runCatching { documentFetcher?.invoke(readerUrl) ?: if (documentFetcher == null) fetch(readerUrl) else null }.getOrNull() ?: return@withContext null
+        val doc = try {
+            documentFetcher?.invoke(readerUrl) ?: if (documentFetcher == null) fetch(readerUrl) else null
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (_: Exception) {
+            null
+        } ?: return@withContext null
         val pages = doc.select("#viewer img").mapNotNull { img ->
             sequenceOf("data-original", "data-lazy-src", "data-src", "src").map(String::trim).firstNotNullOfOrNull { key -> img.attr(key).takeIf { it.isNotBlank() && !it.startsWith("data:") } }
                 ?.let { runCatching { URI(readerUrl).resolve(it).toString() }.getOrNull() }?.takeIf(::validImage)
