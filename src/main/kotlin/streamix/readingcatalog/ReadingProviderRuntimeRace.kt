@@ -64,9 +64,18 @@ class ReadingProviderRuntimeRace(
 
         val eligible = providers.filter { provider ->
             val providerId = provider.id.trim().lowercase(Locale.ROOT)
-            providerId !in failedIds &&
-                ("reading-provider:" + providerId) !in failedIds &&
-                runCatching { provider.supports(entry, eligibleChapter) }.getOrDefault(false)
+            if (providerId in failedIds || ("reading-provider:" + providerId) in failedIds) {
+                false
+            } else {
+                try {
+                    provider.supports(entry, eligibleChapter)
+                } catch (error: CancellationException) {
+                    throw error
+                } catch (_: Exception) {
+                    // A broken adapter predicate should exclude only that adapter.
+                    false
+                }
+            }
         }
         if (eligible.isEmpty()) return@coroutineScope null
 
