@@ -49,6 +49,9 @@
 
 - Hardened Siikomik and NarasiNinja chapter URL validation to reject embedded credentials and nonstandard explicit ports (only default, 80, or 443 are accepted), aligning these API-backed HTML adapters with the existing Indonesian manga URL-authority policy. Code commit: `f090f552ffc2b043717922680b241710236ce077` (`fix(reading): restrict API adapter chapter URL ports`).
 
+- Hardened Bacami chapter URL authority validation: reject embedded credentials and explicit ports other than 80/443 while preserving the existing host and chapter-path checks. Code commit: `4379f6fe76f3429b41b15c06da27f2eb27a0018a` (`fix(reading): harden Bacami chapter URL authority`).
+- Hardened Riztranslation chapter URL parsing: reject embedded credentials and nonstandard ports, and bound numeric chapter IDs to 1–160 digits before constructing the API request. Code commit: `4aa83fad5502cb8f23bca6faa5e8f06af077bd54` (`fix(reading): harden Riztranslation chapter URL validation`).
+
 ## Status vocabulary
 
 - Inventory/audit: `INVENTORIED`, `AUDIT_PENDING`, `AUDITED`, `PARTIAL`
