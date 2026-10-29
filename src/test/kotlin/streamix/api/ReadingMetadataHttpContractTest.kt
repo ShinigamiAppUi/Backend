@@ -10,6 +10,8 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import streamix.auth.AuthRuntime
+import streamix.auth.ExternalIdentity
 import streamix.catalog.CatalogService
 import streamix.catalog.FileCatalogRepository
 import streamix.core.StreamixExtractorRegistry
@@ -20,12 +22,15 @@ class ReadingMetadataHttpContractTest {
     fun readingMetadataSearchAndDetailUseDedicatedGateway() {
         val temp = Files.createTempDirectory("reading-metadata-http")
         val gateway = FakeReadingMetadataGateway()
+        val auth = AuthRuntime(temp.resolve("auth"))
+        val session = auth.auth.signIn(ExternalIdentity("test", "reading-metadata-member", displayName = "Reader"))
         val catalog = CatalogService(
             repository = FileCatalogRepository(temp.resolve("anime-catalog.json")),
             extractors = StreamixExtractorRegistry(emptyList())
         )
         val server = StreamixHttpServer(
             service = StreamixService(catalog = catalog),
+            authRuntime = auth,
             host = "127.0.0.1",
             port = 0,
             readingMetadata = gateway
@@ -36,7 +41,10 @@ class ReadingMetadataHttpContractTest {
             server.start()
             val base = "http://127.0.0.1:${server.boundPort()}"
 
-            val search = get(client, "$base/api/v1/reading/metadata/search?q=Fixture&kind=MANHWA&page=3")
+            val unauthenticated = get(client, "$base/api/v1/reading/metadata/search?q=Fixture&kind=MANHWA&page=3")
+            assertEquals(401, unauthenticated.statusCode())
+
+            val search = get(client, "$base/api/v1/reading/metadata/search?q=Fixture&kind=MANHWA&page=3", session.token)
             assertEquals(200, search.statusCode(), search.body())
             assertTrue(search.body().contains("Fixture Manhwa"))
             assertTrue(search.body().contains("https://anilist.co/manga/123"))
@@ -44,11 +52,11 @@ class ReadingMetadataHttpContractTest {
             assertEquals(ReadingMetadataKind.MANHWA, gateway.lastKind)
             assertEquals(3, gateway.lastPage)
 
-            val detail = get(client, "$base/api/v1/reading/metadata/123")
+            val detail = get(client, "$base/api/v1/reading/metadata/123", session.token)
             assertEquals(200, detail.statusCode(), detail.body())
             assertTrue(detail.body().contains("Fixture Manhwa"))
 
-            val invalidKind = get(client, "$base/api/v1/reading/metadata/search?q=Fixture&kind=VIDEO")
+            val invalidKind = get(client, "$base/api/v1/reading/metadata/search?q=Fixture&kind=VIDEO", session.token)
             assertEquals(400, invalidKind.statusCode())
             assertFalse(gateway.lastKind == null && gateway.lastQuery == "Fixture" && gateway.lastPage == 1)
         } finally {
@@ -68,6 +76,7 @@ class ReadingMetadataHttpContractTest {
         )
         val server = StreamixHttpServer(
             service = StreamixService(catalog = catalog),
+            authRuntime = AuthRuntime(temp.resolve("auth")),
             host = "127.0.0.1",
             port = 0,
             readingMetadata = object : ReadingMetadataGateway {
@@ -80,7 +89,7 @@ class ReadingMetadataHttpContractTest {
         val client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build()
         try {
             server.start()
-            val response = get(client, "http://127.0.0.1:${server.boundPort()}/api/v1/reading/metadata/search?q=Fixture&kind=MANGA")
+            val response = get(client, "http://127.0.0.1:${server.boundPort()}/api/v1/reading/metadata/search?q=Fixture&kind=MANGA", AuthRuntime(temp.resolve("auth")).auth.signIn(ExternalIdentity("test", "reading-metadata-failure", displayName = "Reader")).token)
             assertEquals(502, response.statusCode())
             assertTrue(response.body().contains("AniList reading metadata request failed"))
             assertFalse(response.body().contains("503"))
@@ -92,11 +101,11 @@ class ReadingMetadataHttpContractTest {
         }
     }
 
-    private fun get(client: HttpClient, url: String): HttpResponse<String> =
-        client.send(
-            HttpRequest.newBuilder().uri(URI(url)).timeout(Duration.ofSeconds(3)).GET().build(),
-            HttpResponse.BodyHandlers.ofString()
-        )
+    private fun get(client: HttpClient, url: String, token: String? = null): HttpResponse<String> {
+        val builder = HttpRequest.newBuilder().uri(URI(url)).timeout(Duration.ofSeconds(3))
+        if (token != null) builder.header("Authorization", "Bearer $token")
+        return client.send(builder.GET().build(), HttpResponse.BodyHandlers.ofString())
+    }
 
     private class FakeReadingMetadataGateway : ReadingMetadataGateway {
         @Volatile var lastQuery: String? = null
