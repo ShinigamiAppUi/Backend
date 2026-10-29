@@ -47,7 +47,7 @@ internal fun ReadingContent.isUsableFor(kind: ReadingKind): Boolean =
     }
 
 /** Validates an HTTPS provider chapter URL before any network request. */
-internal fun isSafeReadingChapterUrl(value: String, allowedHosts: Set<String>, pathIsValid: (String) -> Boolean): Boolean = runCatching {
+internal fun isSafeReadingChapterUrl(value: String, allowedHosts: Set<String>, pathIsValid: (String) -> Boolean): Boolean = try {
     URI(value).let { uri ->
         uri.scheme.equals("https", ignoreCase = true) &&
             uri.host?.lowercase() in allowedHosts.map(String::lowercase).toSet() &&
@@ -56,7 +56,11 @@ internal fun isSafeReadingChapterUrl(value: String, allowedHosts: Set<String>, p
             !uri.path.isNullOrBlank() &&
             pathIsValid(uri.path)
     }
-}.getOrDefault(false)
+} catch (error: kotlinx.coroutines.CancellationException) {
+    throw error
+} catch (_: Exception) {
+    false
+}
 
 /** Image URLs use the same public HTTPS destination policy as other reading HTTP targets. */
 internal fun isSafeReadingImageUrl(value: String): Boolean = isSafeReadingHttpUrl(value)
