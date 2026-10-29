@@ -14,7 +14,7 @@ class KomikuReadingRuntimeProvider(private val documentFetcher: ((String) -> Doc
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
         if (entry.kind != ReadingKind.MANGA) return@withContext null
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) } ?: return@withContext null
-        val doc = runCatching { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null }.getOrNull() ?: return@withContext null
+        val doc = try { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null } catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled } catch (_: Exception) { null } ?: return@withContext null
         val pages = doc.select("#Baca_Komik img").filterNot { img ->
             sequenceOf("data-lazy-src", "data-src", "data-original", "src").any { img.attr(it).contains("komiku-promosi", true) }
         }.mapNotNull { img ->
@@ -47,7 +47,7 @@ class BacamiReadingRuntimeProvider(private val documentFetcher: ((String) -> Doc
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
         if (entry.kind != ReadingKind.MANGA) return@withContext null
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) } ?: return@withContext null
-        val doc = runCatching { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null }.getOrNull() ?: return@withContext null
+        val doc = try { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null } catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled } catch (_: Exception) { null } ?: return@withContext null
         val script = doc.select("script").firstOrNull { it.data().contains("imageUrls") || it.html().contains("imageUrls") }
             ?.let { it.data().ifBlank { it.html() } } ?: return@withContext null
         val raw = Regex("""imageUrls\s*:\s*(\[[\s\S]*?\])""").find(script)?.groupValues?.get(1)
@@ -74,7 +74,7 @@ class KomikIndoIdReadingRuntimeProvider(private val documentFetcher: ((String) -
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
         if (entry.kind != ReadingKind.MANGA) return@withContext null
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) } ?: return@withContext null
-        val doc = runCatching { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null }.getOrNull() ?: return@withContext null
+        val doc = try { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null } catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled } catch (_: Exception) { null } ?: return@withContext null
         val pages = doc.select("div.img-landmine img").mapNotNull { img ->
             val onError = img.attr("onError")
             val fallback = Regex("""src=['"]([^'"]+)['"]""").find(onError)?.groupValues?.get(1)
@@ -102,7 +102,7 @@ class KlikMangaReadingRuntimeProvider(private val documentFetcher: ((String) -> 
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
         if (entry.kind != ReadingKind.MANGA) return@withContext null
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) } ?: return@withContext null
-        val doc = runCatching { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null }.getOrNull() ?: return@withContext null
+        val doc = try { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null } catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled } catch (_: Exception) { null } ?: return@withContext null
         val pages = doc.select(".reading-content img, .page-break img, .chapter-content img").mapNotNull { img ->
             sequenceOf("data-src", "data-lazy-src", "data-original", "src")
                 .map { key -> img.attr(key).trim() }
