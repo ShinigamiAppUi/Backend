@@ -34,6 +34,40 @@ class KomikuReadingRuntimeProvider(private val documentFetcher: ((String) -> Doc
     private fun fetch(value: String): Document? = fetchIndonesianReadingDocument(value)
 }
 
+/**
+ * Extracts a balanced JSON array assigned to imageUrls. A non-greedy regex stops at the
+ * first closing bracket, which breaks when an image entry contains a nested array/object.
+ * Scan brackets while respecting quoted strings and escapes instead.
+ */
+private fun extractBacamiImageUrlsArray(script: String): String? {
+    val assignment = Regex("""\bimageUrls\s*[:=]\s*\[""").find(script) ?: return null
+    val start = assignment.range.last
+    var depth = 0
+    var inString = false
+    var escaped = false
+    for (index in start until script.length) {
+        val char = script[index]
+        if (inString) {
+            when {
+                escaped -> escaped = false
+                char == '\\' -> escaped = true
+                char == '"' -> inString = false
+            }
+            continue
+        }
+        when (char) {
+            '"' -> inString = true
+            '[' -> depth++
+            ']' -> {
+                depth--
+                if (depth == 0) return script.substring(start, index + 1)
+                if (depth < 0) return null
+            }
+        }
+    }
+    return null
+}
+
 /** Bacami exposes a JSON-like imageUrls array in its chapter script. */
 class BacamiReadingRuntimeProvider(private val documentFetcher: ((String) -> Document?)? = null) : ReadingRuntimeProvider {
     override val id = "bacami"
@@ -43,11 +77,15 @@ class BacamiReadingRuntimeProvider(private val documentFetcher: ((String) -> Doc
         if (entry.kind != ReadingKind.MANGA) return@withContext null
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) } ?: return@withContext null
         val doc = try { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null } catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled } catch (_: Exception) { null } ?: return@withContext null
-        val script = doc.select("script").firstOrNull { it.data().contains("imageUrls") || it.html().contains("imageUrls") }
-            ?.let { it.data().ifBlank { it.html() } } ?: return@withContext null
-        val raw = Regex("""imageUrls\s*[:=]\s*(\[[\s\S]*?\])""").find(script)?.groupValues?.get(1)
+        val values = doc.select("script")
+            .asSequence()
+            .mapNotNull { script ->
+                val body = script.data().ifBlank { script.html() }
+                extractBacamiImageUrlsArray(body)
+            }
+            .mapNotNull { raw -> runCatching { JsonParser.parseString(raw).asJsonArray }.getOrNull() }
+            .firstOrNull { array -> array.any { it.isJsonPrimitive && it.asJsonPrimitive.isString && it.asString.isNotBlank() } }
             ?: return@withContext null
-        val values = runCatching { JsonParser.parseString(raw).asJsonArray }.getOrNull() ?: return@withContext null
         val pages = values.mapNotNull { value ->
             val rawImage = value.takeIf { it.isJsonPrimitive }?.asString?.takeIf(String::isNotBlank)
                 ?: return@mapNotNull null
