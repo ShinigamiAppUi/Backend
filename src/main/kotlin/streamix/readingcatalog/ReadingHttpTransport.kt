@@ -10,6 +10,7 @@ import org.jsoup.nodes.Document
 import java.io.ByteArrayInputStream
 import java.net.URI
 import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.CancellationException
 
 /**
  * Shared HTTP transport for reading providers, following Keiyoushi's client-centric
@@ -67,7 +68,10 @@ internal object ReadingHttpTransport {
                 ?: return@use null
             Payload(bytes, response.request.url.toString())
         }
-    }.getOrNull()
+    }.getOrElse { error ->
+        if (error is CancellationException || error !is Exception) throw error
+        null
+    }
 
     fun getBytes(
         url: String,
@@ -128,7 +132,10 @@ internal object ReadingHttpTransport {
         if (first.first != 403) return@runCatching first.second
         request(bootstrapUrl, mapOf("Accept" to "text/html,application/xhtml+xml"))
         request(url, headers).second
-    }.getOrNull()
+    }.getOrElse { error ->
+        if (error is CancellationException || error !is Exception) throw error
+        null
+    }
     fun getText(
         url: String,
         headers: Map<String, String> = emptyMap(),
@@ -169,7 +176,10 @@ internal fun isSafeReadingHttpUrl(value: String): Boolean = runCatching {
             validAuthority &&
             publicLiteral
     }
-}.getOrDefault(false)
+}.getOrElse { error ->
+    if (error !is Exception) throw error
+    false
+}
 
 internal fun fetchReadingHtmlDocument(
     value: String,
