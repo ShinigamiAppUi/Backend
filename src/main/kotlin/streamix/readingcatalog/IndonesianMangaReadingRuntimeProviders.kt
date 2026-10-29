@@ -88,10 +88,10 @@ class BacamiReadingRuntimeProvider(private val documentFetcher: ((String) -> Doc
             }
             .mapNotNull { raw -> runCatching { JsonParser.parseString(raw).asJsonArray }.getOrNull() }
             .mapNotNull { array ->
-                array.mapNotNull { value ->
+                array.mapNotNull image@ { value ->
                     val rawImage = value.takeIf { it.isJsonPrimitive && it.asJsonPrimitive.isString }
                         ?.asString?.trim()?.takeIf(String::isNotBlank)
-                        ?: return@mapNotNull null
+                        ?: return@image null
                     runCatching { URI(source.url).resolve(rawImage).toString() }.getOrNull()
                         ?.takeIf(::validImage)
                 }.normalizedReadingPageUrls().takeIf { it.isNotEmpty() }
