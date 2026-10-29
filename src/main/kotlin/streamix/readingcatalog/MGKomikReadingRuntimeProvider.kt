@@ -14,7 +14,7 @@ class MGKomikReadingRuntimeProvider(private val documentFetcher: ((String) -> Do
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
         if (entry.kind != ReadingKind.MANGA) return@withContext null
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) } ?: return@withContext null
-        val doc = runCatching { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null }.getOrNull() ?: return@withContext null
+        val doc = try { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null } catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled } catch (_: Exception) { null } ?: return@withContext null
         val pages = doc.select("div#readerarea img").mapNotNull { img ->
             sequenceOf("data-lazy-src", "data-src", "data-original", "src")
                 .mapNotNull { key ->
@@ -29,7 +29,7 @@ class MGKomikReadingRuntimeProvider(private val documentFetcher: ((String) -> Do
     }
 
     private fun validChapter(value: String) = runCatching {
-        URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("id.mgkomik.cc", true) && it.path.contains("/chapter", true) }
+        URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("id.mgkomik.cc", true) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80) && it.path.contains("/chapter", true) }
     }.getOrDefault(false)
 
     private fun validImage(value: String) = isSafeReadingImageUrl(value)
