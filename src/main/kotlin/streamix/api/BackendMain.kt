@@ -223,6 +223,16 @@ import streamix.readingcatalog.KeopiTranslationsReadingRuntimeProvider
 import streamix.readingcatalog.KnoxtReadingRuntimeProvider
 import streamix.readingcatalog.LibReadReadingRuntimeProvider
 import streamix.readingcatalog.OceanTalesReadingRuntimeProvider
+import streamix.readingcatalog.MTLNovelEnglishReadingRuntimeProvider
+import streamix.readingcatalog.MVLEmpyrReadingRuntimeProvider
+import streamix.readingcatalog.PastelTalesReadingRuntimeProvider
+import streamix.readingcatalog.PawReadReadingRuntimeProvider
+import streamix.readingcatalog.PenguinSquadReadingRuntimeProvider
+import streamix.readingcatalog.RanovelReadingRuntimeProvider
+import streamix.readingcatalog.ReadFromReadingRuntimeProvider
+import streamix.readingcatalog.RequiemTranslationsReadingRuntimeProvider
+import streamix.readingcatalog.SleepyTranslationsReadingRuntimeProvider
+import streamix.readingcatalog.SonicMTLReadingRuntimeProvider
 import streamix.readingcatalog.ReadingProviderRuntimeRace
 import streamix.readingcatalog.ReadingRuntimeProvider
 import streamix.readingcatalog.ReadingSourceType
@@ -374,6 +384,16 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         ManhwaReadReadingRuntimeProvider(),
         ToonGodReadingRuntimeProvider(),
         RoyalRoadReadingRuntimeProvider(),
+        SonicMTLReadingRuntimeProvider(),
+        SleepyTranslationsReadingRuntimeProvider(),
+        RequiemTranslationsReadingRuntimeProvider(),
+        ReadFromReadingRuntimeProvider(),
+        RanovelReadingRuntimeProvider(),
+        PenguinSquadReadingRuntimeProvider(),
+        PawReadReadingRuntimeProvider(),
+        PastelTalesReadingRuntimeProvider(),
+        MVLEmpyrReadingRuntimeProvider(),
+        MTLNovelEnglishReadingRuntimeProvider(),
         OceanTalesReadingRuntimeProvider(),
         LibReadReadingRuntimeProvider(),
         KnoxtReadingRuntimeProvider(),
