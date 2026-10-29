@@ -76,7 +76,7 @@ class RiztranslationReadingRuntimeProvider(private val responseFetcher: ((String
         }.getOrNull().orEmpty().distinct()
         images.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:riztranslation", source.url, it, format = "image-pages") }
     }
-    private fun chapterId(value: String): String? = runCatching { URI(value).let { if (isSafeReadingHttpUrl(value) && it.host.equals("riztranslation.pages.dev", true)) it.path.trimEnd('/').substringAfterLast('/').takeIf { s -> s.isNotBlank() && s.all(Char::isDigit) } else null } }.getOrNull()
+    private fun chapterId(value: String): String? = runCatching { URI(value).let { if (isSafeReadingHttpUrl(value) && it.host.equals("riztranslation.pages.dev", true) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80)) it.path.trimEnd('/').substringAfterLast('/').takeIf { s -> s.length in 1..160 && s.all(Char::isDigit) } else null } }.getOrNull()
     private fun validImage(value: String) = isSafeReadingImageUrl(value)
     private fun fetch(value: String, headers: Map<String, String>): String? =
         ReadingHttpTransport.getText(value, headers)
