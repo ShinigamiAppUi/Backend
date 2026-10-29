@@ -2,6 +2,7 @@ package streamix.readingcatalog
 
 import java.net.URI
 import org.jsoup.nodes.Document
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -11,7 +12,7 @@ class HolotoonReadingRuntimeProvider(private val documentFetcher: ((String) -> D
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
         if (entry.kind != ReadingKind.MANHWA) return@withContext null
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && valid(it.url) } ?: return@withContext null
-        val doc = runCatching { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null }.getOrNull() ?: return@withContext null
+        val doc = try { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null } catch (cancelled: CancellationException) { throw cancelled } catch (_: Exception) { null } ?: return@withContext null
         val candidates = doc.select("#reader-pages img").ifEmpty { doc.select("main img[src*='/image/comic/'], main img[data-src*='/image/comic/']") }
         val pages = candidates.mapNotNull { img ->
             sequenceOf("data-lazy-src", "data-src", "data-original", "src")
