@@ -48,7 +48,7 @@ class KomikuAsiaReadingRuntimeProvider(private val responseFetcher: ((String) ->
                     else -> null
                 }
             }
-        }.getOrNull().orEmpty().filter(String::isNotBlank).distinct()
+        }.getOrNull().orEmpty().filter(String::isNotBlank).normalizedReadingPageUrls()
         pages.takeIf { it.isNotEmpty() }?.let {
             ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages")
         }
@@ -112,7 +112,7 @@ class SiikomikReadingRuntimeProvider(private val documentFetcher: ((String) -> D
                         ?.let { resolveSafeImage(it, source.url) }
                 }
                 .firstOrNull()
-        }.filterNotNull().distinct()
+        }.filterNotNull().normalizedReadingPageUrls()
         pages.takeIf { it.isNotEmpty() }?.let {
             ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages")
         }
@@ -168,7 +168,7 @@ class NarasiNinjaReadingRuntimeProvider(private val documentFetcher: ((String) -
                         ?.let { resolveSafeImage(it, source.url) }
                 }
                 .firstOrNull()
-        }.filterNotNull().distinct()
+        }.filterNotNull().normalizedReadingPageUrls()
         pages.takeIf { it.isNotEmpty() }?.let {
             ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages")
         }
