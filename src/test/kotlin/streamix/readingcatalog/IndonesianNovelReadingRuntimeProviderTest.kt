@@ -53,6 +53,11 @@ class IndonesianNovelRuntimeProviderTest {
         )
     }
 
+    @Test fun novelSelectorEvaluationSkipsMalformedSelectorAndContinues() {
+        val document = Jsoup.parse("""<div class="entry-content"><p>Actual chapter body.</p></div>""")
+        assertEquals("Actual chapter body.", extractFirstReadingNovelText(document, ".[, .entry-content"))
+    }
+
     @Test fun novelSelectorPriorityFallsThroughWhenEarlierContainerHasOnlyNavigationNoise() {
         val document = Jsoup.parse("""<div class="text-left"><nav>Next chapter</nav></div>
             <div class="entry-content"><p>Actual chapter body.</p></div>""")
