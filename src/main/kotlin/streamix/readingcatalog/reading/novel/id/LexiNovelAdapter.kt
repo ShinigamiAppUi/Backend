@@ -39,6 +39,9 @@ class LexiNovelReadingRuntimeProvider(private val documentFetcher: ((String) -> 
             }
         }
 
-    private fun validChapterUrl(value: String): Boolean =
-        novelHost(value, setOf("lexinovel.web.id")) && runCatching { URI(value).path.isNotBlank() }.getOrDefault(false)
+    private fun validChapterUrl(value: String): Boolean = try {
+        novelHost(value, setOf("lexinovel.web.id")) && URI(value).path.isNotBlank()
+    } catch (_: Exception) {
+        false
+    }
 }
