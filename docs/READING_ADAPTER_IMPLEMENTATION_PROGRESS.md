@@ -4,6 +4,10 @@
 >
 > Keep this ledger updated on every implementation commit and before handoff. Inventory, a class, or a registry entry is not proof that an adapter is complete or healthy.
 
+## Latest implementation note — 2026-10-30
+
+- **MangaDex requested-language discovery normalization:** the discovery path previously applied a translated-language filter only when the chapter language was exactly `id` or `en`. Regional tags such as `id-ID` / `en_US` therefore caused an unfiltered chapter search, and an explicitly unsupported language could also broaden discovery rather than fail closed. The adapter now normalizes BCP-47/underscore variants to their primary language, applies the `id` / `en` filter, and returns no discovery match for an explicitly supplied unsupported language. Explicit manually curated MangaDex chapter URLs remain unchanged. Code commit: `658e11f6394878f5528fa304c8a348166e6526d8`. No tests, build, CI, or live request were run, in accordance with the implementation-first policy; the change remains unverified.
+
 ## Current work state
 
 - **Repository:** `ShinigamiAppUi/Backend`
@@ -11,7 +15,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current pass:** Implementation-first sweep across all eight content/language groups; preserve the eight separate batch records and language boundaries.
 - **Pass status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `6b65a1dcccce91cd14815648cfea11873dc6737c`
+- **Latest confirmed code commit:** `658e11f6394878f5528fa304c8a348166e6526d8`
 - **Next concrete action:** continue the implementation-first sweep from `docs/READING_MANGA_ARCHITECTURE.md`, creating site-specific adapters and registering each one for every feasible inventory source across the eight content/language groups. Record duplicate, metadata-only, language-uncertain, inaccessible, and access-restricted sources explicitly; defer cleanup and full test/build until the inventory implementation pass is reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 
