@@ -63,7 +63,7 @@ class DragonTeaReadingRuntimeProvider(
                 }
                 ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }
                 ?.takeIf(::validImage)
-        }.distinct()
+        }.normalizedReadingPageUrls()
 
         pages.takeIf { it.isNotEmpty() }?.let {
             ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages")
