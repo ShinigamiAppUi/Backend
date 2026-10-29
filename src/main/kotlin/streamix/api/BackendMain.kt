@@ -256,6 +256,7 @@ import streamix.readingcatalog.JadeScrollsReadingRuntimeProvider
 import streamix.readingcatalog.NovelsPlReadingRuntimeProvider
 import streamix.readingcatalog.OpenQuillReadingRuntimeProvider
 import streamix.readingcatalog.ReadHiveReadingRuntimeProvider
+import streamix.readingcatalog.ReLibraryReadingRuntimeProvider
 import streamix.readingcatalog.RechaptersReadingRuntimeProvider
 import streamix.readingcatalog.OrvReaderReadingRuntimeProvider
 import streamix.readingcatalog.NyxScansReadingRuntimeProvider
@@ -544,6 +545,7 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         NovelsPlReadingRuntimeProvider(),
         OpenQuillReadingRuntimeProvider(),
         ReadHiveReadingRuntimeProvider(),
+        ReLibraryReadingRuntimeProvider(),
         RechaptersReadingRuntimeProvider(),
         OrvReaderReadingRuntimeProvider(),
         NyxScansReadingRuntimeProvider(),
