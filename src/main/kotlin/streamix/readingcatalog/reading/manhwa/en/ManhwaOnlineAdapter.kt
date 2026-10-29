@@ -20,7 +20,7 @@ class ManhwaOnlineReadingRuntimeProvider(private val documentFetcher: ((String) 
                     raw.takeIf { it.isNotBlank() && !it.startsWith("data:") }
                         ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }
                 }?.takeIf(::validImage)
-        }.distinct()
+        }.normalizedReadingPageUrls()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
     private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("manhwaonline.org", true) && it.path.isNotBlank() } }.getOrDefault(false)
