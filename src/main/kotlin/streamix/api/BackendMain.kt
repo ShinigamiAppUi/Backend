@@ -387,6 +387,7 @@ internal fun canonicalReadingProviderId(rawProviderId: String): String =
     when (rawProviderId.trim().lowercase(java.util.Locale.ROOT)) {
         "mangadex-manhwa", "mangadex-manhua" -> "mangadex"
         "weebcentral-manhwa" -> "weebcentral"
+        "new-manhwa" -> "saymanhwa"
         "comick-unoriginal" -> "comick"
         "bbato" -> "bato"
         else -> rawProviderId.trim()
