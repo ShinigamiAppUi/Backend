@@ -352,7 +352,6 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         NgamenKomikManhuaReadingRuntimeProvider(),
         KiryuuManhuaReadingRuntimeProvider(),
         KlikMangaManhuaReadingRuntimeProvider(),
-        KomikuManhuaReadingRuntimeProvider(),
         ApkomikManhuaReadingRuntimeProvider(),
         KomikIndoIdManhuaReadingRuntimeProvider(),
         KomikindoManhuaReadingRuntimeProvider(),
