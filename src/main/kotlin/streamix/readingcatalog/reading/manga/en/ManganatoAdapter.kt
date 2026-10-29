@@ -20,9 +20,9 @@ class ManganatoReadingRuntimeProvider(private val documentFetcher: ((String) -> 
             null
         } ?: return@withContext null
         val pages = doc.select(".container-chapter-reader img, .page-chapter img").mapNotNull { img ->
-            sequenceOf("data-lazy-src", "data-src", "data-original", "src").map(String::trim).firstNotNullOfOrNull { key -> img.attr(key).takeIf { it.isNotBlank() && !it.startsWith("data:") } }
+            sequenceOf("data-lazy-src", "data-src", "data-original", "src").map(String::trim).firstNotNullOfOrNull { key -> img.attr(key).takeIf { it.isNotBlank() && !it.startsWith("data:", ignoreCase = true) } }
                 ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }?.takeIf(::validImage)
-        }.distinct()
+        }.normalizedReadingPageUrls()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
     private fun validChapter(value: String) = isSafeReadingChapterUrl(value, setOf("manganato.com", "www.manganato.com", "manganato.gg", "www.manganato.gg", "chapmanganato.to")) { it.contains("chapter", true) }
