@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current pass:** Implementation-first sweep across all eight content/language groups; preserve the eight separate batch records and language boundaries.
 - **Pass status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `a5a44e25232b8afed6d338150a39d59cbd53ce61`
+- **Latest confirmed code commit:** `09c6e8a3088f3082a60e0fcf26c071a20663cf24`
 - **Next concrete action:** continue the implementation-first sweep from `docs/READING_MANGA_ARCHITECTURE.md`, creating site-specific adapters and registering each one for every feasible inventory source across the eight content/language groups. Record duplicate, metadata-only, language-uncertain, inaccessible, and access-restricted sources explicitly; defer cleanup and full test/build until the inventory implementation pass is reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
@@ -45,6 +45,9 @@
 
 
 - **English Manga adapter cancellation hardening — continued (2026-10-29):** fixed four more document-fetch wrappers that swallowed coroutine cancellation: MangaHub `2caa8bfaa05a2ab8e59801c4f0f8b6e131110f37`, MangaKatana `85ecaa488af1d3e96b65bc2bf23bd9b330d692cd`, MangaNow `4abd6f8bac878dc53788dbb0a76612da510cd466`, and MangaRead `a5a44e25232b8afed6d338150a39d59cbd53ce61`. The sampled MangaUno provider already propagates cancellation. This pass is a source-level resilience fix only; it does not verify live host availability, chapter selectors, or output ordering. No tests/build/CI run.
+
+
+- **English Manga + English Manhwa cancellation hardening (2026-10-29):** continued the static sweep. MangaBolt and MangaDistrict now rethrow coroutine cancellation rather than swallowing it in `runCatching` around document fetches (commits `cc41af02dc16e4c402c2225b3e0b2c00326e0857`, `e2e4bb0625661d8b8363301bfc38bd1ce6a4ef4e`). ManhwaBuddy, ManhwaGalaxy, and ManhwaHub received the same correction (commits `c95323fe877b27611671af9981ddb205a0d4613d`, `1e560565bf2be36953570f687b34185071a4187e`, `09c6e8a3088f3082a60e0fcf26c071a20663cf24`). Sampled MangaFox, Manga Trend, Mangatown, Aunt Manhwa, and Hiperdex already explicitly propagated cancellation. Parser/host behavior remains unverified; no tests/build/CI run.
 
 ## Batch plan
 
