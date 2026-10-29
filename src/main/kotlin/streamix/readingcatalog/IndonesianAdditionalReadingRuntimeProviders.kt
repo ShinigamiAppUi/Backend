@@ -20,7 +20,7 @@ class BacaKomikReadingRuntimeProvider(private val documentFetcher: ((String) -> 
                 .filterNotNull()
                 .map(String::trim)
                 .mapNotNull { raw ->
-                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:") }
+                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:", ignoreCase = true) }
                         ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }
                         ?.takeIf(::validImage)
                 }
@@ -46,7 +46,7 @@ class MangaCanReadingRuntimeProvider(private val documentFetcher: ((String) -> D
             sequenceOf("data-lazy-src", "data-src", "data-original", "src")
                 .map { key -> img.attr(key).trim() }
                 .mapNotNull { raw ->
-                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:") }
+                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:", ignoreCase = true) }
                         ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }
                         ?.takeIf(::validImage)
                 }
@@ -128,7 +128,7 @@ class NgomikReadingRuntimeProvider(private val documentFetcher: ((String) -> Doc
             sequenceOf("data-lazy-src", "data-src", "data-original", "src")
                 .map { key -> img.attr(key).trim() }
                 .mapNotNull { raw ->
-                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:") }
+                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:", ignoreCase = true) }
                         ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }
                         ?.takeIf(::validImage)
                 }
