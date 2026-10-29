@@ -1080,3 +1080,37 @@ For each language group, process sources in batches while preserving one adapter
 - Adapter names should identify the site (for example, `BacaLightNovelAdapter` or `RoyalRoadAdapter`), and reside in the correct language group. These are naming examples only, not claims that either adapter already exists.
 - A website redesign should trigger tests and a re-audit for that site's adapter without silently changing unrelated site adapters.
 
+## 20. Scope clarification — all reading content types
+
+The mandatory site-specific adapter and language-separation rules in Section 19 apply to **all Reading Catalog content types**, not novels alone:
+
+- Manga
+- Manhwa
+- Manhua
+- Novels / light novels
+
+### 20.1 Dedicated adapter per site and content type
+
+- Every supported source website must have its own site-specific adapter for the content type and reading experience it serves. Do not use one generic adapter across unrelated manga, manhwa, manhua, or novel sites.
+- A site that provides multiple content types may share only verified common infrastructure. Keep content-type-specific discovery, title/detail parsing, chapter navigation, page/image extraction, or text extraction explicit. If the site's manga and manhwa sections demonstrably use the same stable site contract, document the evidence and test each registered content type separately rather than assuming equivalence.
+- For comics, the dedicated adapter must account for that site's chapter-page sequence, image URL extraction, ordering, lazy-loaded image data, and site-specific pagination where applicable. For novels, it must account for that site's chapter text and navigation.
+- Keep source-specific adapters separate even if multiple sites use the same CMS or visually similar templates. Shared helpers may assist parsing but must not turn into a generic cross-site adapter.
+
+### 20.2 Language separation for every content type
+
+- Maintain separate Indonesian and English source adapter groups and registries for manga, manhwa, manhua, and novels. A recommended layout is:
+  - `reading/manga/id/`, `reading/manga/en/`
+  - `reading/manhwa/id/`, `reading/manhwa/en/`
+  - `reading/manhua/id/`, `reading/manhua/en/`
+  - `reading/novel/id/`, `reading/novel/en/`
+- If project naming conventions group manga/manhwa/manhua under a shared comics module, preserve the same logical separation by content type and language in package/registry names and audit reports.
+- Verify the actual language of chapter text or content metadata. Do not infer language from a site's name, top-level domain, or a plugin's label alone. Mark unresolved sources `LANGUAGE_UNVERIFIED`.
+- Track inventory, audit, implementation, fixture-test, live-verification, unavailable, and blocked status separately for each content-type/language group.
+
+### 20.3 Per-source validation and completion
+
+- Each adapter must have its own fixtures and tests for its site's actual content contract. Comic tests must cover chapter ordering and page/image extraction; novel tests must cover chapter ordering and text extraction. Both must cover empty results, malformed or changed pages, duplicate content, invalid URLs, and network failures as applicable.
+- Use the Section 19 workflow for each source: `INVENTORY → AUDIT → IMPLEMENT SITE-SPECIFIC ADAPTER → FIXTURE TEST → LIVE SMOKE TEST (where permitted) → RE-AUDIT → LOCK`.
+- Never count a generic parser, source descriptor, registry entry, or unverified language label as a completed adapter. Never mark a source `LOCKED` without recorded source-specific evidence.
+- These rules supplement existing catalog-first and metadata rules: metadata remains separate from Reading Catalog source URLs; do not put metadata into the Reading Catalog merely to support an adapter.
+
