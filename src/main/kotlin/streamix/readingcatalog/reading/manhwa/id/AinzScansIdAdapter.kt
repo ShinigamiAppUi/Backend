@@ -2,6 +2,7 @@ package streamix.readingcatalog
 
 import java.net.URI
 import org.json.JSONObject
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -25,7 +26,7 @@ private fun parts(value: String, expectedHost: String): Pair<String, String>? = 
 }.getOrNull()
 
 private suspend fun loneSealPages(kind: ReadingKind, sourceUrl: String, apiUrl: String, providerId: String, responseFetcher: ((String) -> String?)?): ReadingContent? {
-    val body = runCatching { responseFetcher?.invoke(apiUrl) ?: if (responseFetcher == null) fetchLoneSealJson(apiUrl) else null }.getOrNull() ?: return null
+    val body = try { responseFetcher?.invoke(apiUrl) ?: if (responseFetcher == null) fetchLoneSealJson(apiUrl) else null } catch (cancelled: CancellationException) { throw cancelled } catch (_: Exception) { null } ?: return null
     val pages = runCatching {
         val root = JSONObject(body)
         val chapter = root.optJSONObject("chapter") ?: root.optJSONObject("data")?.optJSONObject("chapter") ?: root.optJSONObject("data") ?: root
