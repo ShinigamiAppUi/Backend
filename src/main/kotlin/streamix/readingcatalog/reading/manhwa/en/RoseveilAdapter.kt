@@ -10,6 +10,7 @@ class RoseveilReadingRuntimeProvider(private val responseFetcher: ((String) -> S
     override val id = "roseveil"
     override fun supports(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry) = entry.kind == ReadingKind.MANHWA && chapter.sources.any { it.enabled && it.providerId.equals(id, true) && parts(it.url, "roseveil.org") != null }
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
+        if (entry.kind != ReadingKind.MANHWA) return@withContext null
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && parts(it.url, "roseveil.org") != null } ?: return@withContext null
         val (series, slug) = parts(source.url, "roseveil.org") ?: return@withContext null
         loneSealPages(entry.kind, source.url, "https://api.roseveil.org/api/series/comic/$series/chapter/$slug", id, responseFetcher)
@@ -40,7 +41,7 @@ private suspend fun loneSealPages(kind: ReadingKind, sourceUrl: String, apiUrl: 
         (0 until arr.length()).mapNotNull { i ->
             arr.optJSONObject(i)?.optString("image_url")?.takeIf(String::isNotBlank)?.takeIf(::validLoneSealImage)
         }
-    }.getOrNull().orEmpty().distinct()
+    }.getOrNull().orEmpty().normalizedReadingPageUrls()
     return pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(kind, "reading-provider:$providerId", sourceUrl, it, format = "image-pages") }
 }
 
