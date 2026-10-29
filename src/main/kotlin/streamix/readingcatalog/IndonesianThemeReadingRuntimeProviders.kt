@@ -21,7 +21,7 @@ class KiryuuReadingRuntimeProvider(private val documentFetcher: ((String) -> Doc
         }.distinct()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
-    private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("v7.kiryuu.to", true) && it.path.contains("chapter", true) } }.getOrDefault(false)
+    private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80) && it.host.equals("v7.kiryuu.to", true) && it.path.contains("chapter", true) } }.getOrDefault(false)
     private fun validImage(value: String) = isSafeReadingImageUrl(value)
     private fun fetch(value: String): Document? = fetchIndonesianReaderDocument(value)
 }
@@ -41,7 +41,7 @@ class KomikStationReadingRuntimeProvider(private val documentFetcher: ((String) 
         }.distinct()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
-    private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("komikstation.org", true) && it.path.isNotBlank() } }.getOrDefault(false)
+    private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80) && it.host.equals("komikstation.org", true) && it.path.isNotBlank() } }.getOrDefault(false)
     private fun validImage(value: String) = isSafeReadingImageUrl(value)
     private fun fetch(value: String): Document? = fetchIndonesianReaderDocument(value)
 }
@@ -61,7 +61,7 @@ class ApkomikReadingRuntimeProvider(private val documentFetcher: ((String) -> Do
         }.distinct()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
-    private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("01.apkomik.com", true) && it.path.isNotBlank() } }.getOrDefault(false)
+    private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80) && it.host.equals("01.apkomik.com", true) && it.path.isNotBlank() } }.getOrDefault(false)
     private fun validImage(value: String) = isSafeReadingImageUrl(value)
     private fun fetch(value: String): Document? = fetchIndonesianReaderDocument(value)
 }
@@ -81,7 +81,7 @@ class LepoyTlReadingRuntimeProvider(private val documentFetcher: ((String) -> Do
         }.distinct()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
-    private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("www.lepoytl.my.id", true) && it.path.isNotBlank() } }.getOrDefault(false)
+    private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80) && it.host.equals("www.lepoytl.my.id", true) && it.path.isNotBlank() } }.getOrDefault(false)
     private fun validImage(value: String) = isSafeReadingImageUrl(value)
     private fun fetch(value: String): Document? = fetchIndonesianReaderDocument(value)
 }
