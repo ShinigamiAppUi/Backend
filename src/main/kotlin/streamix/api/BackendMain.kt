@@ -48,6 +48,11 @@ import streamix.readingcatalog.NovelBuddyReadingRuntimeProvider
 import streamix.readingcatalog.NovelBinReadingRuntimeProvider
 import streamix.readingcatalog.NovelFireReadingRuntimeProvider
 import streamix.readingcatalog.FreeWebNovelReadingRuntimeProvider
+import streamix.readingcatalog.NovelFullReadingRuntimeProvider
+import streamix.readingcatalog.NovelHiReadingRuntimeProvider
+import streamix.readingcatalog.NovelLightReadingRuntimeProvider
+import streamix.readingcatalog.ScribbleHubReadingRuntimeProvider
+import streamix.readingcatalog.InkittReadingRuntimeProvider
 import streamix.readingcatalog.JNovelClubReadingRuntimeProvider
 import streamix.readingcatalog.BacaKomikReadingRuntimeProvider
 import streamix.readingcatalog.MangaCanReadingRuntimeProvider
@@ -238,6 +243,11 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         NovelBinReadingRuntimeProvider(),
         NovelFireReadingRuntimeProvider(),
         FreeWebNovelReadingRuntimeProvider(),
+        NovelFullReadingRuntimeProvider(),
+        NovelHiReadingRuntimeProvider(),
+        NovelLightReadingRuntimeProvider(),
+        ScribbleHubReadingRuntimeProvider(),
+        InkittReadingRuntimeProvider(),
         WebNovelReadingRuntimeProvider(),
         WuxiaWorldReadingRuntimeProvider(),
         BacaLNReadingRuntimeProvider(),
