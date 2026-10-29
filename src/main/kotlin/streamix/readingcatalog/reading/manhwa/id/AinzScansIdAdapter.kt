@@ -15,26 +15,6 @@ class AinzScansIdReadingRuntimeProvider(private val responseFetcher: ((String) -
     }
 }
 
-class RoseveilReadingRuntimeProvider(private val responseFetcher: ((String) -> String?)? = null) : ReadingRuntimeProvider {
-    override val id = "roseveil"
-    override fun supports(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry) = entry.kind == ReadingKind.MANHWA && chapter.sources.any { it.enabled && it.providerId.equals(id, true) && parts(it.url, "roseveil.org") != null }
-    override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
-        val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && parts(it.url, "roseveil.org") != null } ?: return@withContext null
-        val (series, slug) = parts(source.url, "roseveil.org") ?: return@withContext null
-        loneSealPages(entry.kind, source.url, "https://api.roseveil.org/api/series/comic/$series/chapter/$slug", id, responseFetcher)
-    }
-}
-
-class SoulScansReadingRuntimeProvider(private val responseFetcher: ((String) -> String?)? = null) : ReadingRuntimeProvider {
-    override val id = "soul-scans"
-    override fun supports(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry) = entry.kind == ReadingKind.MANHWA && chapter.sources.any { it.enabled && it.providerId.equals(id, true) && parts(it.url, "v1.soulscans.org") != null }
-    override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
-        val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && parts(it.url, "v1.soulscans.org") != null } ?: return@withContext null
-        val (series, slug) = parts(source.url, "v1.soulscans.org") ?: return@withContext null
-        loneSealPages(entry.kind, source.url, "https://v1.soulscans.org/api/series/comic/$series/chapter/$slug", id, responseFetcher)
-    }
-}
-
 private fun parts(value: String, expectedHost: String): Pair<String, String>? = runCatching {
     val u = URI(value)
     if (!isSafeReadingHttpUrl(value) || !u.host.equals(expectedHost, true)) return@runCatching null
