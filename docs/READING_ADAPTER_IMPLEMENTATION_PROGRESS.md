@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current batch:** Batch 1 — Manga / Indonesian (`MANGA` / `id`)
 - **Batch status:** `IN_PROGRESS`
-- **Latest confirmed code commit: `b06de33a4dce17abbf315430b03d5ccaef8af443`
+- **Latest confirmed code commit: `cce3c472f26f71abf99cdd56f8904ae8a7417fa0`
 - **Next concrete action:** continue source-by-source audit and implementation for the 25 Indonesian manga providers below. Do not start a new language batch until this batch's feasible implementations have been completed and its inventory reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
@@ -30,6 +30,8 @@
 | 8 | Novel | English (`en`) | `NOT_STARTED` | Reconcile the English novel inventory in `READING_MANGA_ARCHITECTURE.md`. |
 
 ## Latest implementation note — 2026-10-29
+
+- WestManga now rejects a route whose extracted final segment is exactly `chapter` (case-insensitive). The route validator previously allowed a multi-segment path containing a chapter marker even if no chapter identifier followed it, which could construct `/api/v/chapter`. Slug syntax and length checks remain enforced. Code commit: `cce3c472f26f71abf99cdd56f8904ae8a7417fa0`. Tests/build/CI and live validation remain deferred.
 
 - WestManga chapter route parsing now extracts the final path segment as the chapter slug instead of the first segment. The prior code could send a parent route segment (including literal `chapter`) to `/api/v/{slug}` even though the path validator accepts a multi-segment chapter route. Host/path validation and slug character/length checks remain in place. Code commit: `b06de33a4dce17abbf315430b03d5ccaef8af443`. Tests/build/CI and live validation remain deferred.
 
