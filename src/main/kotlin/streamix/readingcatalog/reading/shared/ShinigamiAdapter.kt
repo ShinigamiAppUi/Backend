@@ -11,20 +11,21 @@ import kotlinx.coroutines.withContext
  * treats a catalog-provided chapter value as a network URL. Image paths are assembled
  * from the API's baseUrl + chapterPage.path + pages payload.
  */
-class ShinigamiReadingRuntimeProvider(
-    private val jsonFetcher: ((String) -> String?)? = null
+open class ShinigamiReadingRuntimeProvider(
+    private val jsonFetcher: ((String) -> String?)? = null,
+    private val supportedKind: ReadingKind = ReadingKind.MANGA,
+    final override val id: String = "shinigami"
 ) : ReadingRuntimeProvider {
-    override val id = "shinigami"
     private val apiBase = "https://api.shngm.io"
 
     override fun supports(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): Boolean =
-        entry.kind == ReadingKind.MANGA && chapter.sources.any {
+        entry.kind == supportedKind && chapter.sources.any {
             it.enabled && it.providerId.equals(id, true) && chapterId(it.url) != null
         }
 
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? =
         withContext(Dispatchers.IO) {
-            if (entry.kind != ReadingKind.MANGA) return@withContext null
+            if (entry.kind != supportedKind) return@withContext null
             val source = chapter.sources.firstOrNull {
                 it.enabled && it.providerId.equals(id, true) && chapterId(it.url) != null
             } ?: return@withContext null
