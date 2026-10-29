@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current batch:** Batch 1 — Manga / Indonesian (`MANGA` / `id`)
 - **Batch status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `PENDING_NEW_COMMIT`
+- **Latest confirmed code commit:** `73ca3281ec8d6d5d2b76fc443873ca6b44ae99a9`
 - **Next concrete action:** implement first-pass site-specific adapters for all feasible sites in `READING_MANGA_ARCHITECTURE.md` across the eight content/language groups, recording uncertain, duplicate, inaccessible, and metadata-only sources separately; defer cleanup and full test/build until this implementation pass is reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
