@@ -205,6 +205,7 @@ import streamix.readingcatalog.EtudeTranslationsReadingRuntimeProvider
 import streamix.readingcatalog.FoxaholicReadingRuntimeProvider
 import streamix.readingcatalog.IndraTranslationsReadingRuntimeProvider
 import streamix.readingcatalog.LazyGirlTranslationsReadingRuntimeProvider
+import streamix.readingcatalog.ArchiveOfOurOwnReadingRuntimeProvider
 import streamix.readingcatalog.AkknovelReadingRuntimeProvider
 import streamix.readingcatalog.AllNovelReadingRuntimeProvider
 import streamix.readingcatalog.ArcaneTranslationsReadingRuntimeProvider
@@ -508,6 +509,7 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         BlumeVerseReadingRuntimeProvider(),
         ArcaneTranslationsReadingRuntimeProvider(),
         AllNovelReadingRuntimeProvider(),
+        ArchiveOfOurOwnReadingRuntimeProvider(),
         AkknovelReadingRuntimeProvider(),
         LazyGirlTranslationsReadingRuntimeProvider(),
         IndraTranslationsReadingRuntimeProvider(),
