@@ -56,6 +56,15 @@ class ReadingMetadataHttpContractTest {
             assertEquals(200, detail.statusCode(), detail.body())
             assertTrue(detail.body().contains("Fixture Manhwa"))
 
+            val mismatchedDetailKind = get(client, "$base/api/v1/reading/metadata/123?kind=MANGA", session.token)
+            assertEquals(404, mismatchedDetailKind.statusCode())
+
+            val invalidDetailKind = get(client, "$base/api/v1/reading/metadata/123?kind=VIDEO", session.token)
+            assertEquals(400, invalidDetailKind.statusCode())
+
+            val oversizedDetailId = get(client, "$base/api/v1/reading/metadata/2147483648", session.token)
+            assertEquals(400, oversizedDetailId.statusCode())
+
             val callsBeforeInvalidInput = gateway.searchCalls
             val invalidKind = get(client, "$base/api/v1/reading/metadata/search?q=Fixture&kind=VIDEO", session.token)
             assertEquals(400, invalidKind.statusCode())
