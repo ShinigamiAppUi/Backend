@@ -99,7 +99,7 @@ class MikoRokuReadingRuntimeProvider(private val responseFetcher: ((String) -> S
     }
     private fun chapterParts(value: String): Pair<String, String>? = runCatching {
         val u = URI(value)
-        if (!isSafeReadingHttpUrl(value) || !u.host.equals("mikoroku.com", true)) return@runCatching null
+        if (!isSafeReadingHttpUrl(value) || !u.host.equals("mikoroku.com", true) || u.userInfo != null || (u.port != -1 && u.port != 443 && u.port != 80)) return@runCatching null
         val p = u.path.split('/').filter(String::isNotBlank)
         val i = p.indexOf("manga")
         if (i < 0 || p.getOrNull(i + 2) != "chapter") return@runCatching null
