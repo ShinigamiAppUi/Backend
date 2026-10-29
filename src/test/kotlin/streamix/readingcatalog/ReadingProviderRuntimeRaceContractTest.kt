@@ -163,6 +163,21 @@ class ReadingProviderRuntimeRaceContractTest {
     }
 
     @Test
+    fun providerSupportCancellationIsNotConvertedIntoAnIneligibleProvider() = runBlocking {
+        val cancelled = object : ReadingRuntimeProvider {
+            override val id = "cancelled"
+            override fun supports(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): Boolean =
+                throw kotlinx.coroutines.CancellationException("caller cancelled")
+            override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? =
+                error("must not start after cancellation")
+        }
+
+        assertFailsWith<kotlinx.coroutines.CancellationException> {
+            ReadingProviderRuntimeRace(listOf(cancelled)).race(entry(), chapter("cancelled"), emptySet())
+        }
+    }
+
+    @Test
     fun novelRuntimeRejectsImageOnlyContent() = runBlocking {
         val provider = object : ReadingRuntimeProvider {
             override val id = "webnovel"
