@@ -56,10 +56,17 @@ class ReadingMetadataHttpContractTest {
             assertEquals(200, detail.statusCode(), detail.body())
             assertTrue(detail.body().contains("Fixture Manhwa"))
 
-            val callsBeforeInvalidKind = gateway.searchCalls
+            val callsBeforeInvalidInput = gateway.searchCalls
             val invalidKind = get(client, "$base/api/v1/reading/metadata/search?q=Fixture&kind=VIDEO", session.token)
             assertEquals(400, invalidKind.statusCode())
-            assertEquals(callsBeforeInvalidKind, gateway.searchCalls)
+
+            val invalidPage = get(client, "$base/api/v1/reading/metadata/search?q=Fixture&kind=MANGA&page=0", session.token)
+            assertEquals(400, invalidPage.statusCode())
+
+            val oversizedQuery = "x".repeat(101)
+            val oversizedSearch = get(client, "$base/api/v1/reading/metadata/search?q=$oversizedQuery&kind=MANGA", session.token)
+            assertEquals(400, oversizedSearch.statusCode())
+            assertEquals(callsBeforeInvalidInput, gateway.searchCalls)
         } finally {
             server.close()
             Files.walk(temp).use { paths ->
