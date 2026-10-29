@@ -21,6 +21,7 @@ class VoraToonReadingRuntimeProvider(private val responseFetcher: ((String) -> S
         }
 
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
+        if (entry.kind != ReadingKind.MANHWA) return@withContext null
         val source = chapter.sources.firstOrNull {
             it.enabled && it.providerId.equals(id, true) && chapterParts(it.url) != null
         } ?: return@withContext null
@@ -86,6 +87,7 @@ class ComicasoReadingRuntimeProvider(private val responseFetcher: ((String) -> S
         }
 
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
+        if (entry.kind != ReadingKind.MANHWA) return@withContext null
         val source = chapter.sources.firstOrNull {
             it.enabled && it.providerId.equals(id, true) && chapterParts(it.url) != null
         } ?: return@withContext null
@@ -146,6 +148,7 @@ class TheMangaReadingRuntimeProvider(private val documentFetcher: ((String) -> D
         }
 
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
+        if (entry.kind != ReadingKind.MANHWA) return@withContext null
         val source = chapter.sources.firstOrNull {
             it.enabled && it.providerId.equals(id, true) && validChapter(it.url)
         } ?: return@withContext null
@@ -176,11 +179,12 @@ class UlasComicReadingRuntimeProvider(private val documentFetcher: ((String) -> 
     override val id = "ulas-comic"
 
     override fun supports(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry) =
-        entry.kind != ReadingKind.NOVEL && chapter.sources.any {
+        entry.kind == ReadingKind.MANHWA && chapter.sources.any {
             it.enabled && it.providerId.equals(id, true) && validChapter(it.url)
         }
 
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
+        if (entry.kind != ReadingKind.MANHWA) return@withContext null
         val source = chapter.sources.firstOrNull {
             it.enabled && it.providerId.equals(id, true) && validChapter(it.url)
         } ?: return@withContext null
