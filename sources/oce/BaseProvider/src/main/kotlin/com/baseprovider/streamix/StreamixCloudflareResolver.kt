@@ -1,0 +1,4 @@
+package com.baseprovider.streamix
+
+typealias StreamixCloudflareResolver = streamix.core.StreamixCloudflareResolver
+typealias StreamixCloudflareResult = streamix.core.StreamixCloudflareResult

@@ -1,0 +1,21 @@
+package com.baseprovider.model
+
+import com.baseprovider.streamix.StreamixShowStatus
+
+/**
+ * INTERNAL DATA CONTRACT LAYER
+ */
+data class MetadataPackage(
+    val title: String,
+    val poster: String,
+    val banner: String?,
+    val description: String,
+    val year: Int?,
+    val statusText: String?,
+    val tags: List<String>,
+    val rating: String?,
+    val status: StreamixShowStatus,
+    val imdbId: String?,
+    val tmdbId: Int?,
+    val trailer: String?
+)
