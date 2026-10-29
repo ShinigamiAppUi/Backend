@@ -260,6 +260,15 @@ import streamix.readingcatalog.FictionZoneReadingRuntimeProvider
 import streamix.readingcatalog.FreeGoodNovelReadingRuntimeProvider
 import streamix.readingcatalog.GenesisStudioReadingRuntimeProvider
 import streamix.readingcatalog.GreenzReadingRuntimeProvider
+import streamix.readingcatalog.HelioScansReadingRuntimeProvider
+import streamix.readingcatalog.KatReadingCafeReadingRuntimeProvider
+import streamix.readingcatalog.KonkonReadingRuntimeProvider
+import streamix.readingcatalog.KuuPressReadingRuntimeProvider
+import streamix.readingcatalog.LeafStudioReadingRuntimeProvider
+import streamix.readingcatalog.LightNovelToReadingRuntimeProvider
+import streamix.readingcatalog.LNCrawlerReadingRuntimeProvider
+import streamix.readingcatalog.LunoxScansReadingRuntimeProvider
+import streamix.readingcatalog.MTLBooksReadingRuntimeProvider
 import streamix.readingcatalog.ReadingRuntimeProvider
 import streamix.readingcatalog.ReadingSourceType
 import streamix.readingcatalog.ReadingSourceHandler
@@ -475,6 +484,15 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         FreeGoodNovelReadingRuntimeProvider(),
         GenesisStudioReadingRuntimeProvider(),
         GreenzReadingRuntimeProvider(),
+        HelioScansReadingRuntimeProvider(),
+        KatReadingCafeReadingRuntimeProvider(),
+        KonkonReadingRuntimeProvider(),
+        KuuPressReadingRuntimeProvider(),
+        LeafStudioReadingRuntimeProvider(),
+        LightNovelToReadingRuntimeProvider(),
+        LNCrawlerReadingRuntimeProvider(),
+        LunoxScansReadingRuntimeProvider(),
+        MTLBooksReadingRuntimeProvider(),
         NovelBuddyReadingRuntimeProvider(),
         NovelBinReadingRuntimeProvider(),
         NovelFireReadingRuntimeProvider(),
