@@ -1635,6 +1635,9 @@ class StreamixHttpServer(
                     suffix == "search" -> {
                         val searchQuery = query(exchange, "q")?.trim().orEmpty()
                         if (searchQuery.isBlank()) return@withUser respond(exchange, 400, mapOf("error" to "q is required"))
+                        if (searchQuery.length > 100) {
+                            return@withUser respond(exchange, 400, mapOf("error" to "q must contain at most 100 characters"))
+                        }
                         val rawKind = query(exchange, "kind")?.trim()?.uppercase(java.util.Locale.ROOT)
                             ?: return@withUser respond(exchange, 400, mapOf("error" to "kind is required"))
                         val kind = try {
@@ -1642,7 +1645,10 @@ class StreamixHttpServer(
                         } catch (_: IllegalArgumentException) {
                             return@withUser respond(exchange, 400, mapOf("error" to "kind must be MANGA, MANHWA, MANHUA, or NOVEL"))
                         }
-                        val page = query(exchange, "page")?.toIntOrNull()?.coerceAtLeast(1) ?: 1
+                        val rawPage = query(exchange, "page")
+                        val page = if (rawPage == null) 1 else rawPage.toIntOrNull()
+                            ?.takeIf { it in 1..1000 }
+                            ?: return@withUser respond(exchange, 400, mapOf("error" to "page must be between 1 and 1000"))
                         try {
                             respond(exchange, 200, readingMetadata.search(searchQuery, kind, page))
                         } catch (_: AniListReadingMetadataException) {
