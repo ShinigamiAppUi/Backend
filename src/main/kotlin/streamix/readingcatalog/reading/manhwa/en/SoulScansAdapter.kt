@@ -11,6 +11,7 @@ class SoulScansReadingRuntimeProvider(private val responseFetcher: ((String) -> 
     override fun supports(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry) = entry.kind == ReadingKind.MANHWA && chapter.sources.any { it.enabled && it.providerId.equals(id, true) && parts(it.url, "v1.soulscans.org") != null }
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
         if (entry.kind != ReadingKind.MANHWA) return@withContext null
+        if (entry.kind != ReadingKind.MANHWA) return@withContext null
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && parts(it.url, "v1.soulscans.org") != null } ?: return@withContext null
         val (series, slug) = parts(source.url, "v1.soulscans.org") ?: return@withContext null
         loneSealPages(entry.kind, source.url, "https://v1.soulscans.org/api/series/comic/$series/chapter/$slug", id, responseFetcher)
