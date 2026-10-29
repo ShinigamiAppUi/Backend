@@ -43,7 +43,7 @@ class MangaUnoReadingRuntimeProvider(private val jsonFetcher: ((String) -> Strin
                 candidate?.takeIf(::validImageUrl)
             }.orEmpty().normalizedReadingPageUrls()
             pages.takeIf { it.isNotEmpty() }?.let {
-                ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages")
+                ReadingContent(entry.kind, "reading-provider:${this@MangaUnoReadingRuntimeProvider.id}", source.url, it, format = "image-pages")
             }
         }
 
