@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current pass:** Implementation-first sweep across all eight content/language groups; preserve the eight separate batch records and language boundaries.
 - **Pass status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `9fd108915b0a0970ea8b3fc6bde03ef56c6cf9d5`
+- **Latest confirmed code commit:** `0d6b84f7b7f1035a9ff100511e47fed81ade732c`
 - **Next concrete action:** continue the implementation-first sweep from `docs/READING_MANGA_ARCHITECTURE.md`, creating site-specific adapters and registering each one for every feasible inventory source across the eight content/language groups. Record duplicate, metadata-only, language-uncertain, inaccessible, and access-restricted sources explicitly; defer cleanup and full test/build until the inventory implementation pass is reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
@@ -29,6 +29,8 @@
 - **Registry reconciliation and current continuation (2026-10-29):** confirmed the recent Grensia, WuxiaWorld.Site, and Dragon Tea changes are imported and instantiated in `BackendMain.kt`. Rechecked Indonesian novel files against the current implementation tree and continued fixing cancellation propagation in the existing Indonesian providers; this remains implementation hardening, not source-selector verification. Novel Updates / Light Novel Updates remain discovery/index services rather than ordinary chapter-reader adapters, and shared-domain aliases must be deduplicated by canonical source rather than counted as separate providers. Full inventory reconciliation is still in progress. No tests/build/CI run.
 
 - **Additional Indonesian novel source hardening (2026-10-29):** fixed two concrete source-file defects in SakuraNovel and WBNovel: both referenced `URI` without importing `java.net.URI`, and both wrapped chapter fetches in `runCatching`, which could swallow coroutine cancellation. Added the missing imports and explicit `CancellationException` propagation. Commits: SakuraNovel `d893e91a0b116f1983c785721097126570b24864`; WBNovel `9fd108915b0a0970ea8b3fc6bde03ef56c6cf9d5`. This is static source correction; tests/build remain deferred.
+
+- **Indonesian novel source static audit — URI imports (2026-10-29):** a source-only scan of all 16 Indonesian novel adapter files found five more references to `URI(...)` without `java.net.URI` imports. Fixed MeioNovel (`d91c3fb3d2e993d5495858c4949788da8062210d`), MTL Novel ID (`213c59cfec651438228b41691afd36c0941d9129`), NovelBook ID (`8db73f316069f2a81ce6ed3b34cb423b50276244`), Sekte Novel (`448182ae8ac626232d5cee92b91d1afa0742e0ea`), and Vanovel (`0d6b84f7b7f1035a9ff100511e47fed81ade732c`). Together with the SakuraNovel and WBNovel fixes above, these are source-level compile defect corrections. Tests/build/CI remain intentionally deferred until the adapter inventory pass is reconciled.
 
 ## Batch plan
 
