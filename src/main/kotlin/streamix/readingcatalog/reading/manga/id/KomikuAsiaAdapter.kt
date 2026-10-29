@@ -68,27 +68,35 @@ class KomikuAsiaReadingRuntimeProvider(private val responseFetcher: ((String) ->
 
     private fun chapterPath(value: String): Pair<String, String>? {
         if (!isSafeReadingChapterUrl(value, setOf("01.komiku.asia")) { it.isNotBlank() }) return null
-        return runCatching {
+        return try {
             val segments = URI(value).path.split('/').filter(String::isNotBlank)
             if (segments.size < 2) return null
             val comicId = segments[segments.size - 2]
             val chapterId = segments.last()
             if (!comicId.matches(Regex("""[A-Za-z0-9_-]{1,160}""")) || !chapterId.matches(Regex("""[A-Za-z0-9_-]{1,160}"""))) null
             else comicId to chapterId
-        }.getOrNull()
+        } catch (_: Exception) {
+            null
+        }
     }
 
     private fun resolveSafeImage(value: String, base: String): String? {
         val candidate = value.trim()
         if (candidate.isBlank() || candidate.equals("null", ignoreCase = true)) return null
-        return runCatching {
+        return try {
             val image = URI(base).resolve(candidate)
             image.toString().takeIf(::isSafeReadingImageUrl)
-        }.getOrNull()
+        } catch (_: Exception) {
+            null
+        }
     }
 
     private fun fetchJson(value: String): String? {
-        val uri = runCatching { URI(value) }.getOrNull() ?: return null
+        val uri = try {
+            URI(value)
+        } catch (_: Exception) {
+            return null
+        }
         if (!isSafeReadingHttpUrl(value) || !uri.host.equals("01.komiku.asia", true) || uri.userInfo != null || (uri.port != -1 && uri.port != 443 && uri.port != 80)) return null
         return ReadingHttpTransport.getText(
             value,
