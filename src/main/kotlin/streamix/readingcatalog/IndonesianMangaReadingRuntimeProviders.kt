@@ -40,7 +40,7 @@ class KomikuReadingRuntimeProvider(private val documentFetcher: ((String) -> Doc
  * Scan brackets while respecting quoted strings and escapes instead.
  */
 private fun extractBacamiImageUrlsArray(script: String): String? {
-    val assignment = Regex("""\bimageUrls\s*[:=]\s*\[""").find(script) ?: return null
+    val assignment = Regex("""\b["']?imageUrls["']?\s*[:=]\s*\[""").find(script) ?: return null
     val start = assignment.range.last
     var depth = 0
     var inString = false
