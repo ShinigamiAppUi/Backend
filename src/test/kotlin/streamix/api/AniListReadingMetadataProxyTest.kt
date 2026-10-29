@@ -29,8 +29,9 @@ class AniListReadingMetadataProxyTest {
         assertEquals(2024, result.single().year)
         assertEquals(listOf("Action", "Drama"), result.single().genres)
         assertTrue(requestBody.contains("type:MANGA"))
-        assertTrue(requestBody.contains("\"country\":\"KR\""))
-        assertTrue(requestBody.contains("\"format\":null"))
+        assertTrue(requestBody.contains("countryOfOrigin"))
+        assertTrue(requestBody.contains("KR"))
+        assertFalse(requestBody.contains("format: NOVEL"))
     }
 
     @Test
@@ -43,8 +44,8 @@ class AniListReadingMetadataProxyTest {
         val result = gateway.search("Fixture Light Novel", ReadingMetadataKind.NOVEL, 1)
 
         assertEquals(ReadingMetadataKind.NOVEL, result.single().kind)
-        assertTrue(requestBody.contains("\"format\":\"NOVEL\""))
-        assertTrue(requestBody.contains("\"country\":null"))
+        assertTrue(requestBody.contains("format: NOVEL"))
+        assertFalse(requestBody.contains("countryOfOrigin"))
     }
 
     @Test
