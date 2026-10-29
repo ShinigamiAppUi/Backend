@@ -15,7 +15,7 @@ class BacaKomikReadingRuntimeProvider(private val documentFetcher: ((String) -> 
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) } ?: return@withContext null
         val doc = try { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null } catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled } catch (_: Exception) { null } ?: return@withContext null
         val pages = doc.select("div:has(>img[alt*=Chapter]) img").filter { it.parent()?.tagName() != "noscript" }.mapNotNull { img ->
-            val fallback = Regex("""src=['"]([^'"]+)['"]""").find(img.attr("onerror"))?.groupValues?.get(1)
+            val fallback = Regex("""src\s*=\s*['"]([^'"]+)['"]""").find(img.attr("onerror"))?.groupValues?.get(1)
             sequenceOf(fallback, img.attr("data-lazy-src"), img.attr("data-src"), img.attr("data-original"), img.attr("src"))
                 .filterNotNull()
                 .map(String::trim)
