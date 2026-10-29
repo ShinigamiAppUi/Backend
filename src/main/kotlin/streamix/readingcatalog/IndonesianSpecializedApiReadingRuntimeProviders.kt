@@ -19,13 +19,21 @@ class WestMangaReadingRuntimeProvider(private val responseFetcher: ((String, Map
         val headers = signedHeaders(apiUrl)
         val body = try { responseFetcher?.invoke(apiUrl, headers) ?: if (responseFetcher == null) fetch(apiUrl, headers) else null } catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled } catch (_: Exception) { null } ?: return@withContext null
         val images = runCatching {
-            val data = JSONObject(body).optJSONObject("data") ?: JSONObject(body)
-            val arr = data.optJSONArray("images") ?: return@runCatching emptyList<String>()
-            (0 until arr.length()).mapNotNull { index ->
-                arr.opt(index).takeIf { it is String }?.let { (it as String).trim() }
-                    ?.takeIf(String::isNotBlank)
-                    ?.takeIf(::validImage)
-            }
+            val root = JSONObject(body)
+            val data = root.optJSONObject("data") ?: root
+            // Some responses expose the reader list at the root while also including a
+            // partial/empty data object. Inspect both levels so that an unusable nested
+            // payload cannot hide valid root-level pages.
+            sequenceOf(root.optJSONArray("images"), data.optJSONArray("images"))
+                .filterNotNull()
+                .flatMap { arr ->
+                    (0 until arr.length()).mapNotNull { index ->
+                        arr.opt(index).takeIf { it is String }?.let { (it as String).trim() }
+                            ?.takeIf(String::isNotBlank)
+                            ?.takeIf(::validImage)
+                    }
+                }
+                .toList()
         }.getOrNull().orEmpty().normalizedReadingPageUrls()
         images.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
