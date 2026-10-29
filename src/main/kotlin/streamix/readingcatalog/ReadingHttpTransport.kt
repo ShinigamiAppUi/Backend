@@ -150,10 +150,23 @@ internal object ReadingHttpTransport {
 /** Central policy for upstream reading HTTP targets; adapters need not duplicate it. */
 internal fun isSafeReadingHttpUrl(value: String): Boolean = runCatching {
     URI(value).let { uri ->
-        uri.scheme.equals("https", ignoreCase = true) &&
-            !uri.host.isNullOrBlank() &&
+        val host = uri.host?.trimEnd('.')?.lowercase()
+        val validAuthority = !host.isNullOrBlank() &&
             uri.userInfo == null &&
-            (uri.port == -1 || uri.port == 443)
+            (uri.port == -1 || uri.port == 443) &&
+            host != "localhost" &&
+            !host.endsWith(".localhost") &&
+            !host.endsWith(".local")
+        val literalAddress = host?.let {
+            it.contains(':') || it.matches(Regex("[0-9.]+"))
+        } == true
+        val publicLiteral = if (literalAddress) {
+            val addresses = java.net.InetAddress.getAllByName(host)
+            addresses.isNotEmpty() && addresses.none(CatalogPublicDns()::isPrivateOrLocal)
+        } else true
+        uri.scheme.equals("https", ignoreCase = true) &&
+            validAuthority &&
+            publicLiteral
     }
 }.getOrDefault(false)
 
