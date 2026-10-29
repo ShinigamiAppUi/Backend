@@ -17,12 +17,14 @@ class AniListReadingMetadataProxyTest {
     fun searchUsesMangaMediaAndFiltersManhwaByCountry() {
         var requestBody = ""
         val response = metadataResponse(
-            """{"data":{"Page":{"media":[{"id":123,"title":{"english":"Fixture Manhwa"},"coverImage":{"large":"https://cdn.example/cover.jpg"},"bannerImage":"https://cdn.example/banner.jpg","description":"fixture","genres":["Action","Drama"],"status":"RELEASING","format":"MANGA","countryOfOrigin":"KR","startDate":{"year":2024}}]}}}"""
+            """{"data":{"Page":{"media":[{"id":123,"idMal":321,"synonyms":["Fixture Alias"],"title":{"english":"Fixture Manhwa"},"coverImage":{"large":"https://cdn.example/cover.jpg"},"bannerImage":"https://cdn.example/banner.jpg","description":"fixture","genres":["Action","Drama"],"status":"RELEASING","format":"MANGA","countryOfOrigin":"KR","startDate":{"year":2024}}]}}}"""
         ) { body -> requestBody = body }
         val result = response.search("Fixture", ReadingMetadataKind.MANHWA, 2)
 
         assertEquals(1, result.size)
         assertEquals(123L, result.single().id)
+        assertEquals(321, result.single().malId)
+        assertEquals(listOf("Fixture Alias"), result.single().synonyms)
         assertEquals(ReadingMetadataKind.MANHWA, result.single().kind)
         assertEquals("Fixture Manhwa", result.single().title)
         assertEquals("https://anilist.co/manga/123", result.single().url)
@@ -31,6 +33,7 @@ class AniListReadingMetadataProxyTest {
         assertTrue(requestBody.contains("type:MANGA"))
         assertTrue(requestBody.contains("countryOfOrigin"))
         assertTrue(requestBody.contains("KR"))
+        assertTrue(requestBody.contains("format_in: [MANGA, ONE_SHOT]"))
         assertFalse(requestBody.contains("format: NOVEL"))
     }
 
@@ -51,11 +54,13 @@ class AniListReadingMetadataProxyTest {
     @Test
     fun detailInfersManhuaFromCountryOfOrigin() {
         val gateway = metadataResponse(
-            """{"data":{"Media":{"id":789,"title":{"native":"示例漫画"},"format":"MANGA","countryOfOrigin":"CN"}}}"""
+            """{"data":{"Media":{"id":789,"idMal":987,"synonyms":["Example Comic"],"title":{"native":"示例漫画"},"format":"MANGA","countryOfOrigin":"CN"}}}"""
         )
         val result = gateway.detail(789L)
 
         assertEquals(ReadingMetadataKind.MANHUA, result?.kind)
+        assertEquals(987, result?.malId)
+        assertEquals(listOf("Example Comic"), result?.synonyms)
         assertEquals("https://anilist.co/manga/789", result?.url)
     }
 
