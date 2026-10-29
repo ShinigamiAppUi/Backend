@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current pass:** Implementation-first sweep across all eight content/language groups; preserve the eight separate batch records and language boundaries.
 - **Pass status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `7971ff5b81ec3d8bb6998ecd738de403489e0723`
+- **Latest confirmed code commit:** `dbd927ceba9ffa7e1a1747a543f7af7084fc9bd5`
 - **Next concrete action:** continue the implementation-first sweep from `docs/READING_MANGA_ARCHITECTURE.md`, creating site-specific adapters and registering each one for every feasible inventory source across the eight content/language groups. Record duplicate, metadata-only, language-uncertain, inaccessible, and access-restricted sources explicitly; defer cleanup and full test/build until the inventory implementation pass is reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
@@ -372,3 +372,6 @@ For each batch, check these in order:
 
 
 - **2026-10-29 — SRANKMANGA novel adapter:** confirmed the site's public novel listing at `srankmanga.com/novels/` and added a dedicated English novel reader adapter under `reading/novel/en/SrankMangaAdapter.kt`, provider ID `asuralightnovel`, restricted to HTTPS `srankmanga.com` URLs with a novel/chapter path. Registered it in `BackendMain.createSiteReadingProviders()`. Adapter commit `fcc2fac05fa99ae33d780ac980da58c0162e7919`; registration commit `7971ff5b81ec3d8bb6998ecd738de403489e0723`. The site blocks direct page inspection in this environment, so the chapter selector remains provisional and must not be marked verified; tests/build/CI/live checks remain deferred.
+
+
+- **2026-10-29 — IsekaiKomik domain resolution and adapter:** resolved the canonical public reader to `ch1.isekaikomik.site` (public series route `/manga/{slug}/`; chapter route `/{slug}-chapter-{number}/`). Added dedicated Indonesian Manhwa adapter `IsekaiKomikReadingRuntimeProvider` with exact HTTPS host/path validation, reader-image URL normalization, and cancellation propagation; registered it in `BackendMain.createSiteReadingProviders()`. Adapter commit `fd534ab7634edb2c1f6f757409eb8e1838e237c7`; registration commit `dbd927ceba9ffa7e1a1747a543f7af7084fc9bd5`. Public chapter page exposes an image reader; CSS selector and image URL attributes remain provisional until a fixture can be captured, so this is not marked tested/locked.
