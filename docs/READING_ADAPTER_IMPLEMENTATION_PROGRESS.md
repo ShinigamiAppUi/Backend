@@ -8,6 +8,8 @@
 
 - **MangaDex requested-language discovery normalization:** the discovery path previously applied a translated-language filter only when the chapter language was exactly `id` or `en`. Regional tags such as `id-ID` / `en_US` therefore caused an unfiltered chapter search, and an explicitly unsupported language could also broaden discovery rather than fail closed. The adapter now normalizes BCP-47/underscore variants to their primary language, applies the `id` / `en` filter, and returns no discovery match for an explicitly supplied unsupported language. Explicit manually curated MangaDex chapter URLs remain unchanged. Code commit: `658e11f6394878f5528fa304c8a348166e6526d8`. No tests, build, CI, or live request were run, in accordance with the implementation-first policy; the change remains unverified.
 
+- **MangaDex language-normalization regression coverage (2026-10-30):** added a focused regression test for `id-ID` and `en_US` chapter discovery filters and for rejecting unsupported `fr-FR` without issuing an unfiltered chapter query. Test-source commit: `9eaef8696e53dad38625e4eb6a6db0109699988a`. The test is authored but **not run**; full tests/build/CI remain deferred until the adapter implementation sweep is reconciled.
+
 ## Current work state
 
 - **Repository:** `ShinigamiAppUi/Backend`
