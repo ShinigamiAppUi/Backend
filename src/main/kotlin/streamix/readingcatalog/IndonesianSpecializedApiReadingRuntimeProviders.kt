@@ -12,6 +12,7 @@ class WestMangaReadingRuntimeProvider(private val responseFetcher: ((String, Map
     override val id = "west-manga"
     override fun supports(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry) = entry.kind == ReadingKind.MANGA && chapter.sources.any { it.enabled && it.providerId.equals(id, true) && chapterSlug(it.url) != null }
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
+        if (entry.kind != ReadingKind.MANGA) return@withContext null
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && chapterSlug(it.url) != null } ?: return@withContext null
         val slug = chapterSlug(source.url) ?: return@withContext null
         val apiUrl = "https://data.mantweh.online/api/v/$slug"
@@ -43,6 +44,7 @@ class RiztranslationReadingRuntimeProvider(private val responseFetcher: ((String
     override val id = "riztranslation"
     override fun supports(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry) = entry.kind == ReadingKind.MANGA && chapter.sources.any { it.enabled && it.providerId.equals(id, true) && chapterId(it.url) != null }
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
+        if (entry.kind != ReadingKind.MANGA) return@withContext null
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && chapterId(it.url) != null } ?: return@withContext null
         val chapterId = chapterId(source.url) ?: return@withContext null
         val apiUrl = "https://uefnaojxivvxeamljskn.supabase.co/rest/v1/Chapter?select=id,bookId,isigambar&id=eq.$chapterId"
@@ -73,6 +75,7 @@ class MikoRokuReadingRuntimeProvider(private val responseFetcher: ((String) -> S
     override val id = "mikoroku"
     override fun supports(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry) = entry.kind == ReadingKind.MANGA && chapter.sources.any { it.enabled && it.providerId.equals(id, true) && chapterParts(it.url) != null }
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
+        if (entry.kind != ReadingKind.MANGA) return@withContext null
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && chapterParts(it.url) != null } ?: return@withContext null
         val (slug, key) = chapterParts(source.url) ?: return@withContext null
         val urls = listOf("https://firestore.googleapis.com/v1/projects/mikoroku/databases/(default)/documents/manga/$slug/chapters/$key", "https://firestore.googleapis.com/v1/projects/mikoroku/databases/(default)/documents/manga/$slug")
