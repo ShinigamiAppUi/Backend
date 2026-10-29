@@ -107,7 +107,7 @@ class SiikomikReadingRuntimeProvider(private val documentFetcher: ((String) -> D
     }
 
     private fun validChapter(value: String) = runCatching {
-        URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("siikomik.id", true) && it.userInfo == null && it.path.isNotBlank() }
+        URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("siikomik.id", true) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80) && it.path.isNotBlank() }
     }.getOrDefault(false)
 
     private fun resolveSafeImage(value: String, base: String): String? = runCatching {
@@ -158,7 +158,7 @@ class NarasiNinjaReadingRuntimeProvider(private val documentFetcher: ((String) -
     }
 
     private fun validChapter(value: String) = runCatching {
-        URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("narasininja.net", true) && it.userInfo == null && it.path.contains("/komik", true) }
+        URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("narasininja.net", true) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80) && it.path.contains("/komik", true) }
     }.getOrDefault(false)
 
     private fun resolveSafeImage(value: String, base: String): String? = runCatching {
