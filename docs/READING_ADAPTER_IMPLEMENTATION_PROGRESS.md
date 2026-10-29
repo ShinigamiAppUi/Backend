@@ -11,8 +11,8 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current batch:** Batch 1 — Manga / Indonesian (`MANGA` / `id`)
 - **Batch status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `1be3994a08fc74c432d2c0ae44c56fd53764661c`
-- **Next concrete action:** continue source-by-source audit and implementation for the 25 Indonesian manga providers below. Do not start a new language batch until this batch's feasible implementations have been completed and its inventory reconciled.
+- **Latest confirmed code commit:** `PENDING_NEW_COMMIT`
+- **Next concrete action:** implement first-pass site-specific adapters for all feasible sites in `READING_MANGA_ARCHITECTURE.md` across the eight content/language groups, recording uncertain, duplicate, inaccessible, and metadata-only sources separately; defer cleanup and full test/build until this implementation pass is reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
 
@@ -174,6 +174,8 @@ The class names and paths below were checked in this repository. Canonical URLs 
 | `west-manga` / `WestMangaReadingRuntimeProvider` | Needs source-specific canonical URL/reference review; code allowlist is not live proof | Manga | Indonesian (inventory label; verify chapter content) | `PARTIAL` | `IN_PROGRESS` | Not run — deferred | Not run — deferred | `src/main/kotlin/streamix/readingcatalog/reading/manga/id/WestMangaAdapter.kt` | Complete per-site parser/source-reference audit; record evidence and remaining work | Content-kind boundary pass only; not counted as fully implemented. |
 
 ## Changes made on this branch so far
+
+- 2026-10-29 — Expanded the implementation-first pass to additional Indonesian novel sites from architecture inventory §17: BacaLN, Idnoveland, LexiNovel, Ranahnovel, BUBOC, and KimiNovel now have separate chapter-text adapter files and runtime registrations. These are initial, untested implementations using site-scoped HTTPS host checks and isolated selector lists; selector accuracy, canonical redirect behavior, language/content extraction, and permitted access still need source-specific audit. Status: `IMPLEMENTED_UNTESTED` pending later cleanup/fixtures/live verification. No tests/build/CI run.
 
 - 2026-10-29 — MangaK chapter image parsing now accepts only actual JSON string elements, trims candidates, rejects blank and `data:` placeholders case-insensitively, resolves relative image paths against the chapter URL, then applies the shared safe-image validator. Previously it coerced arbitrary JSON values with `optString()` and rejected relative image paths without resolution. Adapter remains `PARTIAL`; tests/build/CI/live validation are not run. Code commit: `1be3994a08fc74c432d2c0ae44c56fd53764661c`.
 
