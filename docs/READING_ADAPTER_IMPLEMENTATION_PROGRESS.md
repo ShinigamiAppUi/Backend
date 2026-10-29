@@ -162,6 +162,8 @@ For each batch, check these in order:
 
 | Date (UTC) | Batch | Change | Commit | Evidence / follow-up |
 |---|---|---|---|---|
+| 2026-10-29 | Manga / Indonesian | MikoRoku's Firestore fallback now rethrows coroutine cancellation instead of swallowing it as a normal failed fetch. | `67f7ecc51d73eb1c4d64d04b42b87c082ad908b4` | Reliability fix; adapter remains PARTIAL; tests/build/CI deferred. |
+| 2026-10-29 | Manga / Indonesian | Kuro Manga source URL validation now rejects embedded credentials and nonstandard ports; its document fetch preserves coroutine cancellation. | `444d5b5358056c014996c57c07e4f0c686e8b3ea` | Targeted hardening; adapter remains PARTIAL; tests/build/CI deferred. |
 | 2026-10-29 | Manga / Indonesian | Komiku.asia now validates page object fields one-by-one and falls through to later safe URL fields when an earlier field is invalid. | `7d86ee71325d3b2ddf4e7566ed4856b45691e0a1` | Targeted parser fallback fix; tests/build/CI deferred. |
 | 2026-10-29 | Manga / Indonesian | Siikomik and NarasiNinja now validate each resolved image candidate before choosing it, preserving fallback after unsafe/malformed lazy attributes. | `065f015fb239edbe38abb45e9e03fe39b71d03bc` | Targeted parser fallback fix; tests/build/CI deferred. |
 | 2026-10-29 | Manga / Indonesian | Mangalay, NgamenKomik, OkyyKomik and ShiyuraSub now validate each resolved image candidate before choosing it, preserving fallback after unsafe/malformed lazy attributes. | `65756b71ea4ee206c5cee4de7f139c7f19ab2605` | Targeted parser fallback fix; tests/build/CI deferred. |
