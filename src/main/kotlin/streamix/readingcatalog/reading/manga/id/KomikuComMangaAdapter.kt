@@ -68,7 +68,7 @@ class KomikuComMangaReadingRuntimeProvider(private val responseFetcher: ((String
 
     private fun chapterPath(value: String): Pair<String, String>? {
         if (!isSafeReadingChapterUrl(value, setOf("01.komiku.asia")) { it.isNotBlank() }) return null
-        return runCatching {
+        return try {
             val uri = URI(value)
             // The Komiku API route includes a language segment between the comic and
             // chapter IDs. Taking the final two path segments used to return ("id",
@@ -77,20 +77,28 @@ class KomikuComMangaReadingRuntimeProvider(private val responseFetcher: ((String
                 """/api/v2/comics/([A-Za-z0-9_-]{1,160})/chapters/id/([A-Za-z0-9_-]{1,160})/?"""
             ).matchEntire(uri.path) ?: return null
             match.groupValues[1] to match.groupValues[2]
-        }.getOrNull()
+        } catch (_: Exception) {
+            null
+        }
     }
 
     private fun resolveSafeImage(value: String, base: String): String? {
         val candidate = value.trim()
         if (candidate.isBlank() || candidate.equals("null", ignoreCase = true)) return null
-        return runCatching {
+        return try {
             val image = URI(base).resolve(candidate)
             image.toString().takeIf(::isSafeReadingImageUrl)
-        }.getOrNull()
+        } catch (_: Exception) {
+            null
+        }
     }
 
     private fun fetchJson(value: String): String? {
-        val uri = runCatching { URI(value) }.getOrNull() ?: return null
+        val uri = try {
+            URI(value)
+        } catch (_: Exception) {
+            return null
+        }
         if (!isSafeReadingHttpUrl(value) || !uri.host.equals("01.komiku.asia", true) || uri.userInfo != null || (uri.port != -1 && uri.port != 443 && uri.port != 80)) return null
         return ReadingHttpTransport.getText(
             value,
