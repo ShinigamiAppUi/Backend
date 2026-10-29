@@ -40,7 +40,7 @@ class BoxNovelReadingRuntimeProvider(private val documentFetcher: ((String) -> D
 
     private fun validChapterUrl(value: String): Boolean = runCatching {
         val uri = URI(value)
-        uri.scheme.equals("https", true) && uri.host.equals("boxnovel.com", true) &&
+        uri.scheme.equals("https", true) && uri.host.equals("novelnice.com", true) &&
             uri.userInfo == null && uri.port in setOf(-1, 443) &&
             !uri.path.isNullOrBlank() && (uri.path.contains("/chapter/", true) || uri.path.contains("-chapter-", true))
     }.getOrDefault(false)
