@@ -47,10 +47,12 @@ class WuxiaWorldSiteReadingRuntimeProvider(
         }
     }
 
-    private fun validChapterUrl(value: String): Boolean = runCatching {
+    private fun validChapterUrl(value: String): Boolean = try {
         val uri = URI(value)
         novelHost(value, setOf("wuxiaworld.site")) &&
             uri.userInfo == null && uri.port in setOf(-1, 443) &&
             uri.path.matches(Regex("/novel/[^/]+/chapter-[^/]+/?"))
-    }.getOrDefault(false)
+    } catch (_: Exception) {
+        false
+    }
 }
