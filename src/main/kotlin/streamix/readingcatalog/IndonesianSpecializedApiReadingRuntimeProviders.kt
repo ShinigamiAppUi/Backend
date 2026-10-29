@@ -50,6 +50,7 @@ class WestMangaReadingRuntimeProvider(private val responseFetcher: ((String, Map
                     }
                 } &&
                 slug != null &&
+                !slug.equals("chapter", ignoreCase = true) &&
                 slug.matches(Regex("[A-Za-z0-9_-]{1,160}"))
             ) slug else null
         }
