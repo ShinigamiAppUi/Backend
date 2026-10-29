@@ -2,6 +2,7 @@ package streamix.readingcatalog
 
 import java.net.URI
 import org.jsoup.nodes.Document
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -11,7 +12,7 @@ class SayManhwaReadingRuntimeProvider(private val documentFetcher: ((String) -> 
         entry.kind != ReadingKind.NOVEL && chapter.sources.any { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) }
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) } ?: return@withContext null
-        val doc = runCatching { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null }.getOrNull() ?: return@withContext null
+        val doc = try { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null } catch (cancelled: CancellationException) { throw cancelled } catch (_: Exception) { null } ?: return@withContext null
         val pages = doc.select(".reader-pages img").mapNotNull { img ->
             sequenceOf("data-lazy-src", "data-src", "data-original", "src")
                 .map { key -> img.attr(key).trim() }
