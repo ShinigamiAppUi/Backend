@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current batch:** Batch 1 — Manga / Indonesian (`MANGA` / `id`)
 - **Batch status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `c01fecfeaabcd86bbe54a4d475cd228a3618a753` — accept Bacami imageUrls object/assignment syntax
+- **Latest confirmed code commit:** `79fe422120aca53fde7b49c15c1713adfe8e7ca5` — require HTTPS chapter URLs in four Indonesian Manga adapters
 - **Next concrete action:** continue source-by-source audit and implementation for the 25 Indonesian manga providers below. Do not start a new language batch until this batch's feasible implementations have been completed and its inventory reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** the changes so far tighten content-kind dispatch/chapter boundaries only. They do **not** mean the source-specific parser work is complete or that these adapters are fully implemented.
@@ -30,6 +30,8 @@
 | 8 | Novel | English (`en`) | `NOT_STARTED` | Reconcile the English novel inventory in `READING_MANGA_ARCHITECTURE.md`. |
 
 ## Latest implementation note — 2026-10-29
+
+- Tightened chapter URL validation for Komiku, Bacami, KomikIndoID, and KlikManga by switching to the shared `isSafeReadingChapterUrl()` guard. These adapters now require HTTPS, reject credentials and non-default ports, and retain their provider-specific host/path constraints; HTTP port 80 is no longer accepted. Code commit: `79fe422120aca53fde7b49c15c1713adfe8e7ca5`. Tests/build/CI remain deferred; this is not live verification.
 
 - Hardened Bacami's script parser to accept both object-property `imageUrls: [...]` and assignment `imageUrls = [...]` forms. The previous regex only matched the colon form and returned no pages when the script used an assignment. Code commit: `c01fecfeaabcd86bbe54a4d475cd228a3618a753`. This remains a targeted parser compatibility fix; fixture tests and live source verification have not been run.
 - Fixed a Mangalay edge case: the adapter previously always dropped the last extracted image because Blogger chapters commonly include a trailing navigation image. If a chapter contained only one image, that rule erased the whole chapter. It now preserves the extracted list when dropping the final item would leave no pages. Code commit: `852b49876a8ce0a31bc941c75c144afff67b9dcd`. Source markup and page semantics still need fixture/live verification.
