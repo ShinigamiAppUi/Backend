@@ -101,6 +101,8 @@ Catalog remains source-URL configuration, not a duplicate metadata catalog. AniL
 
 ## Current per-adapter layout progress
 
+- Static tree check: 102 `*Adapter.kt` files are present under `reading/`, and all 102 reading-provider imports in `BackendMain.kt` map to an expected per-site adapter filename. This checks layout/import-name alignment only; it does not prove parser correctness, source availability, runtime registration behavior, or test/build success.
+
 - The Indonesian/English Manga and Indonesian/English Manhwa language directories have been further split from grouped `*Providers.kt` files into site-specific `*Adapter.kt` files for the providers audited in this refactor. This is a file-organization change only; provider class names, IDs, and the existing `streamix.readingcatalog` package remain unchanged.
 - A `reading/shared/` exception now holds providers whose current contracts span multiple non-novel content kinds or whose language/content-kind bucket is not yet proven. These must be source-audited before narrowing to a language/content folder; shared placement is not completion evidence.
 - The directory structure is not yet complete: additional root-level mixed-domain files still need source-by-source classification and relocation, and the Manhua buckets need their own audited inventory/implementations.
