@@ -833,40 +833,9 @@ class StreamixHttpServer(
                 }
             }
         }
-        // AniList reading metadata is public and remains separate from the manual source catalog.
-        http.createContext(BackendApiContract.READING_METADATA_SEARCH) { exchange ->
-            if (!method(exchange, "GET")) return@createContext
-            val q = query(exchange, "q")?.trim().orEmpty()
-            if (q.isBlank()) return@createContext respond(exchange, 400, mapOf("error" to "q is required"))
-            val rawKind = query(exchange, "kind")?.trim()?.uppercase(java.util.Locale.ROOT)
-                ?: return@createContext respond(exchange, 400, mapOf("error" to "kind must be MANGA, MANHWA, MANHUA, or NOVEL"))
-            val kind = runCatching { ReadingMetadataKind.valueOf(rawKind) }.getOrNull()
-                ?: return@createContext respond(exchange, 400, mapOf("error" to "kind must be MANGA, MANHWA, MANHUA, or NOVEL"))
-            val page = query(exchange, "page")?.toIntOrNull()?.coerceAtLeast(1) ?: 1
-            try {
-                respond(exchange, 200, mapOf("items" to readingMetadata.search(q, kind, page), "page" to page))
-            } catch (_: AniListReadingMetadataException) {
-                respond(exchange, 502, mapOf("error" to "AniList reading metadata request failed"))
-            }
-        }
-        http.createContext(BackendApiContract.READING_METADATA_DETAIL.substringBefore("{id}")) { exchange ->
-            if (!method(exchange, "GET")) return@createContext
-            val id = exchange.requestURI.path.removePrefix(BackendApiContract.READING_METADATA_DETAIL.substringBefore("{id}"))
-                .toLongOrNull()?.takeIf { it > 0L }
-                ?: return@createContext respond(exchange, 400, mapOf("error" to "AniList metadata ID must be positive"))
-            val rawKind = query(exchange, "kind")?.trim()?.uppercase(java.util.Locale.ROOT)
-            val kind = rawKind?.let { runCatching { ReadingMetadataKind.valueOf(it) }.getOrNull() }
-            if (rawKind != null && kind == null) {
-                return@createContext respond(exchange, 400, mapOf("error" to "kind must be MANGA, MANHWA, MANHUA, or NOVEL"))
-            }
-            try {
-                val item = readingMetadata.detail(id)?.takeIf { kind == null || it.kind == kind }
-                    ?: return@createContext respond(exchange, 404, mapOf("error" to "AniList reading metadata not found"))
-                respond(exchange, 200, item)
-            } catch (_: AniListReadingMetadataException) {
-                respond(exchange, 502, mapOf("error" to "AniList reading metadata request failed"))
-            }
-        }
+        // Reading metadata is exposed through the authenticated base context below, keeping
+        // the metadata gateway separate from the manual source catalog without creating
+        // overlapping public routes that bypass the member-only API policy.
         // Member-facing read-only access to the normalized reading catalog.
         // Catalog writes remain behind the admin-only route below.
         http.createContext(BackendApiContract.READING) { exchange ->
