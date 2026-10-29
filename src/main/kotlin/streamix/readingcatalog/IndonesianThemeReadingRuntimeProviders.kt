@@ -24,7 +24,7 @@ class KiryuuReadingRuntimeProvider(private val documentFetcher: ((String) -> Doc
                         ?.takeIf(::validImage)
                 }
                 .firstOrNull()
-        }.distinct()
+        }.normalizedReadingPageUrls()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
     private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80) && it.host.equals("v7.kiryuu.to", true) && it.path.contains("chapter", true) } }.getOrDefault(false)
@@ -50,7 +50,7 @@ class KomikStationReadingRuntimeProvider(private val documentFetcher: ((String) 
                         ?.takeIf(::validImage)
                 }
                 .firstOrNull()
-        }.distinct()
+        }.normalizedReadingPageUrls()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
     private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80) && it.host.equals("komikstation.org", true) && it.path.isNotBlank() } }.getOrDefault(false)
@@ -76,7 +76,7 @@ class ApkomikReadingRuntimeProvider(private val documentFetcher: ((String) -> Do
                         ?.takeIf(::validImage)
                 }
                 .firstOrNull()
-        }.distinct()
+        }.normalizedReadingPageUrls()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
     private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80) && it.host.equals("01.apkomik.com", true) && it.path.isNotBlank() } }.getOrDefault(false)
@@ -102,7 +102,7 @@ class LepoyTlReadingRuntimeProvider(private val documentFetcher: ((String) -> Do
                         ?.takeIf(::validImage)
                 }
                 .firstOrNull()
-        }.distinct()
+        }.normalizedReadingPageUrls()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
     private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80) && it.host.equals("www.lepoytl.my.id", true) && it.path.isNotBlank() } }.getOrDefault(false)
