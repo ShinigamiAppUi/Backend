@@ -28,9 +28,8 @@ class KuroMangaReadingRuntimeProvider(private val documentFetcher: ((String) -> 
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
 
-    private fun validChapter(value: String) = runCatching {
-        URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("kuromanga.id", true) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80) && it.path.isNotBlank() }
-    }.getOrDefault(false)
+    private fun validChapter(value: String) =
+        isSafeReadingChapterUrl(value, setOf("kuromanga.id")) { it.path.isNotBlank() }
 
     private fun validImage(value: String) = isSafeReadingImageUrl(value)
 
