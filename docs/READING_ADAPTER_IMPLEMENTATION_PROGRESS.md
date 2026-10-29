@@ -175,6 +175,8 @@ The class names and paths below were checked in this repository. Canonical URLs 
 
 ## Changes made on this branch so far
 
+- 2026-10-29 — Added first-pass English novel chapter-text adapters for AllNovelFull, BoxNovel, LightNovelCave, LightNovelHeaven, NovelHall, NovelLib, NovelRest, Ranobes, ReadNovelFull, and NovelNinja from the consolidated novel inventory. Each is isolated in its own file and registered with a site-specific host/path guard and selector set. Status is `IMPLEMENTED_UNTESTED`; canonical redirects, live markup, content language, and access constraints remain to be audited. No tests/build/CI run.
+
 - 2026-10-29 — Added first-pass English novel chapter-text adapters for NovelFull, NovelHi, NovelLight, Scribble Hub, and Inkitt, each in its own file with a site-scoped host/path guard, isolated selectors, cancellation propagation, and runtime registration. These are `IMPLEMENTED_UNTESTED`; live markup, exact canonical paths, language/content and access limitations remain to be audited. No tests/build/CI run.
 
 - 2026-10-29 — Added first-pass English novel chapter-text adapters for Royal Road, NovelBuddy, NovelBin, NovelFire, and FreeWebNovel from architecture inventory §§16–18. Each has a dedicated file, site-scoped HTTPS host/path checks, its own selector set, cancellation propagation, and runtime registration. These are `IMPLEMENTED_UNTESTED`; actual markup, canonical host/path behavior, access limitations and language still need source-specific review. Royal Road/bot checks and any login/paywall controls are not bypassed. No tests/build/CI run.
