@@ -1657,10 +1657,16 @@ class StreamixHttpServer(
                             respond(exchange, 500, mapOf("error" to "internal server error"))
                         }
                     }
-                    suffix.toLongOrNull() != null && suffix.toLong() > 0L -> {
+                    suffix.toLongOrNull() != null && suffix.toLong() in 1..Int.MAX_VALUE.toLong() -> {
                         val id = suffix.toLong()
+                        val rawKind = query(exchange, "kind")?.trim()?.uppercase(java.util.Locale.ROOT)
+                        val requestedKind = rawKind?.let { runCatching { ReadingMetadataKind.valueOf(it) }.getOrNull() }
+                        if (rawKind != null && requestedKind == null) {
+                            return@withUser respond(exchange, 400, mapOf("error" to "kind must be MANGA, MANHWA, MANHUA, or NOVEL"))
+                        }
                         try {
                             val metadata = readingMetadata.detail(id)
+                                ?.takeIf { requestedKind == null || it.kind == requestedKind }
                             if (metadata == null) respond(exchange, 404, mapOf("error" to "reading metadata not found"))
                             else respond(exchange, 200, metadata)
                         } catch (_: AniListReadingMetadataException) {
@@ -1668,6 +1674,9 @@ class StreamixHttpServer(
                         } catch (_: Exception) {
                             respond(exchange, 500, mapOf("error" to "internal server error"))
                         }
+                    }
+                    suffix.toLongOrNull() != null -> {
+                        respond(exchange, 400, mapOf("error" to "AniList metadata ID must be between 1 and 2147483647"))
                     }
                     else -> respond(exchange, 404, mapOf("error" to "route not found"))
                 }
