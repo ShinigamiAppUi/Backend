@@ -40,7 +40,7 @@ internal fun Iterable<String>.normalizedReadingPageUrls(): List<String> =
 /** Enforces the payload contract for the reader selected by the catalog entry kind. */
 internal fun ReadingContent.isUsableFor(kind: ReadingKind): Boolean =
     this.kind == kind && when (kind) {
-        ReadingKind.NOVEL -> !text.isNullOrBlank() || !contentUrl.isNullOrBlank()
+        ReadingKind.NOVEL -> !text.isNullOrBlank() || contentUrl?.let(::isSafeReadingHttpUrl) == true
         ReadingKind.MANGA, ReadingKind.MANHWA, ReadingKind.MANHUA ->
             if (pageUrls.isNotEmpty()) pageUrls.all(::isSafeReadingImageUrl)
             else contentUrl?.let(::isSafeReadingHttpUrl) == true
