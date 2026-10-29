@@ -257,6 +257,11 @@ import streamix.readingcatalog.OpenQuillReadingRuntimeProvider
 import streamix.readingcatalog.ReadHiveReadingRuntimeProvider
 import streamix.readingcatalog.RechaptersReadingRuntimeProvider
 import streamix.readingcatalog.OrvReaderReadingRuntimeProvider
+import streamix.readingcatalog.NyxScansReadingRuntimeProvider
+import streamix.readingcatalog.StorySeedlingReadingRuntimeProvider
+import streamix.readingcatalog.SufficientVelocityReadingRuntimeProvider
+import streamix.readingcatalog.TomatoMTLReadingRuntimeProvider
+import streamix.readingcatalog.TranslatinoReadingRuntimeProvider
 import streamix.readingcatalog.ReadingProviderRuntimeRace
 import streamix.readingcatalog.AtsumaruNovelsReadingRuntimeProvider
 import streamix.readingcatalog.BotiTranslationReadingRuntimeProvider
@@ -521,6 +526,11 @@ internal fun createSiteReadingProviders(): List<ReadingRuntimeProvider> {
         ReadHiveReadingRuntimeProvider(),
         RechaptersReadingRuntimeProvider(),
         OrvReaderReadingRuntimeProvider(),
+        NyxScansReadingRuntimeProvider(),
+        StorySeedlingReadingRuntimeProvider(),
+        SufficientVelocityReadingRuntimeProvider(),
+        TomatoMTLReadingRuntimeProvider(),
+        TranslatinoReadingRuntimeProvider(),
         NovelArchiveReadingRuntimeProvider(),
         NovelDexReadingRuntimeProvider(),
         NovelLiveReadingRuntimeProvider(),
