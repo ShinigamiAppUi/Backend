@@ -28,9 +28,8 @@ class MGKomikReadingRuntimeProvider(private val documentFetcher: ((String) -> Do
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
 
-    private fun validChapter(value: String) = runCatching {
-        URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("id.mgkomik.cc", true) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80) && it.path.contains("/chapter", true) }
-    }.getOrDefault(false)
+    private fun validChapter(value: String) =
+        isSafeReadingChapterUrl(value, setOf("id.mgkomik.cc")) { it.contains("/chapter", true) }
 
     private fun validImage(value: String) = isSafeReadingImageUrl(value)
 
