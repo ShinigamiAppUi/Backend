@@ -31,6 +31,8 @@
 
 ## Latest implementation note — 2026-10-29
 
+- Post-refactor static re-audit: current branch tree contains 102 `*Adapter.kt` files under `src/main/kotlin/streamix/readingcatalog/reading/`; the 102 `ReadingRuntimeProvider` imports in `BackendMain.kt` each map to an expected adapter filename. A focused re-fetch also confirmed that the Bacami balanced-array helper and shared fetch helpers remain present in representative split files. This is a structural check only, not a build/test/CI/live-source pass. Batch 1 remains `IN_PROGRESS`.
+
 - Continued the per-site layout refactor: moved mixed-kind or not-yet-language-proven providers into `reading/shared/`, moved confirmed Indonesian Manga sources into `reading/manga/id/`, and split six English Manga reader classes from `MangaReaderSiteAdapters.kt` into individual files. Also moved the shared novel fetch/response helpers to `reading/novel/NovelShared.kt`. Provider class names, IDs, package names, and registration imports remain unchanged. Latest code refactor: `992c8c00e6a01256d0eccc6f3a7ef86d00fe65a6`. Build/tests/CI/live validation remain deferred.
 
 - Split 12 grouped Manga/Manhwa source files into individual `reading/<content-type>/<language>/<SiteName>Adapter.kt` files while preserving the existing package, provider class names, IDs, and runtime registration references. The Bacami balanced-array parser was explicitly carried into `BacamiAdapter.kt` after the split. Refactor commits: `8db5ff001177f73898b03cb8704c87f9ecf3000c`, `784f17fb52ff96cf3275cba34ff5a805886fc98a`; helper preservation fix: `455858b4b5ec56b063716dd6f6c55f2d5e10c0f5`. This remains file organization, not completion evidence; tests/build/CI/live validation have not been run.
