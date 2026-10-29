@@ -39,6 +39,9 @@ class KimiNovelReadingRuntimeProvider(private val documentFetcher: ((String) -> 
             }
         }
 
-    private fun validChapterUrl(value: String): Boolean =
-        novelHost(value, setOf("www.kiminovel.com")) && runCatching { URI(value).path.isNotBlank() }.getOrDefault(false)
+    private fun validChapterUrl(value: String): Boolean = try {
+        novelHost(value, setOf("www.kiminovel.com")) && URI(value).path.isNotBlank()
+    } catch (_: Exception) {
+        false
+    }
 }
