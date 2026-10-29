@@ -19,6 +19,7 @@ class ReadingProviderRuntimeRace(
             "weebcentral-manhwa" -> "weebcentral"
             "comick-unoriginal" -> "comick"
             "bbato" -> "bato"
+            "wbnove" -> "wbnovel"
             else -> raw.trim().lowercase(Locale.ROOT)
         }
     private val providers = providers.also { candidates ->
