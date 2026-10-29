@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current pass:** Implementation-first sweep across all eight content/language groups; preserve the eight separate batch records and language boundaries.
 - **Pass status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `ba69b1e3fe76ab07552f73c969c7d82bdd60e562`
+- **Latest confirmed code commit:** `a5a44e25232b8afed6d338150a39d59cbd53ce61`
 - **Next concrete action:** continue the implementation-first sweep from `docs/READING_MANGA_ARCHITECTURE.md`, creating site-specific adapters and registering each one for every feasible inventory source across the eight content/language groups. Record duplicate, metadata-only, language-uncertain, inaccessible, and access-restricted sources explicitly; defer cleanup and full test/build until the inventory implementation pass is reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
@@ -42,6 +42,9 @@
 
 
 - **English Manga adapter cancellation hardening (2026-10-29):** a targeted source scan found the same fetch-wrapper issue in MangaGeko and MangaHere. Their document-fetch calls now propagate `CancellationException` instead of converting cancellation into a missing chapter. Commits: MangaGeko `1ad3de0e551f6058d288d05bcd9c7292709c7df8`; MangaHere `ba69b1e3fe76ab07552f73c969c7d82bdd60e562`. Nearby sampled providers MangaBat, MangaDemon, and MangaGG already explicitly rethrow cancellation. This remains static hardening; no tests/build/CI run and no claim of live-source verification.
+
+
+- **English Manga adapter cancellation hardening — continued (2026-10-29):** fixed four more document-fetch wrappers that swallowed coroutine cancellation: MangaHub `2caa8bfaa05a2ab8e59801c4f0f8b6e131110f37`, MangaKatana `85ecaa488af1d3e96b65bc2bf23bd9b330d692cd`, MangaNow `4abd6f8bac878dc53788dbb0a76612da510cd466`, and MangaRead `a5a44e25232b8afed6d338150a39d59cbd53ce61`. The sampled MangaUno provider already propagates cancellation. This pass is a source-level resilience fix only; it does not verify live host availability, chapter selectors, or output ordering. No tests/build/CI run.
 
 ## Batch plan
 
