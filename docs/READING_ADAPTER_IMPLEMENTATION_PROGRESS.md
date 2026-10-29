@@ -27,6 +27,8 @@
 
 - **English Manga — MangaReader.site adapter added (2026-10-30):** added a dedicated `MangaReaderSiteReadingRuntimeProvider` for the distinct `mangareader.site` domain, rather than assuming it is the same source as MangaReader.to/.org. The chapter route is constrained to HTTPS `/chapter/...`; extraction is scoped to reader image elements and the observed `mghcdn.com` image CDN, with coroutine cancellation propagated. Code commit: `7e542e7ebdf5f06def12302c969126097cf7795f`. This adapter is not yet registered in `BackendMain.createSiteReadingProviders()` and is therefore not runtime-available yet; registration is the next step. The live page structure was inspected, but no automated tests/build/CI or live HTTP fetch from backend were run; selector/CDN coverage remains unverified.
 
+- **MangaReader.site runtime registration (2026-10-30):** imported `MangaReaderSiteReadingRuntimeProvider` and added it to `createSiteReadingProviders()` on the feature branch. Registration commit: `cd40a0b068d2317f39c2bfc33b2d83e35576b90f`. This completes code+registry wiring for the adapter, but not its verification: tests/build/CI remain deferred, and it must not be counted as TESTED until the final batch verification pass.
+
 ## Current work state
 
 - **Repository:** `ShinigamiAppUi/Backend`
