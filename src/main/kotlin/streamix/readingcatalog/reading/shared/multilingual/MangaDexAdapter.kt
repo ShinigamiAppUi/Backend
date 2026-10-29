@@ -96,7 +96,9 @@ class MangaDexReadingRuntimeProvider(
         // Exact-title results can include multiple editions. Try each exact match so a
         // title with no chapter in one edition does not hide a matching chapter in another.
         for (mangaId in exactMangaIds) {
-            val encodedLanguage = chapter.language?.takeIf { it == "id" || it == "en" }
+            val requestedLanguage = chapter.language?.let(::normalizeRequestedLanguage)
+            if (chapter.language != null && requestedLanguage == null) return null
+            val encodedLanguage = requestedLanguage
                 ?.let { "&translatedLanguage%5B%5D=$it" }.orEmpty()
             val chapters = fetchJson("https://api.mangadex.org/chapter?manga%5B%5D=$mangaId&chapter=$encodedNumber$encodedLanguage&limit=100&order%5BreadableAt%5D=asc")
                 ?: continue
@@ -110,6 +112,11 @@ class MangaDexReadingRuntimeProvider(
             if (chapterId != null) return chapterId
         }
         return null
+    }
+
+    private fun normalizeRequestedLanguage(value: String): String? {
+        val primary = value.trim().replace('_', '-').substringBefore('-').lowercase(java.util.Locale.ROOT)
+        return primary.takeIf { it == "id" || it == "en" }
     }
 
     private fun normalizeTitle(value: String): String =
