@@ -21,7 +21,7 @@ class BacaKomikReadingRuntimeProvider(private val documentFetcher: ((String) -> 
         }.distinct()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
-    private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("bacakomik.my", true) && it.path.isNotBlank() } }.getOrDefault(false)
+    private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80) && it.host.equals("bacakomik.my", true) && it.path.isNotBlank() } }.getOrDefault(false)
     private fun validImage(value: String) = isSafeReadingImageUrl(value)
     private fun fetch(value: String): Document? = fetchIndonesianBatchDocument(value)
 }
@@ -41,7 +41,7 @@ class MangaCanReadingRuntimeProvider(private val documentFetcher: ((String) -> D
         }.distinct()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
-    private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("mangacanblog.com", true) && it.path.isNotBlank() } }.getOrDefault(false)
+    private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80) && it.host.equals("mangacanblog.com", true) && it.path.isNotBlank() } }.getOrDefault(false)
     private fun validImage(value: String) = isSafeReadingImageUrl(value)
     private fun fetch(value: String): Document? = fetchIndonesianBatchDocument(value)
 }
@@ -65,7 +65,7 @@ class MangalayReadingRuntimeProvider(private val documentFetcher: ((String) -> D
         }.distinct()
         all.dropLast(1).takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
-    private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("mangalay.blogspot.com", true) && it.path.isNotBlank() } }.getOrDefault(false)
+    private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80) && it.host.equals("mangalay.blogspot.com", true) && it.path.isNotBlank() } }.getOrDefault(false)
     private fun validImage(value: String) = isSafeReadingImageUrl(value)
     private fun fetch(value: String): Document? = fetchIndonesianBatchDocument(value)
 }
@@ -89,7 +89,7 @@ class NgamenKomikReadingRuntimeProvider(private val documentFetcher: ((String) -
         }.distinct()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
-    private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("ngamenkomik05.blogspot.com", true) && it.path.isNotBlank() } }.getOrDefault(false)
+    private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80) && it.host.equals("ngamenkomik05.blogspot.com", true) && it.path.isNotBlank() } }.getOrDefault(false)
     private fun validImage(value: String) = isSafeReadingImageUrl(value)
     private fun fetch(value: String): Document? = fetchIndonesianBatchDocument(value)
 }
@@ -109,7 +109,7 @@ class NgomikReadingRuntimeProvider(private val documentFetcher: ((String) -> Doc
         }.distinct()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
-    private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("02.ngomik.cc", true) && it.path.isNotBlank() } }.getOrDefault(false)
+    private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80) && it.host.equals("02.ngomik.cc", true) && it.path.isNotBlank() } }.getOrDefault(false)
     private fun validImage(value: String) = isSafeReadingImageUrl(value)
     private fun fetch(value: String): Document? = fetchIndonesianBatchDocument(value)
 }
@@ -133,7 +133,7 @@ class OkyyKomikReadingRuntimeProvider(private val documentFetcher: ((String) -> 
         }.distinct()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
-    private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("www.okyykomik.my.id", true) && it.path.isNotBlank() } }.getOrDefault(false)
+    private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80) && it.host.equals("www.okyykomik.my.id", true) && it.path.isNotBlank() } }.getOrDefault(false)
     private fun validImage(value: String) = isSafeReadingImageUrl(value)
     private fun fetch(value: String): Document? = fetchIndonesianBatchDocument(value)
 }
@@ -157,7 +157,7 @@ class ShiyuraSubReadingRuntimeProvider(private val documentFetcher: ((String) ->
         }.distinct()
         pages.takeIf { it.isNotEmpty() }?.let { ReadingContent(entry.kind, "reading-provider:$id", source.url, it, format = "image-pages") }
     }
-    private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.host.equals("shiyurasub.blogspot.com", true) && it.path.isNotBlank() } }.getOrDefault(false)
+    private fun validChapter(value: String) = runCatching { URI(value).let { isSafeReadingHttpUrl(value) && it.userInfo == null && (it.port == -1 || it.port == 443 || it.port == 80) && it.host.equals("shiyurasub.blogspot.com", true) && it.path.isNotBlank() } }.getOrDefault(false)
     private fun validImage(value: String) = isSafeReadingImageUrl(value)
     private fun fetch(value: String): Document? = fetchIndonesianBatchDocument(value)
 }
