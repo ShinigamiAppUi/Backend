@@ -97,12 +97,12 @@ class ReadingCatalogServiceTest{
   val entry=service.putManual(ReadingCatalogEntry(
    "language-filter",ReadingKind.NOVEL,"Novel","https://catalog.example/novel",ReadingEntryOrigin.MANUAL,
    chapters=listOf(ReadingChapterEntry("chapter-1","1",sources=listOf(
-    ReadingChapterSource("english","reader-en","https://en.example/chapter/1",ReadingSourceType.DIRECT,language="en",priority=100),
-    ReadingChapterSource("indonesian","reader-id","https://id.example/chapter/1",ReadingSourceType.DIRECT,language="id",priority=1),
+    ReadingChapterSource("english","reader-en","https://en.example/chapter/1",ReadingSourceType.DIRECT,language="en-US",priority=100),
+    ReadingChapterSource("indonesian","reader-id","https://id.example/chapter/1",ReadingSourceType.DIRECT,language="id-ID",priority=1),
     ReadingChapterSource("neutral","reader-neutral","https://neutral.example/chapter/1",ReadingSourceType.DIRECT)
    )))
   ))
-  val result=service.resolveChapter(entry.id,"chapter-1",language="id")
+  val result=service.resolveChapter(entry.id,"chapter-1",language="id-ID")
   assertEquals("chapter from indonesian",result?.text)
   assertEquals(listOf("indonesian","neutral"),attempted)
  }
