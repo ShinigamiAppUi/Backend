@@ -1,4 +1,6 @@
 
+- **Test fixture expectation correction:** corrected the Komiku root-relative image expectation in `IndonesianManhwaGapAdapterTest.kt` to match standard URI resolution. Commit: a0dce21c0f01d7b281a076b518e5b0f45a947850. Test execution remains pending.
+
 - **Manhwa gap adapter contract tests (2026-10-30):** added `IndonesianManhwaGapAdapterTest.kt` covering injected fixture parsing, API route selection, content-kind rejection, and provider-ID isolation for Komikindo, KomikNesia, West Manga, MG Komik, and Komiku. Test source commit: bcff66c32febcf01c2657974b3e8045159a07a0d. These are authored contract tests only; execution/build/CI has not been run from this tool session, so do not treat them as passing evidence.
 
 - **Indonesian Manhwa gap sweep follow-up (2026-10-30):** added `KomikuManhwaReadingRuntimeProvider` with dedicated `MANHWA` dispatch, separate `komiku-manhwa` Catalog provider ID, and the existing Komiku reader's accepted hosts/selectors. Registered in `streamix/api/BackendMain.kt`. Adapter commit: 546a32a32c03f627d52f6d772012c399d4b2f717; registry commit: 14a3025505336fd4bdf6416ed0946577323a6a57. This shares the existing Komiku domain contract and image parser; live category-specific availability remains unverified. No tests/build/CI run.
