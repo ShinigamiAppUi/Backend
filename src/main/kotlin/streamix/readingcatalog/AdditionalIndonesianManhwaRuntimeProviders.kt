@@ -16,6 +16,7 @@ class ManhwaListReadingRuntimeProvider(private val documentFetcher: ((String) ->
         }
 
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
+        if (entry.kind != ReadingKind.MANHWA) return@withContext null
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) }
             ?: return@withContext null
         val doc = runCatching {
@@ -62,6 +63,7 @@ class CosmicScansIdReadingRuntimeProvider(private val responseFetcher: ((String)
         }
 
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
+        if (entry.kind != ReadingKind.MANHWA) return@withContext null
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && chapterIdentity(it.url) != null }
             ?: return@withContext null
         val chapterId = chapterIdentity(source.url) ?: return@withContext null
