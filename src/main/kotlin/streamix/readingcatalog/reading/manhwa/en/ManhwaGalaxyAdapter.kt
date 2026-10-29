@@ -11,13 +11,14 @@ class ManhwaGalaxyReadingRuntimeProvider(private val documentFetcher: ((String) 
     override fun supports(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry) =
         entry.kind == ReadingKind.MANHWA && chapter.sources.any { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) }
     override suspend fun chapter(entry: ReadingCatalogEntry, chapter: ReadingChapterEntry): ReadingContent? = withContext(Dispatchers.IO) {
+        if (entry.kind != ReadingKind.MANHWA) return@withContext null
         val source = chapter.sources.firstOrNull { it.enabled && it.providerId.equals(id, true) && validChapter(it.url) } ?: return@withContext null
         val doc = try { documentFetcher?.invoke(source.url) ?: if (documentFetcher == null) fetch(source.url) else null } catch (cancelled: CancellationException) { throw cancelled } catch (_: Exception) { null } ?: return@withContext null
         val pages = doc.select(".reading-content img, .read-content img").mapNotNull { img ->
             sequenceOf("data-src", "data-lazy-src", "data-original", "src")
                 .map { key -> img.attr(key).trim() }
                 .firstNotNullOfOrNull { raw ->
-                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:") }
+                    raw.takeIf { it.isNotBlank() && !it.startsWith("data:", ignoreCase = true) }
                         ?.let { runCatching { URI(source.url).resolve(it).toString() }.getOrNull() }
                 }?.takeIf(::validImage)
         }.normalizedReadingPageUrls()
