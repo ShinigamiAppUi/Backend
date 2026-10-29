@@ -58,8 +58,13 @@ class ShinigamiReadingRuntimeProvider(
         val candidate = if (value.startsWith("https://", true)) {
             runCatching {
                 val uri = java.net.URI(value)
-                if (uri.host.equals("shinigami.asia", true) || uri.host.endsWith(".shinigami.asia", true)) uri.path.substringAfterLast('/')
-                else return null
+                val host = uri.host ?: return null
+                val trustedHost = host.equals("shinigami.asia", true) || host.endsWith(".shinigami.asia", true)
+                val safeAuthority = uri.scheme.equals("https", true) &&
+                    uri.userInfo == null && (uri.port == -1 || uri.port == 443)
+                if (trustedHost && safeAuthority && isSafeReadingHttpUrl(value)) {
+                    uri.path.trimEnd('/').substringAfterLast('/').takeIf { it.isNotBlank() }
+                } else null
             }.getOrNull()
         } else value
         return candidate?.takeIf { it.matches(Regex("[A-Za-z0-9_-]{1,160}")) }
