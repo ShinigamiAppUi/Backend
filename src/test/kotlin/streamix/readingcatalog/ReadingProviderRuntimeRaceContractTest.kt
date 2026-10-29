@@ -209,6 +209,16 @@ class ReadingProviderRuntimeRaceContractTest {
     }
 
     @Test
+    fun chapterUrlGuardDoesNotSwallowCancellationFromPathValidation() {
+        assertFailsWith<kotlinx.coroutines.CancellationException> {
+            isSafeReadingChapterUrl(
+                "https://mangakatana.com/manga/title/chapter-1",
+                setOf("mangakatana.com")
+            ) { throw kotlinx.coroutines.CancellationException("cancel validation") }
+        }
+    }
+
+    @Test
     fun discoveryAwareProviderCanResolveChapterWithoutCatalogSourceUrls() = runBlocking {
         var called = false
         val discoveryProvider = object : ReadingRuntimeProvider {
