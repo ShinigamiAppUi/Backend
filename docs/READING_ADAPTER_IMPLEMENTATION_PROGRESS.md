@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current pass:** Implementation-first sweep across all eight content/language groups; preserve the eight separate batch records and language boundaries.
 - **Pass status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `5e73af37736390ca6f63849b530bd710bf6e464c`
+- **Latest confirmed code commit:** `4ece6d9b99a72a809b196ff8ac631a1c7ce2be77`
 - **Next concrete action:** continue the implementation-first sweep from `docs/READING_MANGA_ARCHITECTURE.md`, creating site-specific adapters and registering each one for every feasible inventory source across the eight content/language groups. Record duplicate, metadata-only, language-uncertain, inaccessible, and access-restricted sources explicitly; defer cleanup and full test/build until the inventory implementation pass is reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
@@ -51,6 +51,9 @@
 
 
 - **English Manhwa cancellation hardening — continued (2026-10-29):** fixed the same cancellation-swallowing fetch pattern in ManhwaNex (`49f1be85d045032d18620167ca7f0d33dbdef55a`), ManhwaOnline (`e950d16b879a8b5d5ad461b4ca03966b5039ddaf`), ManhwaRead (`85bf8d29ccb67b5b1e44c1642efb3176c591233d`), and ManhwaZone (`5e73af37736390ca6f63849b530bd710bf6e464c`). The sampled ManhwaManhua, ManhwaReads, ManhwaToon, ManhwaTop, ManhwaUS, and ManhwaZ adapters already propagated cancellation. Source selectors and current host status remain pending verification; no tests/build/CI run.
+
+
+- **Indonesian Manhwa adapter cancellation hardening (2026-10-29):** source fetch wrappers in Ainz Scans ID, Comicaso, Cosmic Scans ID, Holotoon, and Hwago now rethrow `CancellationException` instead of treating cancellation as an ordinary missing response/page. Commits: Ainz Scans ID `eea0e83520d0b748213ee8724be4b299b91def4a`; Comicaso `e834f54fc09d3b8711493e50b5e9da40ae584f93`; Cosmic Scans ID `8e428da0b784e9f12c724b4c7c8906758037dafd`; Holotoon `0d6537f5fac3eb04d6ff89629b774723f55b17f0`; Hwago `4ece6d9b99a72a809b196ff8ac631a1c7ce2be77`. This is static exception-flow hardening only; API/schema and live chapter behavior are still pending fixture/live verification. No tests/build/CI run.
 
 ## Batch plan
 
