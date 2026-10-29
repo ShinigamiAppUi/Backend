@@ -26,6 +26,17 @@ interface ReadingRuntimeProvider {
     ): ReadingContent?
 }
 
+/** Maximum page references accepted from a single provider response. Keeps malformed sources from producing unbounded reader payloads. */
+internal const val MAX_READING_PAGE_COUNT: Int = 1000
+
+/** Preserves source order while dropping unsafe/duplicate image URLs and bounding the response. */
+internal fun Iterable<String>.normalizedReadingPageUrls(): List<String> =
+    asSequence()
+        .filter(::isSafeReadingImageUrl)
+        .distinct()
+        .take(MAX_READING_PAGE_COUNT)
+        .toList()
+
 /** Enforces the payload contract for the reader selected by the catalog entry kind. */
 internal fun ReadingContent.isUsableFor(kind: ReadingKind): Boolean =
     this.kind == kind && when (kind) {
