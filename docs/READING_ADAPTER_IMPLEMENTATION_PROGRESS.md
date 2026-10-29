@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current pass:** Implementation-first sweep across all eight content/language groups; preserve the eight separate batch records and language boundaries.
 - **Pass status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `a0ab393142552341159adcf8132d94eaee3202c3`
+- **Latest confirmed code commit:** `fc16e032581231b6b734e49709d5fc639fb0cae3`
 - **Next concrete action:** continue the implementation-first sweep from `docs/READING_MANGA_ARCHITECTURE.md`, creating site-specific adapters and registering each one for every feasible inventory source across the eight content/language groups. Record duplicate, metadata-only, language-uncertain, inaccessible, and access-restricted sources explicitly; defer cleanup and full test/build until the inventory implementation pass is reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** URL/content boundary hardening and several source-specific parser fixes are in place, but the source-by-source parser audit is not complete. These changes do **not** mean the batch or adapters are fully implemented.
@@ -351,3 +351,6 @@ For each batch, check these in order:
 
 
 - 2026-10-29 — English Manga adapter continuation: fixed cancellation handling in `MangaBatReadingRuntimeProvider`. The source fetch previously used `runCatching`, which could swallow coroutine `CancellationException` and treat cancelled provider work as an ordinary source failure. The fetch boundary now rethrows cancellation and only converts ordinary exceptions into a null provider result. Code commit: `a0ab393142552341159adcf8132d94eaee3202c3`. This is a targeted adapter correctness fix, not completion evidence for the Manga English batch; fixtures, tests, build, CI, and live-source verification remain deferred under the implementation-first policy.
+
+
+- 2026-10-29 — English Manga adapter continuation: applied the same cancellation-boundary correction to `MangaFoxReadingRuntimeProvider` and `MangaGGReadingRuntimeProvider`. Both fetch paths previously used `runCatching`, which can absorb coroutine cancellation; they now rethrow `CancellationException` and convert only ordinary exceptions into a null provider result. Code commits: MangaFox `7148841c08f2a02403b9f025695a6b01a37c35f8`; MangaGG `fc16e032581231b6b734e49709d5fc639fb0cae3`. Together with MangaBat commit `a0ab393142552341159adcf8132d94eaee3202c3`, this is a targeted runtime-correctness increment in the English Manga group, not proof of batch completion. Tests/build/CI/live checks remain deferred as directed by the implementation-first policy.
