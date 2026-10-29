@@ -1178,3 +1178,22 @@ For each content-type/language batch, use:
 - The ledger must be updated before ending or handing off a work session, even if the batch is incomplete.
 - A commit is evidence of a code change, not evidence that tests passed. Record implementation and verification statuses independently.
 
+### 21.5 Implementation-first policy: defer full tests and builds until all adapters are implemented
+
+This is the required default for the current adapter expansion effort:
+
+- **Primary objective:** finish the site-specific adapter implementations across all planned content-type/language batches, preserving work through incremental commits and the progress ledger.
+- Do not run a full test suite, Android/backend build, or broad verification pipeline after each adapter or after every small implementation commit. Avoid repeated builds/tests whose results are unlikely to be useful while the implementation set is still incomplete.
+- During the implementation phase, prioritize coding, source-specific references, adapter registration, implementation review, coherent commits, and accurate ledger updates.
+- Commit in reviewable increments throughout the work. Do not wait until every adapter is finished to create the first commit, and do not combine unrelated or excessively large changes merely to reduce the commit count.
+- Defer the planned full adapter test pass and full build until **all feasible adapters in the agreed inventory and all planned content-type/language batches have had their implementation pass completed**. Then run the batch-wide test/build pass, record per-adapter outcomes, fix failures, and re-run the necessary checks.
+- Before starting the final test/build phase, perform a completeness audit against the inventory and ledger. Explicitly list any adapter still missing, partially implemented, blocked, unavailable, or lacking sufficient source references. A blocked or unavailable source must not be falsely counted as implemented; record its disposition and continue implementing other feasible sources.
+- No test or build may be described as passed if it was not run. During the implementation phase, label adapters `IMPLEMENTED_UNTESTED` until evidence from the deferred verification phase exists.
+- Narrow, targeted checks are permitted when necessary to understand a source contract, prevent an obvious destructive change, or establish that a code edit can be made safely. Such checks must not turn into routine full test/build cycles after each adapter.
+- Once all feasible adapters are implemented and the inventory has been reconciled, the final verification phase is mandatory; deferring tests is a scheduling policy, not permission to skip verification.
+- Update `docs/READING_ADAPTER_IMPLEMENTATION_PROGRESS.md` before every handoff with the current batch, implemented and remaining adapter counts, latest commit SHA(s), blocked sources, and the exact next action. Keep implementation status separate from test/build status.
+
+Required high-level sequence:
+
+`IMPLEMENT ADAPTERS BY LANGUAGE → COMMIT INCREMENTALLY → UPDATE PROGRESS LEDGER → COMPLETE ALL FEASIBLE IMPLEMENTATIONS → INVENTORY COMPLETENESS AUDIT → FULL ADAPTER TESTS + BUILDS → FIX FAILURES → RE-TEST/RE-BUILD AS NEEDED → FINAL AUDIT → LOCK ELIGIBLE ADAPTERS`
+
