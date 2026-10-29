@@ -5,6 +5,7 @@ import java.net.URLEncoder
 import org.json.JSONObject
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -23,9 +24,13 @@ class VoraToonReadingRuntimeProvider(private val responseFetcher: ((String) -> S
         } ?: return@withContext null
         val parts = chapterParts(source.url) ?: return@withContext null
         val apiUrl = "https://v9.voratoon.com/api/proxy/series/${parts.first}/chapters/${parts.second}"
-        val body = runCatching {
+        val body = try {
             if (responseFetcher != null) responseFetcher.invoke(apiUrl) else ReadingHttpTransport.getTextWithCookieBootstrap(apiUrl, "https://v9.voratoon.com/", mapOf("User-Agent" to "ShinigamiReadingRuntime/1.0", "Accept" to "application/json"))
-        }.getOrNull() ?: return@withContext null
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (_: Exception) {
+            null
+        } ?: return@withContext null
         val pages = runCatching {
             val root = JSONObject(body)
             val data = root.optJSONObject("data") ?: root
