@@ -43,7 +43,7 @@ class ReadHiveReadingRuntimeProvider(
     private fun validChapterUrl(value: String): Boolean = runCatching {
         val uri = URI(value)
         uri.scheme.equals("https", true) &&
-            uri.host?.lowercase() in setOf("readhive.org", "www.readhive.org".map(String::lowercase) &&
+            uri.host?.lowercase()?.let { it in setOf("readhive.org", "www.readhive.org") } == true &&
             uri.userInfo == null && uri.port in setOf(-1, 443) &&
             (uri.path.isNotBlank() && uri.path != "/")
     }.getOrDefault(false)
