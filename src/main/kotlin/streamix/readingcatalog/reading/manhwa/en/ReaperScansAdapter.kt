@@ -10,9 +10,10 @@ class ReaperScansReadingRuntimeProvider(private val documentFetcher: ((String)->
  override val id="reaper-scans"
  override fun supports(entry:ReadingCatalogEntry,chapter:ReadingChapterEntry)=entry.kind==ReadingKind.MANHWA&&chapter.sources.any{it.enabled&&it.providerId.equals(id,true)&&valid(it.url)}
  override suspend fun chapter(entry:ReadingCatalogEntry,chapter:ReadingChapterEntry):ReadingContent?=withContext(Dispatchers.IO){
+  if(entry.kind!=ReadingKind.MANHWA)return@withContext null
   val source=chapter.sources.firstOrNull{it.enabled&&it.providerId.equals(id,true)&&valid(it.url)}?:return@withContext null
   val doc=try{documentFetcher?.invoke(source.url)?:if(documentFetcher==null)fetch(source.url)else null}catch(cancelled:CancellationException){throw cancelled}catch(_:Exception){null}?:return@withContext null
-  val pages=doc.select("#readerarea img, .reading-content img, .chapter-content img").mapNotNull{img->sequenceOf("data-lazy-src","data-src","data-original","src").map(String::trim).firstNotNullOfOrNull{k->img.attr(k).takeIf{it.isNotBlank()&&!it.startsWith("data:")}}?.let{runCatching{URI(source.url).resolve(it).toString()}.getOrNull()}?.takeIf(::validImage)}.distinct()
+  val pages=doc.select("#readerarea img, .reading-content img, .chapter-content img").mapNotNull{img->sequenceOf("data-lazy-src","data-src","data-original","src").map(String::trim).firstNotNullOfOrNull{k->img.attr(k).takeIf{it.isNotBlank()&&!it.startsWith("data:", ignoreCase = true)}}?.let{runCatching{URI(source.url).resolve(it).toString()}.getOrNull()}?.takeIf(::validImage)}.normalizedReadingPageUrls()
   pages.takeIf{it.isNotEmpty()}?.let{ReadingContent(entry.kind,"reading-provider:$id",source.url,it,format="image-pages")}
  }
  private fun valid(v:String)=isSafeReadingChapterUrl(v,setOf("reaperscans.com")){it.contains("chapter",true)}
