@@ -11,7 +11,7 @@
 - **Protected rule:** implementation commits stay on this branch; do not use `main` for implementation.
 - **Current batch:** Batch 1 — Manga / Indonesian (`MANGA` / `id`)
 - **Batch status:** `IN_PROGRESS`
-- **Latest confirmed code commit:** `d5c55a9cc8c8e4bf019765b9ad0e5cb43f1b687d` — validate MGKomik image candidates after Kuro Manga candidate fallback
+- **Latest confirmed code commit:** `3265a58605b865e630f70bbb397a8f57f759b412` — validate Shinigami chapter URL authority
 - **Next concrete action:** continue source-by-source audit and implementation for the 25 Indonesian manga providers below. Do not start a new language batch until this batch's feasible implementations have been completed and its inventory reconciled.
 - **Testing policy:** no full tests, CI, or build run for this implementation pass. Defer the planned full test/build pass until all feasible adapters in all planned language batches have an implementation pass. Never describe unrun tests as passed.
 - **Important status distinction:** the changes so far tighten content-kind dispatch/chapter boundaries only. They do **not** mean the source-specific parser work is complete or that these adapters are fully implemented.
@@ -30,6 +30,11 @@
 | 8 | Novel | English (`en`) | `NOT_STARTED` | Reconcile the English novel inventory in `READING_MANGA_ARCHITECTURE.md`. |
 
 ## Latest implementation note — 2026-10-29
+
+- Hardened the native Shinigami adapter's chapter URL parsing: HTTPS catalog URLs must use the Shinigami domain or its subdomains, contain no user-info credentials, use only the default/443 port, pass the shared safe-URL guard, and yield a bounded opaque chapter identifier. The adapter still constructs API requests against its fixed API origin. Code commit: `3265a58605b865e630f70bbb397a8f57f759b412` (`fix(reading): validate Shinigami chapter URL authority`).
+- Updated MGKomik reader extraction to resolve and validate each lazy/source image candidate before selection; malformed or unsafe earlier attributes no longer prevent fallback to a later valid image. Code commit: `d5c55a9cc8c8e4bf019765b9ad0e5cb43f1b687d` (`fix(reading): fall through invalid MGKomik image candidates`).
+- Updated Kuro Manga reader extraction to validate each resolved image candidate as it is tried, rather than selecting the first non-empty attribute and rejecting it afterward. Code commit: `1cded7553c85eaab3f98023536990b8cd358607f` (`fix(reading): fall through invalid Kuro Manga image candidates`). These are targeted parser/URL validation fixes; tests/build/CI remain deferred.
+
 
 - Updated MGKomik reader extraction to resolve and validate each lazy/source image candidate before selection; malformed or unsafe earlier attributes no longer prevent fallback to a later valid image. Code commit: `d5c55a9cc8c8e4bf019765b9ad0e5cb43f1b687d` (`fix(reading): fall through invalid MGKomik image candidates`).
 - Updated Kuro Manga reader extraction to validate each resolved image candidate as it is tried, rather than selecting the first non-empty attribute and rejecting it afterward. Code commit: `1cded7553c85eaab3f98023536990b8cd358607f` (`fix(reading): fall through invalid Kuro Manga image candidates`). Both are targeted parser fallback fixes; tests/build/CI remain deferred.
