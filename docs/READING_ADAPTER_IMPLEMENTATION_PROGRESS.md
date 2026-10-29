@@ -1,5 +1,7 @@
 # Reading Adapter Implementation Progress
 
+- **Shared novel HTML response bound (2026-10-30):** the common `fetchNovelHtml` helper used by many novel adapters previously called `fetchReadingHtmlDocument` without an explicit byte cap, unlike `fetchNovelDocument`. Added a 2 MiB `maxBytes` ceiling to this shared path so Indonesian and English providers using the helper inherit the same bounded-response behavior. Code commit: `f885760079e9a5b738becda6e3fe0ebae14638d3`. Static source change only; tests/build/CI and live provider checks were not run.
+
 - **Dragon Tea novel response bounding (2026-10-30):** corrected the dual-kind Dragon Tea provider so novel chapter pages use `fetchNovelDocument`, which applies the shared 2 MiB response cap, while manhwa continues to use the regular comic HTML fetch path. The injectable document fetcher remains unchanged. Code commit: `792c194a5f146bf12bc59f48de74f396e721d173`. Static edit only; tests/build/CI and live site validation were not run. This supersedes the earlier caution below that Dragon Tea should not be counted as a prose-novel adapter: the current implementation explicitly supports `ReadingKind.NOVEL`, but its live selectors/domain behavior remain unverified.
 
 - **Registry deduplication — Komiku Manhua (2026-10-30):** the source registry contained `KomikuManhuaReadingRuntimeProvider()` twice. Removed the duplicate entry; the adapter remains registered once. Commit: `d78eb8cf4014773a56f6f4dc0c3e43d2b69b2eee`. This is a static registry cleanup; tests/build/CI were not run.
